@@ -53,7 +53,11 @@
             --header-bg: rgba(39, 39, 42, 0.95);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -67,54 +71,114 @@
         }
 
         .container {
-            width: 100%; max-width: 1600px; margin: 0 auto; padding: 1.5rem;
-            flex-grow: 1; display: flex; flex-direction: column; gap: 1.5rem;
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
         }
 
         .hidden { display: none !important; }
 
         .panel-glass {
-            background: var(--panel-bg); backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px); border: 1px solid var(--panel-border);
-            border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
 
         .btn {
-            cursor: pointer; border: none; outline: none; font-family: inherit;
-            transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .btn-pill {
-            padding: 0.4rem 1rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;
-            background: transparent; border: 1px solid var(--panel-border); color: var(--text-main);
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: transparent;
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
         }
 
         .btn-pill:hover {
-            color: var(--primary-accent); border-color: var(--primary-accent); background: rgba(250, 204, 21, 0.05);
+            color: var(--primary-accent);
+            border-color: var(--primary-accent);
+            background: rgba(250, 204, 21, 0.05);
         }
 
         .btn-pill.active {
-            background-color: var(--primary-accent); color: #000 !important; border-color: var(--primary-accent);
+            background-color: var(--primary-accent);
+            color: #000 !important;
+            border-color: var(--primary-accent);
             box-shadow: 0 0 15px rgba(250, 204, 21, 0.15);
         }
 
+        [data-theme="kuning"] .btn-pill.active { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+
         .form-input, .form-select {
-            width: 100%; background-color: var(--input-bg); border: 1px solid var(--panel-border);
-            color: var(--text-main); border-radius: 0.75rem; padding: 0.7rem 1rem; font-size: 0.9rem;
-            font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            border-radius: 0.75rem;
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
         
         .form-select { cursor: pointer; appearance: none; font-weight: 600; }
-        .form-input:focus, .form-select:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2); }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2);
+        }
+
         .form-input::placeholder, .form-select::placeholder { color: #64748b; }
 
         .table-container { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 1200px; }
-        th {
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #cbd5e1;
-            font-weight: 800; padding: 1.25rem 1rem; border-bottom: 2px solid var(--panel-border); text-align: left; white-space: nowrap;
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
         }
-        td { padding: 1rem; font-size: 0.9rem; border-bottom: 1px solid var(--panel-border); vertical-align: middle; font-weight: 500; }
+
+        th {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #cbd5e1;
+            font-weight: 800; 
+            padding: 1.25rem 1rem;
+            border-bottom: 2px solid var(--panel-border);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--panel-border);
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
         tr:hover td { background-color: var(--table-hover); cursor: default; }
 
         .text-xs { font-size: 0.75rem; }
@@ -142,46 +206,164 @@
         #login-view { margin: auto; max-width: 400px; width: 100%; }
 
         .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center; z-index: 100; padding: 1rem;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1rem;
         }
 
         .modal-content {
-            background: var(--bg-color); border: 1px solid var(--panel-border);
-            border-radius: 1rem; width: 100%; max-width: 700px; max-height: 90vh; display: flex; flex-direction: column;
+            background: var(--bg-color);
+            border: 1px solid var(--panel-border);
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
         }
-        .modal-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--panel-border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-body { padding: 1.5rem; overflow-y: auto; flex-grow: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--panel-border); display: flex; justify-content: flex-end; gap: 0.5rem; }
 
-        .badge-views { display: inline-flex; align-items: center; gap: 4px; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(249, 115, 22, 0.5); color: #fb923c; background: rgba(249, 115, 22, 0.1); }
-        .badge-subs { display: inline-flex; align-items: center; gap: 4px; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.5); color: #60a5fa; background: rgba(59, 130, 246, 0.1); }
-        .icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .badge-views {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
+            border: 1px solid rgba(249, 115, 22, 0.5); color: #fb923c; background: rgba(249, 115, 22, 0.1);
+        }
+        .badge-subs {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
+            border: 1px solid rgba(59, 130, 246, 0.5); color: #60a5fa; background: rgba(59, 130, 246, 0.1);
+        }
+        .icon-box {
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+        }
 
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { display: none; position: absolute; right: 0; top: 100%; background-color: var(--panel-bg); min-width: 120px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); border: 1px solid var(--panel-border); z-index: 1; border-radius: 0.5rem; padding: 0.5rem; margin-top: 0.5rem; }
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 100%;
+            background-color: var(--panel-bg); min-width: 120px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2); border: 1px solid var(--panel-border);
+            z-index: 1; border-radius: 0.5rem; padding: 0.5rem; margin-top: 0.5rem;
+        }
         .dropdown:hover .dropdown-content { display: flex; flex-direction: column; gap: 0.25rem; }
-        .dropdown-item { padding: 0.5rem; cursor: pointer; border-radius: 0.25rem; font-size: 0.75rem; color: var(--text-main); }
+        .dropdown-item {
+            padding: 0.5rem; cursor: pointer; border-radius: 0.25rem; font-size: 0.75rem; color: var(--text-main);
+        }
         .dropdown-item:hover { background-color: var(--table-hover); }
 
         #toast {
-            position: fixed; top: 20px; right: 20px; z-index: 200; background: #10b981; color: white; padding: 10px 20px;
-            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transform: translateY(-150%); transition: transform 0.3s ease; font-size: 0.875rem; font-weight: bold;
+            position: fixed; top: 20px; right: 20px; z-index: 200;
+            background: #10b981; color: white; padding: 10px 20px;
+            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transform: translateY(-150%); transition: transform 0.3s ease;
+            font-size: 0.875rem; font-weight: bold;
         }
         #toast.show { transform: translateY(0); }
+        #toast.error { background: #ef4444; }
 
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 4px; }
+
+        .settings-tab-btn {
+            flex: 1; padding: 0.75rem; text-align: center; background: transparent;
+            border: 1px solid var(--panel-border); color: var(--text-muted);
+            font-weight: 600; border-radius: 9999px; cursor: pointer; transition: all 0.2s;
+        }
+        .settings-tab-btn.active {
+            background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+            color: white; border-color: #0ea5e9; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+        .settings-card {
+            background: rgba(17, 24, 39, 0.4); border: 1px solid var(--panel-border);
+            border-radius: 1rem; padding: 1.25rem; margin-bottom: 1rem;
+        }
+        .api-key-item {
+            background: var(--input-bg); border: 1px solid var(--panel-border);
+            border-radius: 0.75rem; padding: 1rem; margin-bottom: 0.75rem;
+        }
+        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.7rem; border-radius: 0.5rem; }
+
+        .tip-card {
+            border-radius: 0.75rem; padding: 1rem; display: flex;
+            flex-direction: column; gap: 0.5rem; border: 1px solid transparent;
+        }
+        .tip-card.green { background: rgba(74, 222, 128, 0.05); border-color: rgba(74, 222, 128, 0.3); }
+        .tip-card.green .tip-label { color: #4ade80; }
+        .tip-card.blue { background: rgba(56, 189, 248, 0.05); border-color: rgba(56, 189, 248, 0.3); }
+        .tip-card.blue .tip-label { color: #38bdf8; }
+        .tip-card.yellow { background: rgba(250, 204, 21, 0.05); border-color: rgba(250, 204, 21, 0.3); }
+        .tip-card.yellow .tip-label { color: #facc15; }
+        .tip-card.red { background: rgba(248, 113, 113, 0.05); border-color: rgba(248, 113, 113, 0.3); }
+        .tip-card.red .tip-label { color: #f87171; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label {
+            font-size: 0.75rem; color: #cbd5e1; font-weight: 700; letter-spacing: 0.02em;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            background-color: rgba(0, 0, 0, 0.5); border: 1px solid var(--panel-border); 
+            color: var(--text-main); border-radius: 0.5rem; padding: 0.75rem 1rem;
+            font-size: 0.875rem; font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--primary-accent); box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.2);
+        }
+        
         .cloud-status {
             display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem;
-            background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.1); color: #10b981;
+            padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
         }
-        .cloud-status.offline { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
-        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); } }
+        .cloud-status.offline {
+            background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);
+        }
+        .cloud-status.local {
+            background: rgba(250, 204, 21, 0.1); color: #facc15; border-color: rgba(250, 204, 21, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+        }
     </style>
 </head>
 <body>
 
-    <div id="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Success</span></div>
+    <div id="toast"><i class="fas fa-info-circle"></i> <span id="toast-msg">Success</span></div>
 
     <!-- Login View -->
     <div id="login-view" class="container" style="justify-content: center;">
@@ -193,8 +375,8 @@
             <p class="text-xs text-muted" style="margin-bottom: 1.5rem;">Akses Sinkronisasi Cloud Real-time</p>
             
             <form id="login-form" class="flex-col gap-4">
-                <input type="text" id="username" autocomplete="new-password" class="form-input text-center" placeholder="Username" value="admin" required>
-                <input type="password" id="password" autocomplete="new-password" class="form-input text-center" placeholder="Password" value="admin" required>
+                <input type="text" id="username" class="form-input text-center" placeholder="Username" value="admin" required>
+                <input type="password" id="password" class="form-input text-center" placeholder="Password" value="admin" required>
                 <button type="submit" class="btn" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; background: var(--primary-accent); color: white; font-weight: bold;">
                     Masuk Sistem
                 </button>
@@ -203,6 +385,7 @@
     </div>
 
     <div id="dashboard-view" class="container hidden">
+        
         <header class="panel-glass" style="padding: 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
             <div class="flex items-center gap-4">
                 <div class="icon-box" style="background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid rgba(255, 255, 255, 0.1); position: relative;">
@@ -218,9 +401,11 @@
             <div class="flex items-center gap-2 flex-wrap justify-end">
                 <button id="btn-install" class="btn btn-pill hidden" style="background: var(--primary-accent); color: #1a1814; border: none; font-weight: bold;"><i class="fas fa-download"></i> Install App</button>
                 <div id="cloud-status-indicator" class="cloud-status">
-                    <i class="fas fa-cloud-check"></i> Cloud Terhubung
+                    <i class="fas fa-spinner fa-spin"></i> Menghubungkan...
                 </div>
+
                 <button id="btn-sync" class="btn btn-pill"><i class="fas fa-sync-alt"></i> Sync Stats</button>
+                
                 <div class="flex items-center gap-2" style="background: var(--input-bg); padding: 4px; border-radius: 999px; border: 1px solid var(--panel-border); margin-left: 0.5rem;">
                     <button class="btn" onclick="window.openModal('modal-settings')" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="Pengaturan"><i class="fas fa-cog"></i></button>
                     <div class="dropdown">
@@ -269,7 +454,7 @@
                 <div class="flex items-center gap-2 flex-wrap">
                     <div style="position: relative; flex-grow: 1; max-width: 300px;">
                         <i class="fas fa-search text-muted" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.75rem;"></i>
-                        <input type="text" id="search-input" autocomplete="off" class="form-input text-xs" style="padding-left: 2rem;" placeholder="Cari nama, ID, niche...">
+                        <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 2rem;" placeholder="Cari nama, ID, niche...">
                     </div>
                     <select id="filter-monet" class="form-select text-xs" style="width: auto;">
                         <option value="all">SEMUA MONETISASI</option>
@@ -309,44 +494,63 @@
                 </table>
             </div>
         </div>
-    </div>
-
-    <!-- Modals -->
+    
     <div id="modal-form" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 700px;">
-            <div class="modal-header">
+        <div class="modal-content" style="max-width: 700px; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1rem;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--panel-border); padding: 1.5rem;">
                 <div>
                     <p class="text-accent font-bold" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">DATA CHANNEL</p>
                     <h3 id="modal-title" class="font-bold text-xl" style="color: white;">Tambah Channel Baru</h3>
                 </div>
-                <button class="btn" onclick="window.closeModal('modal-form')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 0.5rem; width: 32px; height: 32px;"><i class="fas fa-times"></i></button>
+                <button class="btn" onclick="window.closeModal('modal-form')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
             </div>
+            
             <form id="item-form" style="display: contents;">
                 <input type="hidden" id="item-id">
-                <div class="modal-body">
-                    <div class="form-group"><label>Nama Channel</label><input type="text" id="item-title" required class="form-input" placeholder="NAMA CHANNEL"></div>
-                    <div class="form-group"><label>Link Channel / Profil</label><input type="text" id="item-link" class="form-input" placeholder="https://youtube.com/@handle"></div>
-                    <div class="form-group"><label>ID Channel</label><input type="text" id="item-channelId" class="form-input" placeholder="UC..."></div>
-                    <div class="form-group"><label>Nama Pengelola</label><input type="text" id="item-pengelola" class="form-input" placeholder="NAMA PENGELOLA" style="text-transform: uppercase;"></div>
-                    <div class="form-group"><label>Niche / Kategori</label><input type="text" id="item-niche" class="form-input" placeholder="Ketik niche..."></div>
-                    <div class="form-group"><label>Monetisasi</label>
-                        <select id="item-monet" class="form-select">
-                            <option value="Belum">NO — Belum monetisasi</option>
-                            <option value="Sudah">YES — Sudah monetisasi</option>
-                        </select>
-                    </div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Catatan Pribadi</label><textarea id="item-notes" rows="3" class="form-input" placeholder="Catatan..."></textarea></div>
-                    <div style="display: none;">
-                        <input type="text" id="item-subs"><input type="text" id="item-views"><input type="number" id="item-video">
-                        <input type="number" id="item-subsGrowth" value="0"><input type="number" id="item-viewGrowth" value="0">
-                        <input type="checkbox" id="item-topViews"><input type="checkbox" id="item-topSubs">
+                <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; max-height: 70vh;">
+                    <div class="form-grid">
+                        <div class="form-group"><label>Nama Channel</label><input type="text" id="item-title" required placeholder="NAMA CHANNEL"></div>
+                        <div class="form-group"><label>Link Channel / Profil</label><input type="text" id="item-link" placeholder="https://youtube.com/@handle"></div>
+                        <div class="form-group"><label>ID Channel</label><input type="text" id="item-channelId" placeholder="UC..."></div>
+                        <div class="form-group"><label>Nama Pengelola</label><input type="text" id="item-pengelola" placeholder="NAMA PENGELOLA" style="text-transform: uppercase;"></div>
+                        <div class="form-group"><label>Niche / Kategori</label><input type="text" id="item-niche" placeholder="Ketik niche secara manual"></div>
+                        <div class="form-group"><label>Monetisasi</label>
+                            <select id="item-monet">
+                                <option value="Belum">NO — Belum monetisasi</option>
+                                <option value="Sudah">YES — Sudah monetisasi</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width"><label>Catatan Pribadi</label><textarea id="item-notes" rows="3" placeholder="Catatan, info tambahan, strategi, dll..."></textarea></div>
+
+                        <!-- Data Tersembunyi -->
+                        <div style="display: none;">
+                            <input type="text" id="item-subs"><input type="text" id="item-views"><input type="number" id="item-video">
+                            <input type="number" id="item-subsGrowth" value="0"><input type="number" id="item-viewGrowth" value="0">
+                            <input type="checkbox" id="item-topViews"><input type="checkbox" id="item-topSubs">
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-pill" onclick="window.closeModal('modal-form')">Batal</button>
-                    <button type="submit" class="btn active" style="padding: 0.6rem 1.5rem; background: #38bdf8; color: #0f172a; font-weight: 600; border-radius: 0.5rem; border: none;"><i class="fas fa-save"></i> Simpan</button>
+                <div class="modal-footer" style="padding: 1.5rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--panel-border); gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn" style="padding: 0.6rem 1.5rem; background: rgba(255,255,255,0.05); color: #d1d5db; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; font-size: 0.875rem;" onclick="window.closeModal('modal-form')">Batal</button>
+                    <button type="submit" class="btn active" style="padding: 0.6rem 1.5rem; background: #38bdf8; color: #0f172a; font-weight: 600; border-radius: 0.5rem; border: none; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="modal-detail" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 350px; text-align: center;">
+            <div class="modal-body flex-col items-center" style="display: flex;">
+                <div class="icon-box" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(239, 68, 68, 0.1); color: #ef4444; font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fab fa-youtube"></i></div>
+                <h3 id="det-title" class="font-bold text-lg">Name</h3>
+                <p id="det-pengelola" class="text-xs text-muted font-semibold" style="text-transform: uppercase; margin-bottom: 1.5rem;">Manager</p>
+                <div style="width: 100%; text-align: left; background: var(--input-bg); border: 1px solid var(--panel-border); padding: 1rem; border-radius: 0.75rem; font-size: 0.85rem;">
+                    <p class="text-muted" style="font-size: 0.75rem;">Info detail dapat diakses di menu Edit.</p>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: center;"><button type="button" class="btn btn-pill" style="width: 100%; padding: 0.5rem;" onclick="window.closeModal('modal-detail')">Tutup</button></div>
         </div>
     </div>
 
@@ -357,47 +561,89 @@
                     <p class="text-accent font-bold" style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem;">KONFIGURASI</p>
                     <h3 class="font-bold text-xl"><i class="fas fa-cog"></i> Pengaturan</h3>
                 </div>
-                <button class="btn" onclick="window.closeModal('modal-settings')" style="background: transparent; color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 32px; height: 32px;"><i class="fas fa-times"></i></button>
+                <button class="btn" onclick="window.closeModal('modal-settings')" style="background: transparent; color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
             </div>
+            
+            <div style="padding: 1.5rem 1.5rem 0;">
+                <div class="flex gap-2" style="background: var(--input-bg); padding: 0.25rem; border-radius: 9999px; border: 1px solid var(--panel-border);">
+                    <button class="settings-tab-btn active"><i class="fas fa-key text-yellow-400"></i> API Key</button>
+                    <button class="settings-tab-btn"><i class="fas fa-database text-orange-400"></i> Backup/Restore</button>
+                </div>
+            </div>
+
             <div class="modal-body" style="display: block; overflow-y: auto;">
-                <div class="panel-glass" style="padding: 1.25rem; margin-bottom: 1rem;">
-                    <h4 class="font-bold text-sm mb-4"><i class="fas fa-plus text-xs"></i> Tambah YouTube API Key</h4>
-                    <div class="flex-col gap-2 mb-4"><label class="text-xs font-bold text-main">YouTube Data API v3 Key</label><input type="password" id="new-api-key" autocomplete="new-password" class="form-input font-mono text-sm" placeholder="AIzaSy..."></div>
-                    <div class="flex-col gap-2 mb-4">
-                        <label class="text-xs font-bold text-main">Label</label>
-                        <div class="flex gap-3">
-                            <input type="text" id="new-api-label" autocomplete="off" class="form-input text-sm" placeholder="Label..." style="flex-grow: 1;">
-                            <button onclick="window.addApiKey()" class="btn" style="background: #eab308; color: #1a1814; font-weight: bold; padding: 0 1.25rem; border-radius: 0.5rem;"><i class="fas fa-plus"></i> Tambah</button>
+                <!-- API Key Section -->
+                <div id="tab-api-key">
+                    <div class="settings-card">
+                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-plus text-xs"></i> Tambah YouTube API Key</h4>
+                        <div class="flex-col gap-2 mb-4"><label class="text-xs font-bold text-main">YouTube Data API v3 Key</label><input type="password" id="new-api-key" class="form-input font-mono text-sm" placeholder="AIzaSy..." style="background: rgba(0,0,0,0.2);"></div>
+                        <div class="flex-col gap-2 mb-4">
+                            <label class="text-xs font-bold text-main">Label</label>
+                            <div class="flex gap-3">
+                                <input type="text" id="new-api-label" class="form-input text-sm" placeholder="Label otomatis..." style="background: rgba(0,0,0,0.2); flex-grow: 1;">
+                                <button onclick="window.addApiKey()" class="btn" style="background: #eab308; color: #1a1814; font-weight: bold; padding: 0 1.25rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-plus"></i> Tambah</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="panel-glass" style="padding: 1.25rem;">
-                    <div class="flex justify-between items-center mb-2">
-                        <h4 class="font-bold text-sm"><i class="fas fa-key text-xs"></i> Keys Tersimpan</h4>
-                        <span id="api-key-count" class="text-xs" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9; padding: 0.25rem 0.75rem; border-radius: 999px;">0 aktif / 0 total</span>
+
+                    <div class="settings-card">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-sm"><i class="fas fa-key text-xs"></i> Keys Tersimpan</h4>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs" id="api-sync-status" style="color: #facc15; font-weight: 600;"><i class="fas fa-hdd"></i> Tersimpan Lokal</span>
+                                <span id="api-key-count" class="text-xs" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(14, 165, 233, 0.3);">0 aktif / 0 total</span>
+                            </div>
+                        </div>
+                        <div id="api-keys-list"></div>
                     </div>
-                    <div id="api-keys-list"></div>
+                </div>
+
+                <!-- Backup/Restore Section (Hidden by default) -->
+                <div id="tab-backup" class="hidden">
+                     <div class="settings-card">
+                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-download text-xs"></i> Ekspor Data Lokal</h4>
+                        <p class="text-xs text-muted mb-4">Simpan data Anda sebagai file JSON. Sangat berguna jika Cloud tidak terhubung.</p>
+                        <button onclick="window.exportData()" class="btn w-full" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid #38bdf8; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-export"></i> Download Data (JSON)</button>
+                    </div>
+                     <div class="settings-card">
+                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-upload text-xs"></i> Impor Data Lokal</h4>
+                        <p class="text-xs text-muted mb-4">Kembalikan data dari file JSON. <strong>Peringatan:</strong> Ini akan menimpa data lokal saat ini.</p>
+                        <input type="file" id="import-file" accept=".json" class="hidden" onchange="window.importData(event)">
+                        <button onclick="document.getElementById('import-file').click()" class="btn w-full" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-import"></i> Pilih File JSON</button>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer" style="border-top: none;"><button type="button" class="btn btn-pill" onclick="window.closeModal('modal-settings')">Tutup</button></div>
+            <div class="modal-footer" style="border-top: none; padding-top: 0;"><button type="button" class="btn btn-pill" style="padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--panel-border);" onclick="window.closeModal('modal-settings')">Tutup</button></div>
         </div>
     </div>
 
     <div id="modal-search-yt" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 900px; padding: 2rem;">
+        <div class="modal-content" style="max-width: 900px; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1.5rem; padding: 2rem;">
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <p class="font-bold text-accent" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">AUTO-FETCH YOUTUBE</p>
                     <h2 class="font-bold text-2xl" style="color: white;">Cari Channel YouTube</h2>
                 </div>
-                <button class="btn" onclick="window.closeModal('modal-search-yt')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 0.5rem; width: 36px; height: 36px;"><i class="fas fa-times"></i></button>
+                <button class="btn" onclick="window.closeModal('modal-search-yt')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;"><i class="fas fa-times"></i></button>
             </div>
+
+            <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; padding: 1.5rem; background: rgba(0,0,0,0.3); margin-bottom: 1.5rem;">
+                <p class="font-bold text-sm mb-4" style="color: white;">💡 Tips pencarian yang akurat:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                    <div class="tip-card green"><div class="tip-label text-xs font-bold">✓ PALING AKURAT</div><div class="font-bold text-sm" style="color: white;">URL channel lengkap</div></div>
+                    <div class="tip-card blue"><div class="tip-label text-xs font-bold">↗ AKURAT</div><div class="font-bold text-sm" style="color: white;">@handle channel</div></div>
+                    <div class="tip-card yellow"><div class="tip-label text-xs font-bold">~ MUNGKIN DITEMUKAN</div><div class="font-bold text-sm" style="color: white;">Nama channel</div></div>
+                </div>
+            </div>
+
             <div class="flex items-center gap-4 flex-wrap">
                 <div style="flex-grow: 1; position: relative; border: 1px solid var(--primary-accent); border-radius: 999px; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 0.25rem 0.25rem 0.25rem 1.5rem;">
-                    <i class="fas fa-search text-muted" style="margin-right: 0.75rem;"></i>
-                    <input type="text" id="yt-search-input" autocomplete="off" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="https://youtube.com/@handle..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
+                    <i class="fas fa-search text-muted" style="font-size: 1.1rem; margin-right: 0.75rem;"></i>
+                    <input type="text" id="yt-search-input" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="https://youtube.com/@handle atau nama channel..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
                 </div>
-                <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; padding: 0.75rem 2rem; border-radius: 999px;"><i class="fas fa-search"></i> Cari</button>
+                <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; font-size: 1rem; padding: 0.75rem 2rem; border-radius: 999px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
+                    <i class="fas fa-search text-sm"></i> Cari
+                </button>
             </div>
         </div>
     </div>
@@ -405,85 +651,212 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, enableIndexedDbPersistence, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // === KONFIGURASI FIREBASE MILIK ANDA ("TNC7 Visualizer") ===
-        const firebaseConfig = {
-          apiKey: "AIzaSyA1hxTceWANgQU8vwKpXDCJABvYpWQQNmk",
-          authDomain: "tnc7-visualizer.firebaseapp.com",
-          projectId: "tnc7-visualizer",
-          storageBucket: "tnc7-visualizer.firebasestorage.app",
-          messagingSenderId: "1098792876538",
-          appId: "1:1098792876538:web:28304ee128f7d156190c43"
+        // ==========================================
+        // KONFIGURASI FIREBASE KITA
+        // ==========================================
+        const MY_FIREBASE_CONFIG = {
+            apiKey: "AIzaSyA1hxTceWANgQU8vwKpXDCJABvYpWQQNmk", // Menggunakan Kunci Asli Bawaan Firebase
+            authDomain: "tnc7-visualizer.firebaseapp.com",
+            projectId: "tnc7-visualizer",
+            storageBucket: "tnc7-visualizer.firebasestorage.app",
+            messagingSenderId: "1098792876538",
+            appId: "1:1098792876538:web:28304ee128f7d156190c43"
         };
-        const appId = "tnc7-visualizer-main";
+        // ==========================================
 
-        let state = { items: [], apiKeys: [], theme: 'dark', isLoggedIn: false };
+        // Default API Key dari Google Cloud (Khusus untuk fitur Cari YouTube)
+        const DEFAULT_API_KEY = "AIzaSyDJbN1UQy17B_hqVTQE4zNOpJJZFqh2eMc";
+
+        let state = { items: [], apiKeys: [], theme: 'dark', isLoggedIn: false, isCloudConnected: false };
         let db, auth;
         let deferredPrompt;
+
+        const USER_ID = 'user_default'; 
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'tnc7-management';
+        
         const el = (id) => document.getElementById(id);
+
+        function loadLocalData() {
+            try {
+                const storedChannels = localStorage.getItem('tnc7_channels');
+                if (storedChannels) state.items = JSON.parse(storedChannels);
+                
+                const storedKeys = localStorage.getItem('tnc7_apikeys');
+                if (storedKeys) {
+                    state.apiKeys = JSON.parse(storedKeys);
+                    
+                    // Pastikan setidaknya ada satu key yang aktif jika ada data key yang tersimpan
+                    if (state.apiKeys.length > 0 && !state.apiKeys.some(k => k.active)) {
+                        state.apiKeys[0].active = true;
+                        saveLocalData();
+                    }
+                } else {
+                    // Inject Default API Key if empty
+                    state.apiKeys = [{
+                        id: "default_key_1",
+                        key: DEFAULT_API_KEY,
+                        label: "API key 2 (Default)",
+                        active: true,
+                        createdAt: Date.now()
+                    }];
+                    saveLocalData();
+                }
+            } catch(e) { console.error("Gagal load data lokal", e); }
+        }
+
+        function saveLocalData() {
+            try {
+                localStorage.setItem('tnc7_channels', JSON.stringify(state.items));
+                localStorage.setItem('tnc7_apikeys', JSON.stringify(state.apiKeys));
+            } catch(e) { console.error("Gagal save data lokal", e); }
+        }
 
         async function initApp() {
             setupPWA();
             const savedTheme = localStorage.getItem('TNC7_THEME');
             window.setTheme(savedTheme || 'dark');
-            handleLoginSuccess();
-            setInterval(() => { el('clock').innerText = new Date().toLocaleString('id-ID'); }, 1000);
             setupEventListeners();
+            
+            loadLocalData();
+            if(state.items.length > 0 || state.apiKeys.length > 0) {
+                 handleLoginSuccess(); 
+            }
 
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                enableIndexedDbPersistence(db).catch((err) => console.warn("Offline persistence:", err.code));
-                auth = getAuth(app);
-                
-                await signInAnonymously(auth);
-                
-                el('cloud-status-indicator').classList.remove('offline');
-                el('cloud-status-indicator').innerHTML = '<i class="fas fa-cloud-check"></i> Cloud Terhubung';
-                setupRealtimeListeners();
-            } catch (e) {
-                console.error(e);
-                setCloudOffline();
+            const hasValidConfig = Object.keys(MY_FIREBASE_CONFIG).length > 0;
+
+            if (hasValidConfig) {
+                try {
+                    const app = initializeApp(MY_FIREBASE_CONFIG);
+                    db = getFirestore(app);
+                    
+                    try { await enableIndexedDbPersistence(db); } 
+                    catch (err) { console.warn("Firebase Offline persistence:", err.code); }
+
+                    auth = getAuth(app);
+                    await signInAnonymously(auth);
+                    
+                    state.isCloudConnected = true;
+                    setCloudOnline();
+                    setupRealtimeListeners();
+                    syncLocalToCloud();
+
+                } catch (e) {
+                    console.error("Firebase init error:", e);
+                    if (e.code === 'auth/api-key-not-valid' || e.code === 'auth/operation-not-allowed') {
+                         showToast('Akses Ditolak: Periksa Pembatasan Kunci API di Google Cloud', true);
+                    } else {
+                         setCloudOffline();
+                    }
+                }
+            } else { 
+                setCloudLocalOnly(); 
+            }
+        }
+
+        function setCloudOnline() {
+            const ind = el('cloud-status-indicator');
+            ind.className = 'cloud-status';
+            ind.innerHTML = '<i class="fas fa-cloud-check"></i> Cloud Terhubung';
+            
+            const apiSync = el('api-sync-status');
+            if(apiSync) {
+                apiSync.style.color = '#10b981';
+                apiSync.innerHTML = '<i class="fas fa-cloud-check"></i> Tersinkron Cloud';
             }
         }
 
         function setCloudOffline() {
-            el('cloud-status-indicator').classList.add('offline');
-            el('cloud-status-indicator').innerHTML = '<i class="fas fa-cloud-times"></i> Koneksi Cloud Terputus';
-            showToast('Berjalan offline/lokal.');
+            state.isCloudConnected = false;
+            const ind = el('cloud-status-indicator');
+            ind.className = 'cloud-status offline';
+            ind.innerHTML = '<i class="fas fa-cloud-times"></i> Koneksi Terputus';
+            showToast('Berjalan mode Offline. Data disimpan lokal.', false);
+        }
+
+        function setCloudLocalOnly() {
+            state.isCloudConnected = false;
+            const ind = el('cloud-status-indicator');
+            ind.className = 'cloud-status local';
+            ind.innerHTML = '<i class="fas fa-hdd"></i> Mode Lokal';
         }
 
         function setupRealtimeListeners() {
             if (!db) return;
-            const channelsRef = collection(db, 'artifacts', appId, 'public', 'data', 'channels');
+            
+            const channelsRef = collection(db, 'artifacts', APP_ID, 'users', USER_ID, 'channels');
             onSnapshot(channelsRef, (snapshot) => {
-                state.items = [];
-                snapshot.forEach((doc) => { state.items.push({ id: doc.id, ...doc.data() }); });
-                state.items.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-                updateFilters(); renderTable();
-            }, (err) => setCloudOffline());
+                let cloudItems = [];
+                snapshot.forEach((doc) => { cloudItems.push({ id: doc.id, ...doc.data() }); });
+                
+                state.items = cloudItems.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+                saveLocalData(); 
+                
+                if(state.isLoggedIn) { updateFilters(); renderTable(); }
+            }, (err) => { 
+                console.error("Firebase listener error:", err);
+                if(err.code === 'permission-denied') {
+                    showToast('Akses Ditolak: Ubah Aturan (Rules) Firestore Anda!', true);
+                }
+                setCloudOffline(); 
+            });
 
-            const keysRef = collection(db, 'artifacts', appId, 'public', 'data', 'apikeys');
+            const keysRef = collection(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys');
             onSnapshot(keysRef, (snapshot) => {
-                state.apiKeys = [];
-                snapshot.forEach((doc) => { state.apiKeys.push({ id: doc.id, ...doc.data() }); });
+                let cloudKeys = [];
+                snapshot.forEach((doc) => { cloudKeys.push({ id: doc.id, ...doc.data() }); });
+                
+                if (cloudKeys.length > 0) {
+                     state.apiKeys = cloudKeys;
+                     saveLocalData();
+                }
                 renderApiKeys();
+            }, (err) => {
+                console.error("Firebase keys listener error:", err);
             });
         }
+        
+        async function syncLocalToCloud() {
+            if(!db || !state.isCloudConnected) return;
+            
+            try {
+                const channelsRef = collection(db, 'artifacts', APP_ID, 'users', USER_ID, 'channels');
+                for(const item of state.items) {
+                    await setDoc(doc(channelsRef, item.id), item, { merge: true });
+                }
+                
+                const keysRef = collection(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys');
+                for(const key of state.apiKeys) {
+                    await setDoc(doc(keysRef, key.id), key, { merge: true });
+                }
+            } catch(e) {
+                console.error("Gagal sync ke cloud", e);
+                if(e.code === 'permission-denied') {
+                     showToast('Gagal Sync: Akses Ditolak Aturan Firestore', true);
+                }
+            }
+        }
 
-        function showToast(msg) {
+        function showToast(msg, isError = false) {
+            const toast = el('toast');
             el('toast-msg').innerText = msg;
-            el('toast').classList.add('show');
-            setTimeout(() => el('toast').classList.remove('show'), 2500);
+            toast.className = isError ? 'show error' : 'show';
+            toast.querySelector('i').className = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
+            setTimeout(() => toast.className = '', 3000);
         }
 
         function handleLoginSuccess() {
-            state.isLoggedIn = true; el('login-view').classList.add('hidden');
-            el('dashboard-view').classList.remove('hidden'); updateFilters(); renderTable();
+            state.isLoggedIn = true; 
+            el('login-view').classList.add('hidden');
+            el('dashboard-view').classList.remove('hidden'); 
+            updateFilters(); 
+            renderTable();
         }
+        
         function handleLogout() {
-            state.isLoggedIn = false; el('dashboard-view').classList.add('hidden');
+            state.isLoggedIn = false; 
+            el('dashboard-view').classList.add('hidden');
             el('login-view').classList.remove('hidden');
         }
 
@@ -492,40 +865,97 @@
             localStorage.setItem('TNC7_THEME', theme);
         };
 
-        window.openModal = function(id) { el(id).classList.remove('hidden'); if(id === 'modal-settings') renderApiKeys(); };
+        window.openModal = function(id) { 
+            el(id).classList.remove('hidden'); 
+            if(id === 'modal-settings') renderApiKeys(); 
+        };
         window.closeModal = function(id) { el(id).classList.add('hidden'); };
+        window.openDetail = function(id) {
+            const item = state.items.find(i => i.id === id);
+            if (item) {
+                el('det-title').innerText = item.title; el('det-pengelola').innerText = item.pengelola || 'Tanpa Pengelola';
+                window.openModal('modal-detail');
+            }
+        };
 
         function setupEventListeners() {
             el('login-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 if(el('username').value === 'admin' && el('password').value === 'admin') handleLoginSuccess();
+                else showToast('Login Gagal', true);
             });
             el('btn-logout').addEventListener('click', handleLogout);
-            el('btn-sync').addEventListener('click', () => showToast('Sinkronisasi API YouTube berjalan...'));
-            ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { el(id).addEventListener('input', renderTable); });
+            el('btn-sync').addEventListener('click', () => showToast('Fitur sync manual sedang dikembangkan.'));
+            
+            ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { 
+                el(id).addEventListener('input', renderTable); 
+            });
             
             el('btn-reset').addEventListener('click', () => {
                 el('search-input').value = ''; el('filter-monet').value = 'all'; el('filter-pengelola').value = 'all'; el('sort-data').value = 'asli';
                 renderTable();
             });
             
+            const tabs = document.querySelectorAll('.settings-tab-btn');
+            tabs.forEach((tab, index) => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    if(index === 0) {
+                        el('tab-api-key').classList.remove('hidden');
+                        el('tab-backup').classList.add('hidden');
+                    } else {
+                        el('tab-api-key').classList.add('hidden');
+                        el('tab-backup').classList.remove('hidden');
+                    }
+                });
+            });
+
             el('item-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                if(!db) { alert("Tidak ada koneksi Cloud!"); return; }
-                const id = el('item-id').value; const docId = id || Date.now().toString();
+                
+                const id = el('item-id').value; 
+                const docId = id || Date.now().toString();
                 const newItem = {
-                    id: docId, title: el('item-title').value, channelId: el('item-channelId').value,
-                    link: el('item-link').value, pengelola: el('item-pengelola').value.toUpperCase(),
-                    subs: el('item-subs').value || '0', subsGrowth: parseInt(el('item-subsGrowth').value) || 0,
-                    views: el('item-views').value || '0', viewGrowth: parseInt(el('item-viewGrowth').value) || 0,
-                    videoCount: parseInt(el('item-video').value) || 0, niche: el('item-niche').value,
-                    monet: el('item-monet').value, notes: el('item-notes').value,
+                    id: docId, 
+                    title: el('item-title').value, 
+                    channelId: el('item-channelId').value,
+                    link: el('item-link').value, 
+                    pengelola: el('item-pengelola').value.toUpperCase(),
+                    subs: el('item-subs').value || '0', 
+                    subsGrowth: parseInt(el('item-subsGrowth').value) || 0,
+                    views: el('item-views').value || '0', 
+                    viewGrowth: parseInt(el('item-viewGrowth').value) || 0,
+                    videoCount: parseInt(el('item-video').value) || 0, 
+                    niche: el('item-niche').value,
+                    monet: el('item-monet').value, 
+                    notes: el('item-notes').value,
+                    badges: { topViews: el('item-topViews').checked, topSubs: el('item-topSubs').checked },
                     createdAt: id ? (state.items.find(i => i.id === id)?.createdAt || Date.now()) : Date.now()
                 };
-                try {
-                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'channels', docId), newItem);
-                    window.closeModal('modal-form'); showToast('Data tersimpan ke Cloud!');
-                } catch(error) { alert("Gagal menyimpan data."); }
+
+                if(id) {
+                    const idx = state.items.findIndex(i => i.id === id);
+                    if(idx > -1) state.items[idx] = newItem;
+                } else {
+                    state.items.unshift(newItem);
+                }
+                saveLocalData();
+                renderTable();
+                window.closeModal('modal-form'); 
+
+                if(db && state.isCloudConnected) {
+                    try {
+                        const docRef = doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'channels', docId);
+                        await setDoc(docRef, newItem);
+                        showToast('Tersimpan ke Cloud & Lokal');
+                    } catch(error) { 
+                        console.error(error);
+                        showToast('Tersimpan Lokal (Cloud Gagal)', true); 
+                    }
+                } else {
+                    showToast('Tersimpan secara Lokal');
+                }
             });
         }
 
@@ -536,6 +966,8 @@
         }
 
         function renderTable() {
+            if(!state.isLoggedIn) return;
+            
             const tbody = el('table-body');
             const sq = el('search-input').value.toLowerCase();
             const fm = el('filter-monet').value;
@@ -551,6 +983,7 @@
 
             if(sort === 'views_desc') filtered.sort((a,b) => (b.viewGrowth||0) - (a.viewGrowth||0));
             if(sort === 'subs_desc') filtered.sort((a,b) => (b.subsGrowth||0) - (a.subsGrowth||0));
+            if(sort === 'asli') filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
 
             const now = Date.now();
             const newChannelsCount = state.items.filter(i => (now - (i.createdAt || 0)) <= 86400000).length;
@@ -567,16 +1000,20 @@
             }
 
             filtered.forEach((item, idx) => {
+                let badge = '';
+                if(item.badges?.topViews) badge += `<span class="badge-views"><i class="fas fa-fire"></i> Top Views</span> `;
+                if(item.badges?.topSubs) badge += `<span class="badge-subs"><i class="fas fa-chart-line"></i> Top Subs</span>`;
+
                 let sG = item.subsGrowth > 0 ? `<div class="text-emerald text-xs font-bold">▲ +${item.subsGrowth}</div>` : `<div class="text-muted text-xs">± 0</div>`;
                 let vG = item.viewGrowth > 0 ? `<div><span class="text-emerald font-bold text-sm">▲ +${item.viewGrowth}</span></div>` : `<div><span class="text-muted text-sm font-bold">0</span></div>`;
                 let monetHtml = item.monet === 'Sudah' ? `<div style="width:20px;height:20px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
-                let linkUrl = item.link && item.link.trim() !== '' ? item.link : `https://youtube.com/channel/${item.channelId}`;
+                let linkUrl = item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '#');
 
                 tbody.innerHTML += `
                     <tr>
                         <td class="text-center text-muted">${idx+1}</td>
-                        <td><div class="font-bold text-sm mb-1">${item.title}</div></td>
-                        <td class="text-center">${item.channelId || item.link ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.65rem; font-weight: bold; text-decoration: none;">Buka <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
+                        <td><div class="font-bold text-sm mb-1">${item.title}</div><div>${badge}</div></td>
+                        <td class="text-center">${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.65rem; font-weight: bold; text-decoration: none;">Buka <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
                         <td><div class="font-bold text-sm">${item.subs||'0'}</div>${sG}</td>
                         <td class="font-bold text-sm">${item.views||'0'}</td><td>${vG}</td>
                         <td class="text-center font-semibold text-sm">${item.videoCount}</td>
@@ -605,41 +1042,72 @@
                     el('item-views').value = item.views || ''; el('item-viewGrowth').value = item.viewGrowth || 0;
                     el('item-video').value = item.videoCount || 0; el('item-niche').value = item.niche || '';
                     el('item-monet').value = item.monet || 'Belum'; el('item-notes').value = item.notes || '';
+                    el('item-topViews').checked = !!item.badges?.topViews; el('item-topSubs').checked = !!item.badges?.topSubs;
                 }
             } else { el('modal-title').innerHTML = 'Tambah Channel Baru'; }
             window.openModal('modal-form');
         };
 
         window.deleteItem = async function(id) {
-            if(confirm('Hapus channel ini dari Cloud?')) {
-                if(!db) return;
-                try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'channels', id)); showToast('Dihapus dari Cloud!'); } catch(e) {}
+            if(confirm('Hapus channel ini?')) {
+                state.items = state.items.filter(i => i.id !== id);
+                saveLocalData();
+                renderTable();
+
+                if(db && state.isCloudConnected) {
+                    try { 
+                        await deleteDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'channels', id)); 
+                        showToast('Dihapus dari Sistem'); 
+                    } catch(e) { console.error(e); }
+                } else {
+                    showToast('Dihapus dari Lokal');
+                }
             }
         };
 
         function renderApiKeys() {
             const listContainer = el('api-keys-list');
             if(!listContainer) return; listContainer.innerHTML = '';
+            
             const activeCount = state.apiKeys.filter(k => k.active).length;
-            if(el('api-key-count')) el('api-key-count').innerText = `${activeCount} aktif / ${state.apiKeys.length} total`;
-            if (el('new-api-label')) el('new-api-label').value = 'Key ' + (state.apiKeys.length + 1);
+            const countEl = el('api-key-count');
+            if(countEl) countEl.innerText = `${activeCount} aktif / ${state.apiKeys.length} total`;
+            
+            const labelInput = el('new-api-label');
+            if (labelInput) labelInput.value = 'Key ' + (state.apiKeys.length + 1);
 
-            if (state.apiKeys.length === 0) { listContainer.innerHTML = `<p class="text-center text-muted text-sm py-4">Belum ada API Key.</p>`; return; }
+            if (state.apiKeys.length === 0) { 
+                listContainer.innerHTML = `<p class="text-center text-muted text-sm py-4">Belum ada API Key.</p>`; 
+                return; 
+            }
 
             [...state.apiKeys].sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0)).forEach((apiKey, index) => {
-                const isActive = apiKey.active;
-                const activeBadge = isActive ? `<span style="font-size: 0.65rem; color: #34d399;">Aktif & Tersinkron Cloud</span>` : `<span style="font-size: 0.65rem; color: var(--text-muted);">Tersimpan</span>`;
+                const isActive = apiKey.active; 
+                const borderColor = isActive ? '#0ea5e9' : 'var(--panel-border)';
+                const badgeStatus = state.isCloudConnected ? 
+                    `<i class="fas fa-cloud-check"></i> Cloud` : 
+                    `<i class="fas fa-hdd"></i> Lokal`;
+                    
+                const activeBadge = isActive ? `<span style="font-size: 0.65rem; border: 1px solid rgba(16,185,129,0.5); color: #34d399; padding: 2px 8px; border-radius: 999px; background: rgba(16,185,129,0.1);"><i class="fas fa-check"></i> Aktif (${badgeStatus})</span>` : `<span style="font-size: 0.65rem; color: var(--text-muted);">${badgeStatus}</span>`;
+                
                 const setBtnAction = isActive ? '' : `onclick="window.setActiveApiKey('${apiKey.id}')"`;
+                const setBtnStyle = isActive ? 'border: 1px solid rgba(16,185,129,0.5); color: #34d399; background: rgba(16,185,129,0.1); cursor: default;' : 'border: 1px solid var(--panel-border); color: #34d399; background: transparent;';
 
                 listContainer.innerHTML += `
-                    <div class="panel-glass" style="padding: 1rem; margin-bottom: 0.75rem;">
-                        <div class="flex justify-between items-start mb-2">
-                            <h5 class="font-bold text-sm">${apiKey.label}</h5>
+                    <div class="api-key-item" style="border: 1px solid ${borderColor}; background: rgba(17, 24, 39, 0.4);">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex gap-3 items-center">
+                                <div style="width: 28px; height: 28px; background: #eab308; color: #1a1814; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">${index + 1}</div>
+                                <div>
+                                    <h5 class="font-bold text-sm" style="color: var(--text-main);">${apiKey.label}</h5>
+                                    <p class="text-xs text-muted font-mono mt-1">${apiKey.key.substring(0,6)}...${apiKey.key.slice(-4)}</p>
+                                </div>
+                            </div>
                             ${activeBadge}
                         </div>
-                        <div class="flex gap-2">
-                            <button ${setBtnAction} class="btn btn-pill text-xs">Aktifkan</button>
-                            <button onclick="window.deleteApiKey('${apiKey.id}')" class="btn btn-pill text-xs text-red">Hapus</button>
+                        <div class="flex gap-2 flex-wrap">
+                            <button ${setBtnAction} class="btn btn-pill btn-sm" style="${setBtnStyle}"><i class="fas fa-check"></i> Aktifkan</button>
+                            <button onclick="window.deleteApiKey('${apiKey.id}')" class="btn btn-pill btn-sm text-red" style="background: transparent; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);"><i class="fas fa-trash"></i> Hapus</button>
                         </div>
                     </div>
                 `;
@@ -647,73 +1115,214 @@
         }
 
         window.addApiKey = async function() {
-            if(!db) return;
-            const keyVal = el('new-api-key').value.trim(); let labelVal = el('new-api-label').value.trim();
-            if(!keyVal) { showToast('API Key kosong!'); return; }
-            try {
-                const docId = Date.now().toString();
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'apikeys', docId), { key: keyVal, label: labelVal || 'Key', active: state.apiKeys.length === 0, createdAt: Date.now() });
-                el('new-api-key').value = ''; showToast('API Key tersimpan ke Cloud!');
-            } catch(e) { alert("Gagal menyimpan API Key."); }
+            const keyVal = el('new-api-key').value.trim(); 
+            let labelVal = el('new-api-label').value.trim();
+            
+            if(!keyVal) { showToast('API Key kosong!', true); return; }
+            if(!labelVal) labelVal = 'Key ' + ((state.apiKeys?.length || 0) + 1);
+            
+            const docId = Date.now().toString();
+            // Jadikan aktif secara otomatis jika ini adalah key pertama yang ditambahkan
+            const isActive = state.apiKeys.length === 0;
+            const newKey = { id: docId, key: keyVal, label: labelVal, active: isActive, createdAt: Date.now() };
+            
+            state.apiKeys.push(newKey);
+            saveLocalData();
+            renderApiKeys();
+            el('new-api-key').value = ''; 
+            
+            if(db && state.isCloudConnected) {
+                try {
+                    await setDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys', docId), newKey);
+                    showToast('API Key tersimpan ke Cloud!');
+                } catch(e) { console.error(e); }
+            } else {
+                showToast('API Key tersimpan Lokal');
+            }
         };
 
         window.setActiveApiKey = async function(id) {
-            if(!db) return;
-            try {
-                for (const k of state.apiKeys) await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'apikeys', k.id), { active: (k.id === id) }, { merge: true });
-                showToast('API Key aktif diubah!');
-            } catch(e) {}
+            state.apiKeys = state.apiKeys.map(k => ({ ...k, active: k.id === id }));
+            saveLocalData();
+            renderApiKeys();
+
+            if(db && state.isCloudConnected) {
+                try {
+                    for (const k of state.apiKeys) {
+                        await setDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys', k.id), { active: (k.id === id) }, { merge: true });
+                    }
+                    showToast('API Key aktif diubah!');
+                } catch(e) { console.error(e); }
+            } else {
+                showToast('API Key aktif diubah (Lokal)');
+            }
         };
         
         window.deleteApiKey = async function(id) {
-            if(!db) return;
             if(confirm('Hapus API Key ini?')) {
-                try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'apikeys', id)); showToast('API Key dihapus!'); } catch(e) {}
+                state.apiKeys = state.apiKeys.filter(k => k.id !== id);
+                saveLocalData();
+                renderApiKeys();
+                
+                if(db && state.isCloudConnected) {
+                    try { 
+                        await deleteDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys', id)); 
+                        showToast('API Key dihapus!'); 
+                    } catch(e) { console.error(e); }
+                } else {
+                    showToast('API Key dihapus (Lokal)');
+                }
             }
         };
 
         window.searchYouTubeChannel = async function() {
             const query = el('yt-search-input').value.trim();
             if (!query) return;
-            const activeKeyObj = state.apiKeys.find(k => k.active);
-            if (!activeKeyObj || !activeKeyObj.key) { alert('API Key YouTube belum aktif!'); window.closeModal('modal-search-yt'); window.openModal('modal-settings'); return; }
+
+            // Cari API Key yang statusnya active = true
+            let activeKeyObj = state.apiKeys.find(k => k.active === true);
+            
+            // Fallback: Jika tidak ada yang aktif, tapi array apiKeys ada isinya, pakai yang pertama dan set jadi aktif
+            if (!activeKeyObj && state.apiKeys.length > 0) {
+                console.warn("Ditemukan API Key, tapi tidak ada yang aktif. Mengaktifkan paksa key pertama.");
+                activeKeyObj = state.apiKeys[0];
+                window.setActiveApiKey(activeKeyObj.id); // Set aktif di UI dan storage
+            }
+
+            if (!activeKeyObj || !activeKeyObj.key) {
+                // Gunakan fungsi alert bawaan browser agar sama dengan gambar
+                alert('API Key YouTube belum aktif!'); 
+                window.closeModal('modal-search-yt'); 
+                window.openModal('modal-settings'); 
+                return;
+            }
             
             const apiKey = activeKeyObj.key;
             let handle = query.includes('@') ? query.split('@')[1].split('/')[0].split('?')[0] : null;
+
+            const btn = el('btn-yt-search'); 
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...'; 
+            btn.disabled = true;
 
             try {
                 let channelData = null;
                 if (handle) {
                     const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&forHandle=${handle}&key=${apiKey}`);
-                    const data = await res.json(); if (data.items) channelData = data.items[0];
+                    const data = await res.json(); 
+                    if (data.error) throw new Error(data.error.message);
+                    if (data.items) channelData = data.items[0];
                 } else {
                     const searchRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(query)}&key=${apiKey}`);
                     const searchData = await searchRes.json();
+                    if (searchData.error) throw new Error(searchData.error.message);
+                    
                     if (searchData.items && searchData.items.length > 0) {
                         const statRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${searchData.items[0].snippet.channelId}&key=${apiKey}`);
-                        const statData = await statRes.json(); if (statData.items) channelData = statData.items[0];
+                        const statData = await statRes.json(); 
+                        if (statData.items) channelData = statData.items[0];
                     }
                 }
+
                 if (channelData) {
-                    window.closeModal('modal-search-yt'); window.editItem(null); 
-                    el('item-title').value = channelData.snippet.title; el('item-channelId').value = channelData.id;
+                    const formatNumber = (numStr) => {
+                        const num = parseInt(numStr);
+                        if (isNaN(num)) return '0';
+                        if (num >= 1000000) return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
+                        if (num >= 1000) return (num / 1000).toFixed(1).replace('.0', '') + 'K';
+                        return num.toString();
+                    };
+
+                    window.closeModal('modal-search-yt'); 
+                    window.editItem(null); 
+                    el('item-title').value = channelData.snippet.title; 
+                    el('item-channelId').value = channelData.id;
                     el('item-link').value = channelData.snippet.customUrl ? `https://youtube.com/${channelData.snippet.customUrl}` : `https://youtube.com/channel/${channelData.id}`;
-                    el('item-subs').value = channelData.statistics.subscriberCount;
-                    el('item-views').value = channelData.statistics.viewCount;
+                    el('item-subs').value = formatNumber(channelData.statistics.subscriberCount);
+                    el('item-views').value = formatNumber(channelData.statistics.viewCount);
                     el('item-video').value = channelData.statistics.videoCount;
+                    el('yt-search-input').value = ''; 
                     showToast('Data ditemukan!');
-                } else { alert('Channel tidak ditemukan.'); }
-            } catch (err) { alert('Gagal memanggil YouTube API.'); }
+                } else { 
+                    alert('Channel tidak ditemukan.'); 
+                }
+            } catch (err) { 
+                console.error(err);
+                alert('Kesalahan API: ' + err.message); 
+            } finally { 
+                btn.innerHTML = originalText; 
+                btn.disabled = false; 
+            }
         };
 
-        window.onload = initApp;
+        window.exportData = function() {
+            const dataToExport = {
+                channels: state.items,
+                apiKeys: state.apiKeys,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "TNC7_Backup_" + new Date().getTime() + ".json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+            showToast('Data berhasil diekspor');
+        };
+
+        window.importData = function(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if(imported.channels && Array.isArray(imported.channels)) {
+                        state.items = imported.channels;
+                    }
+                    if(imported.apiKeys && Array.isArray(imported.apiKeys)) {
+                        state.apiKeys = imported.apiKeys;
+                        // Pastikan ada yang aktif setelah import
+                        if(state.apiKeys.length > 0 && !state.apiKeys.some(k => k.active)) {
+                            state.apiKeys[0].active = true;
+                        }
+                    }
+                    
+                    saveLocalData();
+                    renderTable();
+                    renderApiKeys();
+                    
+                    if(state.isCloudConnected) {
+                        syncLocalToCloud();
+                        showToast('Data diimpor & disinkronkan ke Cloud');
+                    } else {
+                        showToast('Data berhasil diimpor (Lokal)');
+                    }
+                    
+                    el('import-file').value = ''; 
+                } catch(err) {
+                    alert('Gagal membaca file JSON: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        window.onload = () => {
+            setInterval(() => { el('clock').innerText = new Date().toLocaleString('id-ID'); }, 1000);
+            initApp();
+        };
 
         function setupPWA() {
             const manifest = {
-                "name": "TNC7 Management", "short_name": "TNC7", "start_url": window.location.pathname,
-                "display": "standalone", "background_color": "#161921", "theme_color": "#161921",
-                "icons": [{ "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png", "sizes": "512x512", "type": "image/png" }]
+                "name": "TNC7 Management", "short_name": "TNC7",
+                "start_url": window.location.pathname, "display": "standalone",
+                "background_color": "#161921", "theme_color": "#161921",
+                "icons": [{ "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }]
             };
+            
             const manifestUrl = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
             let link = document.querySelector('link[rel="manifest"]');
             if (!link) { link = document.createElement('link'); link.rel = 'manifest'; document.head.appendChild(link); }
@@ -723,9 +1332,12 @@
                 const swCode = `
                     self.addEventListener('install', (e) => self.skipWaiting());
                     self.addEventListener('activate', (e) => self.clients.claim());
-                    self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => {})); });
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(fetch(e.request).catch(err => console.log('Bypass SW', err)));
+                    });
                 `;
-                navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }))).catch(() => {});
+                const swUrl = URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }));
+                navigator.serviceWorker.register(swUrl).catch((err) => { console.warn("SW gagal:", err); });
             }
 
             window.addEventListener('beforeinstallprompt', (e) => {
