@@ -200,10 +200,15 @@
             background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.25rem 0.75rem;
             border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
             font-weight: bold; white-space: nowrap;
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            z-index: 100000; /* Lebih tinggi dari modal (9999) */
         }
         #toast.show { display: flex; animation: fadeInToast 0.2s ease-out forwards; }
-        #toast.error { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
-        @keyframes fadeInToast { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        #toast.error { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); background-color: rgba(26, 31, 41, 0.95); }
+        @keyframes fadeInToast { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -353,6 +358,7 @@
                     <i class="fas fa-spinner fa-spin"></i> MENGHUBUNGKAN...
                 </div>
 
+                <!-- Toast Notification Container (Now globally positioned) -->
                 <div id="toast"><i class="fas fa-info-circle"></i> <span id="toast-msg">SUCCESS</span></div>
 
                 <div id="auto-sync-badge" class="badge-live hidden"><i class="fas fa-circle"></i> AUTO-SYNC</div>
@@ -522,8 +528,20 @@
     </div>
 
     <!-- Modal Cari YouTube -->
-    <div id="modal-search-yt" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 900px; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1.5rem; padding: 2rem;">
+    <div id="modal-search-yt" class="modal-overlay hidden" style="flex-direction: column; justify-content: center; align-items: center;">
+        
+        <div class="modal-content" style="position: relative; max-width: 900px; width: 100%; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1.5rem; padding: 2rem;">
+            
+            <!-- Notifikasi Khusus Modal Cari (Posisi absolut agar sempurna di tengah dan tidak menggeser panel) -->
+            <style>
+                @keyframes fadeInAlertYT { 
+                    from { opacity: 0; transform: translate(-50%, -15px); } 
+                    to { opacity: 1; transform: translate(-50%, 0); } 
+                }
+            </style>
+            <div id="search-yt-alert" class="hidden" style="position: absolute; top: -3.5rem; left: 50%; transform: translateX(-50%); width: fit-content; padding: 0.5rem 1.25rem; background: rgba(26, 31, 41, 0.95); border: 1px solid rgba(239, 68, 68, 0.5); color: #ef4444; border-radius: 999px; font-weight: bold; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; backdrop-filter: blur(10px); animation: fadeInAlertYT 0.2s ease-out forwards; z-index: 10000; white-space: nowrap;">
+            </div>
+
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <p class="font-bold text-accent" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">AUTO-FETCH YOUTUBE</p>
@@ -835,7 +853,9 @@
             el('toast-msg').innerText = msg;
             toast.className = isError ? 'show error' : 'show';
             toast.querySelector('i').className = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
-            setTimeout(() => toast.className = '', 3000);
+            
+            if(window.toastTimeout) clearTimeout(window.toastTimeout);
+            window.toastTimeout = setTimeout(() => toast.className = '', isError ? 5000 : 3000);
         }
 
         window.openModal = function(id) { el(id).classList.remove('hidden'); };
@@ -1224,6 +1244,20 @@
                 }
 
                 if (channelData) {
+                    // Cek duplikat sebelum membuka form
+                    const isDuplicate = state.items.some(item => 
+                        (channelData.id && item.channelId === channelData.id) || 
+                        (channelData.snippet.title && item.title === channelData.snippet.title.toUpperCase())
+                    );
+
+                    if (isDuplicate) {
+                        const localAlert = document.getElementById('search-yt-alert');
+                        localAlert.innerHTML = '<i class="fas fa-exclamation-triangle"></i> GAGAL: CHANNEL INI SUDAH ADA DI DATABASE!';
+                        localAlert.classList.remove('hidden');
+                        setTimeout(() => localAlert.classList.add('hidden'), 4000);
+                        return; // Hentikan proses jika duplikat
+                    }
+
                     window.closeModal('modal-search-yt'); 
                     window.editItem(null); 
                     el('item-title').value = channelData.snippet.title; 
@@ -1234,10 +1268,18 @@
                     el('item-video').value = channelData.statistics.videoCount;
                     el('yt-search-input').value = ''; 
                     showToast('CHANNEL DITEMUKAN!');
-                } else alert('CHANNEL TIDAK DITEMUKAN.'); 
+                } else {
+                    const localAlert = document.getElementById('search-yt-alert');
+                    localAlert.innerHTML = '<i class="fas fa-exclamation-triangle"></i> CHANNEL TIDAK DITEMUKAN.';
+                    localAlert.classList.remove('hidden');
+                    setTimeout(() => localAlert.classList.add('hidden'), 4000);
+                } 
             } catch (err) { 
                 console.error(err);
-                alert('KESALAHAN PENCARIAN: ' + err.message); 
+                const localAlert = document.getElementById('search-yt-alert');
+                localAlert.innerHTML = '<i class="fas fa-exclamation-triangle"></i> KESALAHAN PENCARIAN: ' + err.message;
+                localAlert.classList.remove('hidden');
+                setTimeout(() => localAlert.classList.add('hidden'), 4000);
             } finally { 
                 btn.innerHTML = originalText; 
                 btn.disabled = false; 
@@ -1264,12 +1306,46 @@
             reader.onload = function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
-                    if(imported.channels && Array.isArray(imported.channels)) state.items = imported.channels;
-                    saveLocalData();
-                    renderTable();
-                    showToast('DATA BERHASIL DIIMPOR');
+                    if(imported.channels && Array.isArray(imported.channels)) {
+                        let importedCount = 0;
+                        let duplicateCount = 0;
+                        
+                        imported.channels.forEach(newChannel => {
+                            // Cek duplikasi berdasarkan Channel ID, Link, atau Judul
+                            const isDuplicate = state.items.some(existing => {
+                                const isIdSame = newChannel.channelId && newChannel.channelId !== '' && existing.channelId === newChannel.channelId;
+                                const isLinkSame = newChannel.link && newChannel.link !== '' && existing.link === newChannel.link;
+                                const isTitleSame = newChannel.title && newChannel.title !== '' && existing.title === newChannel.title;
+                                return isIdSame || isLinkSame || isTitleSame;
+                            });
+                            
+                            if (!isDuplicate) {
+                                state.items.push(newChannel);
+                                importedCount++;
+                                
+                                // Sinkronisasi otomatis ke Cloud jika online
+                                if (state.isCloudConnected && db && userId) {
+                                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', newChannel.id);
+                                    setDoc(docRef, newChannel).catch(err => console.error("Gagal simpan ke cloud", err));
+                                }
+                            } else {
+                                duplicateCount++;
+                            }
+                        });
+                        
+                        // Urutkan kembali berdasarkan waktu dan render
+                        state.items.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+                        saveLocalData();
+                        renderTable();
+                        
+                        if (duplicateCount > 0) {
+                            showToast(`IMPOR: ${importedCount} BERHASIL, ${duplicateCount} DUPLIKAT DITOLAK!`, true);
+                        } else {
+                            showToast(`DATA BERHASIL DIIMPOR (${importedCount} CHANNEL BARU)`);
+                        }
+                    }
                     el('import-file').value = ''; 
-                } catch(err) { alert('GAGAL MEMBACA FILE JSON: ' + err.message); }
+                } catch(err) { showToast('GAGAL MEMBACA FILE JSON: ' + err.message, true); }
             };
             reader.readAsText(file);
         };
