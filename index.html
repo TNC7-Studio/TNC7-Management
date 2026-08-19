@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         :root {
             --bg-color: #161921;
@@ -220,6 +222,15 @@
         }
         .cloud-status.offline { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
 
+        .cards-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; padding-bottom: 1rem; }
+        .card-item { background: rgba(0,0,0,0.2); border: 1px solid var(--panel-border); border-radius: 1rem; padding: 1.25rem; transition: transform 0.2s; display: flex; flex-direction: column; gap: 0.75rem; }
+        .card-item:hover { border-color: var(--primary-accent); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .card-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+        .card-stat { background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.05); }
+        .chart-container { width: 100%; height: 300px; background: rgba(0,0,0,0.2); border-radius: 1rem; border: 1px solid var(--panel-border); padding: 1rem; margin-bottom: 1rem; display: none; position: relative; }
+        .chart-container.show { display: block; }
+
         @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .badge-live {
@@ -277,6 +288,8 @@
                 </div>
 
                 <div id="auto-sync-badge" class="badge-live hidden"><i class="fas fa-circle"></i> AUTO-SYNC</div>
+                
+                <div id="last-sync-time" class="text-xs text-muted font-bold hidden" style="margin-left: 0.5rem; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--panel-border);"></div>
                 
                 <div class="flex items-center gap-2" style="background: var(--input-bg); padding: 4px; border-radius: 999px; border: 1px solid var(--panel-border); margin-left: 0.5rem; position: relative; z-index: 60;">
                     <button class="btn" onclick="window.openModal('modal-settings')" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="PENGATURAN"><i class="fas fa-cog"></i></button>
@@ -340,12 +353,18 @@
                         <option value="subs_desc">KENAIKAN SUBS ↑</option>
                         <option value="views_month_desc">VIEWS TERTINGGI (BULAN INI) ↑</option>
                     </select>
+                    <button id="btn-view-toggle" class="btn btn-pill text-xs" onclick="window.toggleViewMode()"><i class="fas fa-th"></i> GRID</button>
+                    <button id="btn-chart-toggle" class="btn btn-pill text-xs" onclick="window.toggleChart()"><i class="fas fa-chart-bar"></i> GRAFIK</button>
                     <button id="btn-reset" class="btn btn-pill text-xs"><i class="fas fa-times"></i> RESET FILTER</button>
                 </div>
             </div>
 
             <div class="table-container" style="flex-grow: 1;">
-                <table>
+                <div id="chart-wrapper" class="chart-container">
+                    <canvas id="dashboardChart"></canvas>
+                </div>
+                
+                <table id="data-table">
                     <thead>
                         <tr>
                             <th style="width: 50px; text-align: center;">NO</th>
@@ -363,6 +382,8 @@
                     </thead>
                     <tbody id="table-body"></tbody>
                 </table>
+                
+                <div id="data-grid" class="cards-container hidden"></div>
             </div>
         </div>
     </div>
@@ -464,14 +485,22 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { initializeFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, persistentLocalCache, persistentMultipleTabManager } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js";
+        import { initializeFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, persistentLocalCache, persistentMultipleTabManager } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'tnc7-management';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-             apiKey: "mock-key", authDomain: "mock-domain", projectId: "mock-project"
+        
+        // --- KONFIGURASI FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyA1hxTceWANgQU8vwKpXDCJABvYpWQQNmk",
+            authDomain: "tnc7-visualizer.firebaseapp.com",
+            projectId: "tnc7-visualizer",
+            storageBucket: "tnc7-visualizer.firebasestorage.app",
+            messagingSenderId: "1098792876538",
+            appId: "1:1098792876538:web:28304ee128f7d156190c43"
         };
+        // ----------------------------------------------
         
         let app, db, auth;
         let userId = null;
@@ -479,16 +508,22 @@
         let unsubscribeChannels = null;
 
         try {
-            app = initializeApp(firebaseConfig);
-            db = initializeFirestore(app, {
-                localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
-            });
-            auth = getAuth(app);
+            // Mencegah error console jika API Key belum diubah
+            if (firebaseConfig.apiKey.includes("PASTE_API_KEY")) {
+                console.warn("⚠️ Firebase Offline Mode: API Key belum dimasukkan. Aplikasi berjalan secara LOKAL.");
+            } else {
+                app = initializeApp(firebaseConfig);
+                db = initializeFirestore(app, {
+                    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+                });
+                auth = getAuth(app);
+            }
         } catch (e) {
             console.warn("Firebase initialization failed, falling back to local only mode.", e);
         }
 
-        let state = { items: [], theme: 'kuning', isLoggedIn: true, isCloudConnected: false };
+        let state = { items: [], theme: 'kuning', isLoggedIn: true, isCloudConnected: false, viewMode: 'table', showChart: false };
+        let dashboardChartInstance = null;
         const DEFAULT_API_KEY = "AIzaSyDJbN1UQy17B_hqVTQE4zNOpJJZFqh2eMc";
         const el = (id) => document.getElementById(id);
 
@@ -578,6 +613,13 @@
                 renderTable();
             }
 
+            const lastSyncEl = el('last-sync-time');
+            const nowSync = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            if(lastSyncEl) {
+                lastSyncEl.innerText = `SYNC: ${nowSync}`;
+                lastSyncEl.classList.remove('hidden');
+            }
+
             if(autoSyncBadge && !autoSyncBadge.classList.contains('hidden')) {
                 autoSyncBadge.innerHTML = originalHtml;
             }
@@ -596,11 +638,7 @@
 
             if (auth) {
                 try {
-                    if (typeof __initial_auth_token !== 'undefined') {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
+                    await signInAnonymously(auth);
                     
                     onAuthStateChanged(auth, (user) => {
                         if (user) {
@@ -617,7 +655,7 @@
                         }
                     });
                 } catch(e) {
-                    console.error("Auth error", e);
+                    console.warn("⚠️ Autentikasi Cloud gagal, menggunakan mode lokal. Pastikan Anonymous Auth aktif di Firebase Console.");
                     setCloudOffline();
                 }
             } else {
@@ -788,10 +826,86 @@
             select.innerHTML = '<option value="all">SEMUA PENGELOLA</option>' + unique.map(p => `<option value="${p}">${p}</option>`).join('');
         }
 
+        window.toggleViewMode = function() {
+            state.viewMode = state.viewMode === 'table' ? 'grid' : 'table';
+            const btn = el('btn-view-toggle');
+            if (state.viewMode === 'grid') {
+                btn.innerHTML = '<i class="fas fa-list"></i> TABEL';
+                btn.classList.add('active');
+            } else {
+                btn.innerHTML = '<i class="fas fa-th"></i> GRID';
+                btn.classList.remove('active');
+            }
+            renderTable();
+        };
+
+        window.toggleChart = function() {
+            state.showChart = !state.showChart;
+            const wrapper = el('chart-wrapper');
+            const btn = el('btn-chart-toggle');
+            if(state.showChart) {
+                wrapper.classList.add('show');
+                btn.classList.add('active');
+            } else {
+                wrapper.classList.remove('show');
+                btn.classList.remove('active');
+            }
+            renderTable();
+        };
+
+        function updateChartData(data) {
+            if (!state.showChart) return;
+            const ctx = document.getElementById('dashboardChart');
+            if (!ctx) return;
+            
+            // Limit to Top 10 based on current sort
+            const chartData = data.slice(0, 10);
+            const labels = chartData.map(d => d.title.length > 12 ? d.title.substring(0,12)+'...' : d.title);
+            const viewsData = chartData.map(d => parseViewsStr(d.views));
+
+            if (dashboardChartInstance) dashboardChartInstance.destroy();
+
+            Chart.defaults.color = '#94a3b8';
+            Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
+            
+            dashboardChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total Views',
+                        data: viewsData,
+                        backgroundColor: 'rgba(250, 204, 21, 0.7)',
+                        borderColor: 'rgba(250, 204, 21, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'top', labels: { color: '#e2e8f0', font: { weight: 'bold' } } }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { callback: function(value) { return formatNumberGlobal(value); } }
+                        },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+        }
+
         function renderTable() {
             if(!state.isLoggedIn) return;
             
             const tbody = el('table-body');
+            const tableEl = el('data-table');
+            const gridEl = el('data-grid');
+            
             const sq = el('search-input').value.toLowerCase();
             const fm = el('filter-monet').value;
             const fp = el('filter-pengelola').value;
@@ -824,9 +938,22 @@
             if(el('stat-aktif')) el('stat-aktif').innerText = state.items.length; 
             if(el('stat-new')) el('stat-new').innerText = newChannelsCount;
 
+            if (state.showChart) updateChartData(filtered);
+
+            if (state.viewMode === 'table') {
+                tableEl.classList.remove('hidden');
+                gridEl.classList.add('hidden');
+            } else {
+                tableEl.classList.add('hidden');
+                gridEl.classList.remove('hidden');
+            }
+
             tbody.innerHTML = '';
+            gridEl.innerHTML = '';
+
             if(filtered.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="11" class="text-center text-muted" style="padding: 3rem;">BELUM ADA DATA...</td></tr>`;
+                gridEl.innerHTML = `<div class="text-center text-muted w-full" style="padding: 3rem; grid-column: 1 / -1;">BELUM ADA DATA...</div>`;
                 return;
             }
 
@@ -866,6 +993,46 @@
 
                 let monetHtml = item.monet === 'Sudah' ? `<div style="width:20px;height:20px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
                 let linkUrl = item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '#');
+
+                gridEl.innerHTML += `
+                    <div class="card-item">
+                        <div class="card-header">
+                            <div>
+                                <div class="font-bold text-sm mb-1">${item.title}</div>
+                                <div>${badge}</div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="window.editItem('${item.id}')" class="btn btn-pill" style="padding: 6px; border-radius: 8px;"><i class="fas fa-edit" style="font-size: 0.75rem;"></i></button>
+                                <button onclick="window.deleteItem('${item.id}')" class="btn btn-pill text-red" style="padding: 6px; border-radius: 8px;"><i class="fas fa-trash" style="font-size: 0.75rem;"></i></button>
+                            </div>
+                        </div>
+                        <div class="card-body mt-2">
+                            <div class="card-stat">
+                                <div class="text-xs text-muted mb-1 font-bold">SUBSCRIBERS</div>
+                                <div class="font-bold text-lg">${item.subs||'0'}</div>
+                                <div style="margin-top:4px;">${sG}</div>
+                            </div>
+                            <div class="card-stat">
+                                <div class="text-xs text-muted mb-1 font-bold">TOTAL VIEWS</div>
+                                <div class="font-bold text-lg">${item.views||'0'}</div>
+                                <div style="margin-top:4px;">${vG}</div>
+                            </div>
+                            <div class="card-stat flex justify-between items-center" style="grid-column: span 2;">
+                                <div>
+                                    <div class="text-xs text-muted font-bold">NICHE</div>
+                                    <div class="font-bold text-sm mt-1">${item.niche||'-'}</div>
+                                </div>
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="text-xs text-muted font-bold">MONET</span> 
+                                    ${monetHtml}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex gap-2">
+                            ${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="btn flex-1 text-xs" style="background:rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius:0.5rem; padding: 0.6rem;"><i class="fab fa-youtube text-red"></i> KUNJUNGI</a>` : ''}
+                        </div>
+                    </div>
+                `;
 
                 tbody.innerHTML += `
                     <tr>
@@ -1027,7 +1194,7 @@
         };
 
         function setupPWA() {
-            // Generate PNG Icon via Canvas untuk memenuhi standar ketat instalasi PC
+            // Generate PNG Icon via Canvas untuk memenuhi standar ketat instalasi PWA
             const canvas = document.createElement('canvas');
             canvas.width = 512; canvas.height = 512;
             const ctx = canvas.getContext('2d');
@@ -1039,10 +1206,16 @@
             const pngIcon = canvas.toDataURL('image/png');
 
             const manifest = {
-                "name": "TNC7 Management", "short_name": "TNC7",
-                "start_url": window.location.pathname, "display": "standalone",
-                "background_color": "#161921", "theme_color": "#161921",
-                "icons": [{ "src": pngIcon, "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }]
+                "name": "TNC7 Management", 
+                "short_name": "TNC7",
+                "start_url": ".", 
+                "display": "standalone",
+                "background_color": "#161921", 
+                "theme_color": "#161921",
+                "icons": [
+                    { "src": pngIcon, "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+                    { "src": pngIcon, "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+                ]
             };
             
             const manifestUrl = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
@@ -1050,16 +1223,28 @@
             if (!link) { link = document.createElement('link'); link.rel = 'manifest'; document.head.appendChild(link); }
             link.href = manifestUrl;
 
-            // Mendaftarkan service worker dummy untuk menipu browser PC agar memunculkan tombol install
+            // Service Worker yang memenuhi standar PWA secara penuh
             if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register(URL.createObjectURL(new Blob([`self.addEventListener('fetch', (e) => {});`], { type: 'application/javascript' }))).catch(() => {});
+                const swCode = `
+                    self.addEventListener('install', e => self.skipWaiting());
+                    self.addEventListener('activate', e => self.clients.claim());
+                    self.addEventListener('fetch', e => {
+                        e.respondWith(fetch(e.request).catch(() => new Response('TNC7 Offline Mode')));
+                    });
+                `;
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(() => {});
             }
 
             let deferredPrompt;
             window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault(); deferredPrompt = e;
+                e.preventDefault(); 
+                deferredPrompt = e;
                 const installBtn = document.getElementById('btn-install');
-                if(installBtn) { installBtn.classList.remove('hidden'); installBtn.style.animation = 'pulse 2s infinite'; }
+                if(installBtn) { 
+                    installBtn.classList.remove('hidden'); 
+                    installBtn.style.animation = 'pulse 2s infinite'; 
+                }
             });
 
             const installBtn = document.getElementById('btn-install');
