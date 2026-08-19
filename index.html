@@ -70,6 +70,18 @@
             overflow-x: hidden;
         }
 
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-accent);
+            z-index: 9999;
+            box-shadow: 0 0 15px var(--primary-accent);
+        }
+
         .container {
             width: 100%;
             max-width: 1600px;
@@ -359,6 +371,17 @@
             70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
         }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .badge-live {
+            display: flex; align-items: center; gap: 0.4rem;
+            font-size: 0.7rem; font-weight: 800; letter-spacing: 0.05em;
+            background: rgba(16, 185, 129, 0.1); color: #10b981;
+            padding: 0.4rem 0.8rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .badge-live i { animation: blink 1.5s infinite; font-size: 0.5rem; }
     </style>
 </head>
 <body>
@@ -404,7 +427,7 @@
                     <i class="fas fa-spinner fa-spin"></i> Menghubungkan...
                 </div>
 
-                <button id="btn-sync" class="btn btn-pill"><i class="fas fa-sync-alt"></i> Sync Stats</button>
+                <div id="auto-sync-badge" class="badge-live hidden"><i class="fas fa-circle"></i> AUTO-SYNC</div>
                 
                 <div class="flex items-center gap-2" style="background: var(--input-bg); padding: 4px; border-radius: 999px; border: 1px solid var(--panel-border); margin-left: 0.5rem;">
                     <button class="btn" onclick="window.openModal('modal-settings')" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="Pengaturan"><i class="fas fa-cog"></i></button>
@@ -651,7 +674,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // KONFIGURASI FIREBASE KITA
@@ -729,11 +752,12 @@
                  handleLoginSuccess(); 
             }
 
-            const hasValidConfig = Object.keys(MY_FIREBASE_CONFIG).length > 0;
+            const configToUse = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : MY_FIREBASE_CONFIG;
+            const hasValidConfig = Object.keys(configToUse).length > 0;
 
             if (hasValidConfig) {
                 try {
-                    const app = initializeApp(MY_FIREBASE_CONFIG);
+                    const app = initializeApp(configToUse);
                     db = getFirestore(app);
                     
                     try { await enableIndexedDbPersistence(db); } 
@@ -741,12 +765,16 @@
 
                     auth = getAuth(app);
                     
-                    await signInAnonymously(auth);
+                    const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+                    if (token) {
+                        await signInWithCustomToken(auth, token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
                     
                     state.isCloudConnected = true;
                     setCloudOnline();
                     setupRealtimeListeners();
-                    syncLocalToCloud();
 
                 } catch (e) {
                     console.error("Firebase init error:", e);
@@ -766,6 +794,7 @@
             const ind = el('cloud-status-indicator');
             ind.className = 'cloud-status';
             ind.innerHTML = '<i class="fas fa-cloud-check"></i> Cloud Terhubung';
+            el('auto-sync-badge').classList.remove('hidden');
             
             const apiSync = el('api-sync-status');
             if(apiSync) {
@@ -779,6 +808,7 @@
             const ind = el('cloud-status-indicator');
             ind.className = 'cloud-status offline';
             ind.innerHTML = '<i class="fas fa-cloud-times"></i> Koneksi Terputus';
+            el('auto-sync-badge').classList.add('hidden');
             showToast('Berjalan mode Offline. Data disimpan lokal.', false);
         }
 
@@ -787,12 +817,13 @@
             const ind = el('cloud-status-indicator');
             ind.className = 'cloud-status local';
             ind.innerHTML = '<i class="fas fa-hdd"></i> Mode Lokal';
+            el('auto-sync-badge').classList.add('hidden');
         }
 
         function setupRealtimeListeners() {
             if (!db || !auth.currentUser) return;
             
-            const channelsRef = collection(db, 'artifacts', APP_ID, 'users', USER_ID, 'channels');
+            const channelsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'channels');
             onSnapshot(channelsRef, (snapshot) => {
                 let cloudItems = [];
                 snapshot.forEach((doc) => { cloudItems.push({ id: doc.id, ...doc.data() }); });
@@ -809,7 +840,7 @@
                 setCloudOffline(); 
             });
 
-            const keysRef = collection(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys');
+            const keysRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'apikeys');
             onSnapshot(keysRef, (snapshot) => {
                 let cloudKeys = [];
                 snapshot.forEach((doc) => { cloudKeys.push({ id: doc.id, ...doc.data() }); });
@@ -828,12 +859,12 @@
             if(!db || !state.isCloudConnected || !auth.currentUser) return;
             
             try {
-                const channelsRef = collection(db, 'artifacts', APP_ID, 'users', USER_ID, 'channels');
+                const channelsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'channels');
                 for(const item of state.items) {
                     await setDoc(doc(channelsRef, item.id), item, { merge: true });
                 }
                 
-                const keysRef = collection(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys');
+                const keysRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'apikeys');
                 for(const key of state.apiKeys) {
                     await setDoc(doc(keysRef, key.id), key, { merge: true });
                 }
@@ -896,14 +927,6 @@
             });
             el('btn-logout').addEventListener('click', handleLogout);
             
-            el('btn-sync').addEventListener('click', () => {
-                if(state.isCloudConnected) {
-                    syncLocalToCloud();
-                } else {
-                    showToast('Cloud tidak terhubung', true);
-                }
-            });
-            
             ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { 
                 el(id).addEventListener('input', renderTable); 
             });
@@ -963,7 +986,7 @@
 
                 if(db && state.isCloudConnected && auth.currentUser) {
                     try {
-                        const docRef = doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'channels', docId);
+                        const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'channels', docId);
                         await setDoc(docRef, newItem);
                         showToast('Tersimpan ke Cloud & Lokal');
                     } catch(error) { 
@@ -1077,7 +1100,7 @@
                             showToast('Gagal: Sesi Cloud tidak valid (Auth Null)', true);
                             return;
                         }
-                        await deleteDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'channels', id)); 
+                        await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'channels', id)); 
                         showToast('Dihapus dari Sistem'); 
                     } catch(e) { 
                         console.error("Error menghapus dari cloud:", e); 
@@ -1160,7 +1183,7 @@
             
             if(db && state.isCloudConnected && auth.currentUser) {
                 try {
-                    await setDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys', docId), newKey);
+                    await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'apikeys', docId), newKey);
                     showToast('API Key tersimpan ke Cloud!');
                 } catch(e) { console.error(e); }
             } else {
@@ -1176,7 +1199,7 @@
             if(db && state.isCloudConnected && auth.currentUser) {
                 try {
                     for (const k of state.apiKeys) {
-                        await setDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys', k.id), { active: k.active }, { merge: true });
+                        await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'apikeys', k.id), { active: k.active }, { merge: true });
                     }
                     showToast('API Key aktif diubah!');
                 } catch(e) { console.error(e); }
@@ -1198,9 +1221,9 @@
                 
                 if(db && state.isCloudConnected && auth.currentUser) {
                     try { 
-                        await deleteDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys', id)); 
+                        await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'apikeys', id)); 
                         if (state.apiKeys.length > 0) {
-                             await setDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'apikeys', state.apiKeys[0].id), { active: true }, { merge: true });
+                             await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'apikeys', state.apiKeys[0].id), { active: true }, { merge: true });
                         }
                         showToast('API Key dihapus!'); 
                     } catch(e) { console.error(e); }
