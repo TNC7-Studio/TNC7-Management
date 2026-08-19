@@ -206,12 +206,12 @@
         ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 4px; }
 
         .settings-card { background: rgba(17, 24, 39, 0.4); border: 1px solid var(--panel-border); border-radius: 1rem; padding: 1.25rem; margin-bottom: 1rem; }
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-grid { display: flex; flex-direction: column; gap: 1.25rem; width: 100%; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; }
         .form-group.full-width { grid-column: span 2; }
         .form-group label { font-size: 0.75rem; color: #cbd5e1; font-weight: 700; letter-spacing: 0.02em; }
         .form-group input, .form-group textarea, .form-group select {
-            background-color: rgba(0, 0, 0, 0.5); border: 1px solid var(--panel-border); color: var(--text-main); 
+            width: 100%; box-sizing: border-box; background-color: rgba(0, 0, 0, 0.5); border: 1px solid var(--panel-border); color: var(--text-main); 
             border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.875rem; font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
         }
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.2); }
@@ -392,14 +392,14 @@
             
             <form id="item-form" style="display: contents;">
                 <input type="hidden" id="item-id">
-                <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; max-height: 70vh;">
+                <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; max-height: 70vh; display: flex; flex-direction: column; width: 100%;">
                     <div class="form-grid">
                         <div class="form-group full-width"><label>NAMA CHANNEL</label><input type="text" id="item-title" required placeholder="NAMA CHANNEL" oninput="this.value = this.value.toUpperCase()"></div>
                         <div class="form-group full-width"><label>LINK CHANNEL / PROFIL</label><input type="text" id="item-link" class="case-sensitive" placeholder="HTTPS://YOUTUBE.COM/@HANDLE"></div>
-                        <div class="form-group"><label>ID CHANNEL</label><input type="text" id="item-channelId" class="case-sensitive" placeholder="UC..."></div>
-                        <div class="form-group"><label>NAMA PENGELOLA</label><input type="text" id="item-pengelola" placeholder="NAMA PENGELOLA" oninput="this.value = this.value.toUpperCase()"></div>
-                        <div class="form-group"><label>NICHE / KATEGORI</label><input type="text" id="item-niche" placeholder="KETIK NICHE" oninput="this.value = this.value.toUpperCase()"></div>
-                        <div class="form-group"><label>MONETISASI</label>
+                        <div class="form-group full-width"><label>ID CHANNEL</label><input type="text" id="item-channelId" class="case-sensitive" placeholder="UC..."></div>
+                        <div class="form-group full-width"><label>NAMA PENGELOLA</label><input type="text" id="item-pengelola" placeholder="NAMA PENGELOLA" oninput="this.value = this.value.toUpperCase()"></div>
+                        <div class="form-group full-width"><label>NICHE / KATEGORI</label><input type="text" id="item-niche" placeholder="KETIK NICHE" oninput="this.value = this.value.toUpperCase()"></div>
+                        <div class="form-group full-width"><label>MONETISASI</label>
                             <select id="item-monet">
                                 <option value="Belum">NO — BELUM MONETISASI</option>
                                 <option value="Sudah">YES — SUDAH MONETISASI</option>
