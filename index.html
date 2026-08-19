@@ -4,14 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#161921">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>TNC7 MANAGEMENT</title>
+    <title>TNC7 MANAGEMENT - TEAM SYNC</title>
     
-    <!-- App Icon / Favicon Kustom TNC7 -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231a1f2c'/%3E%3Cpath d='M190 160 L370 256 L190 352 Z' fill='%23facc15'/%3E%3Ctext x='256' y='440' font-family='sans-serif' font-size='100' font-weight='900' letter-spacing='-2' fill='%23ffffff' text-anchor='middle'%3ETNC7%3C/text%3E%3C/svg%3E">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231a1f2c'/%3E%3Cpath d='M190 160 L370 256 L190 352 Z' fill='%23facc15'/%3E%3Ctext x='256' y='440' font-family='sans-serif' font-size='100' font-weight='900' letter-spacing='-2' fill='%23ffffff' text-anchor='middle'%3ETNC7%3C/text%3E%3C/svg%3E">
-
     <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -36,1054 +30,468 @@
             --panel-border: #e2e8f0;
             --text-main: #0f172a;
             --text-muted: #64748b;
-            --input-bg: #f1f5f9;
-            --table-hover: rgba(0, 0, 0, 0.03);
-            --primary-accent: #2563eb;
-            --primary-hover: #1d4ed8;
+            --input-bg: rgba(241, 245, 249, 0.7);
+            --primary-accent: #3b82f6;
+            --primary-hover: #2563eb;
+            --table-hover: rgba(59, 130, 246, 0.05);
+            --header-bg: rgba(255, 255, 255, 0.98);
         }
 
         [data-theme="kuning"] {
-            --bg-color: #1a1814;
-            --panel-bg: rgba(39, 39, 42, 0.8);
-            --panel-border: #52525b;
-            --text-main: #fef3c7;
-            --text-muted: #d4d4d8;
-            --input-bg: #27272a;
-            --table-hover: rgba(255, 255, 255, 0.05);
-            --primary-accent: #f59e0b;
-            --primary-hover: #d97706;
+            --bg-color: #1a1c19;
+            --panel-bg: rgba(26, 28, 25, 0.95);
+            --panel-border: rgba(250, 204, 21, 0.3);
+            --text-main: #fefce8;
+            --text-muted: #a1a1aa;
+            --input-bg: rgba(0, 0, 0, 0.5);
+            --primary-accent: #facc15;
+            --primary-hover: #eab308;
+            --table-hover: rgba(250, 204, 21, 0.08);
+            --header-bg: rgba(26, 28, 25, 0.98);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color); 
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            transition: background-color 0.3s, color 0.3s;
-            overflow-x: hidden;
-            user-select: none; 
-            -webkit-user-select: none;
-            text-transform: uppercase;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        .case-sensitive {
-            text-transform: none !important;
-        }
-
-        /* Topbar Kuning yang menyesuaikan dengan tema aksen */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--primary-accent);
-            z-index: 99999;
-            box-shadow: 0 0 15px var(--primary-accent);
-        }
-
-        input, textarea, table, .allow-select {
-            user-select: text;
-            -webkit-user-select: text;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            z-index: 1;
-        }
-
-        .hidden { display: none !important; }
-
-        .panel-glass {
-            background: var(--panel-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--panel-border);
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-        }
-
-        header.panel-glass {
-            position: relative;
-            z-index: 50;
-        }
-
-        .btn {
-            cursor: pointer;
-            border: none;
-            outline: none;
-            font-family: inherit;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-pill {
-            padding: 0.4rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: transparent;
-            border: 1px solid var(--panel-border);
-            color: var(--text-main);
-        }
-
-        .btn-pill:hover {
-            color: var(--primary-accent);
-            border-color: var(--primary-accent);
-            background: rgba(250, 204, 21, 0.05);
-        }
-
-        .btn-pill.active {
-            background-color: var(--primary-accent);
-            color: #000 !important;
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 15px rgba(250, 204, 21, 0.15);
-        }
-
-        .form-input, .form-select {
-            width: 100%;
-            background-color: var(--input-bg);
-            border: 1px solid var(--panel-border);
-            color: var(--text-main);
-            border-radius: 0.75rem;
-            padding: 0.7rem 1rem;
-            font-size: 0.9rem;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        
-        .form-select { cursor: pointer; appearance: none; font-weight: 600; }
-
-        .form-input:focus, .form-select:focus {
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2);
-        }
-
-        .table-container { overflow-x: auto; }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1200px;
-        }
-
-        th {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #cbd5e1;
-            font-weight: 800; 
-            padding: 1.25rem 1rem;
-            border-bottom: 2px solid var(--panel-border);
-            text-align: left;
-            white-space: nowrap;
-        }
-
-        td {
-            padding: 1rem;
-            font-size: 0.9rem;
+        /* Navbar / Header */
+        header {
+            background: var(--header-bg);
             border-bottom: 1px solid var(--panel-border);
-            vertical-align: middle;
-            font-weight: 500;
-        }
-
-        tr:hover td { background-color: var(--table-hover); cursor: default; }
-
-        .text-xs { font-size: 0.75rem; }
-        .text-sm { font-size: 0.875rem; }
-        .text-lg { font-size: 1.125rem; }
-        .text-xl { font-size: 1.25rem; }
-        .text-2xl { font-size: 1.5rem; }
-        .font-bold { font-weight: 700; }
-        .font-semibold { font-weight: 600; }
-        .text-muted { color: var(--text-muted); }
-        .text-accent { color: var(--primary-accent); }
-        .text-emerald { color: #10b981; }
-        .text-red { color: #ef4444; }
-        
-        .flex { display: flex; }
-        .flex-col { display: flex; flex-direction: column; }
-        .items-center { align-items: center; }
-        .justify-between { justify-content: space-between; }
-        .justify-center { justify-content: center; }
-        .gap-2 { gap: 0.5rem; }
-        .gap-4 { gap: 1rem; }
-        .w-full { width: 100%; }
-        .text-center { text-align: center; }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            padding: 1rem;
-        }
-
-        .modal-content {
-            background: var(--bg-color);
-            border: 1px solid var(--panel-border);
-            border-radius: 1rem;
-            width: 100%;
-            max-width: 700px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--panel-border);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-            overflow-y: auto;
-            flex-grow: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid var(--panel-border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-        }
-
-        .badge-views {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
-            border: 1px solid rgba(249, 115, 22, 0.5); color: #fb923c; background: rgba(249, 115, 22, 0.1);
-        }
-        .badge-subs {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
-            border: 1px solid rgba(59, 130, 246, 0.5); color: #60a5fa; background: rgba(59, 130, 246, 0.1);
-        }
-        .icon-box {
-            width: 40px; height: 40px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-        }
-
-        .dropdown { position: relative; display: inline-block; }
-        .dropdown-content {
-            display: none; 
-            position: absolute; 
-            right: 0; 
-            top: 120%;
-            background-color: var(--panel-bg); 
-            min-width: 140px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
-            border: 1px solid var(--panel-border);
-            z-index: 99999 !important; 
-            border-radius: 0.75rem; 
-            padding: 0.5rem; 
+            position: sticky;
+            top: 0;
+            z-index: 100;
             backdrop-filter: blur(10px);
         }
-        .dropdown:hover .dropdown-content { display: flex; flex-direction: column; gap: 0.25rem; }
-        .dropdown-item {
-            padding: 0.6rem; cursor: pointer; border-radius: 0.5rem; font-size: 0.75rem; color: var(--text-main); font-weight: bold;
-        }
-        .dropdown-item:hover { background-color: var(--table-hover); color: var(--primary-accent); }
 
-        #toast {
-            position: fixed; top: 20px; right: 20px; z-index: 999999;
-            background: #10b981; color: white; padding: 10px 20px;
-            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transform: translateY(-150%); transition: transform 0.3s ease;
-            font-size: 0.875rem; font-weight: bold;
-        }
-        #toast.show { transform: translateY(0); }
-        #toast.error { background: #ef4444; }
-
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 4px; }
-
-        .settings-card {
-            background: rgba(17, 24, 39, 0.4); border: 1px solid var(--panel-border);
-            border-radius: 1rem; padding: 1.25rem; margin-bottom: 1rem;
-        }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-        .form-group.full-width { grid-column: span 2; }
-        .form-group label {
-            font-size: 0.75rem; color: #cbd5e1; font-weight: 700; letter-spacing: 0.02em;
-        }
-        .form-group input, .form-group textarea, .form-group select {
-            background-color: rgba(0, 0, 0, 0.5); border: 1px solid var(--panel-border); 
-            color: var(--text-main); border-radius: 0.5rem; padding: 0.75rem 1rem;
-            font-size: 0.875rem; font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            border-color: var(--primary-accent); box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.2);
-        }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-accent); letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+        .logo i { font-size: 1.8rem; }
         
-        .cloud-status {
-            display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem;
-            background: rgba(16, 185, 129, 0.1); color: #10b981;
-            padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
+        .header-controls { display: flex; align-items: center; gap: 15px; }
+        
+        /* Auto Sync Indicator */
+        .sync-indicator {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid rgba(34, 197, 94, 0.5);
         }
-        .cloud-status.offline {
-            background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);
-        }
+        .sync-indicator i { font-size: 0.7rem; animation: pulse 2s infinite; }
 
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
         }
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        .badge-live {
-            display: flex; align-items: center; gap: 0.4rem;
-            font-size: 0.7rem; font-weight: 800; letter-spacing: 0.05em;
-            background: rgba(16, 185, 129, 0.1); color: #10b981;
-            padding: 0.4rem 0.8rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
-        }
-        .badge-live i { animation: blink 1.5s infinite; font-size: 0.5rem; }
 
-        @media screen and (max-width: 768px) {
-            .container { padding: 0.75rem; gap: 0.75rem; }
-            .panel-glass { border-radius: 1.25rem; }
-            header.panel-glass { flex-direction: column; align-items: flex-start !important; padding: 1rem; }
-            header .justify-end { width: 100%; justify-content: space-between; margin-top: 0.5rem; }
-            #dashboard-view > div[style*="display: grid"] { grid-template-columns: 1fr 1fr !important; gap: 0.5rem !important; }
-            #dashboard-view > div[style*="display: grid"] .panel-glass { flex-direction: column; text-align: center; gap: 0.5rem; padding: 0.75rem !important; }
-            #stat-total, #stat-monet, #stat-aktif, #stat-new { font-size: 1.5rem; }
-            #dashboard-view > .panel-glass.flex-col > div:first-child { padding: 1rem !important; }
-            .flex.justify-between.items-center { flex-direction: column; align-items: stretch !important; gap: 0.75rem; }
-            .flex.justify-between.items-center .flex.gap-2 { display: flex; width: 100%; justify-content: space-between; }
-            .flex.justify-between.items-center .btn-pill { flex: 1; text-align: center; justify-content: center; }
-            .flex.items-center.gap-2.flex-wrap > div[style*="max-width: 300px"] { max-width: 100% !important; width: 100%; }
-            #search-input { width: 100%; }
-            #filter-monet, #filter-pengelola, #sort-data { flex: 1 1 calc(50% - 0.5rem); width: auto !important; }
-            #btn-reset { width: 100%; margin-top: 0.25rem; }
-            .table-container { -webkit-overflow-scrolling: touch; padding-bottom: 0.5rem; }
-            .modal-content { max-height: 92vh; margin: 0.5rem; width: auto; border-radius: 1.25rem; }
-            .modal-header, .modal-footer { padding: 1rem 1.25rem !important; }
-            .modal-body { padding: 1rem 1.25rem !important; display: flex; flex-direction: column; }
-            .form-grid { display: flex; flex-direction: column; gap: 1rem; }
-            .form-group.full-width { grid-column: auto; }
+        .icon-btn {
+            background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem;
+            cursor: pointer; transition: color 0.2s, transform 0.2s; padding: 8px;
         }
+        .icon-btn:hover { color: var(--primary-accent); transform: scale(1.1); }
+
+        /* Main Container */
+        .container { padding: 2rem; max-width: 1400px; margin: 0 auto; width: 100%; flex: 1; }
+        
+        .panel {
+            background: var(--panel-bg); border: 1px solid var(--panel-border);
+            border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); backdrop-filter: blur(12px);
+        }
+
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--panel-border); padding-bottom: 1rem; }
+        .panel-header h2 { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+
+        /* Input Controls */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        .input-group { display: flex; flex-direction: column; gap: 5px; }
+        .input-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+        .input-group input, .input-group select {
+            background: var(--input-bg); border: 1px solid var(--panel-border);
+            color: var(--text-main); padding: 10px 12px; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s;
+        }
+        .input-group input:focus, .input-group select:focus { border-color: var(--primary-accent); }
+        
+        .yt-search-wrapper { display: flex; gap: 8px; }
+        .yt-search-wrapper input { flex: 1; }
+
+        .btn-primary { background: var(--primary-accent); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn-primary:hover { background: var(--primary-hover); }
+
+        /* Table */
+        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid var(--panel-border); }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: rgba(0,0,0,0.2); padding: 12px 15px; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); white-space: nowrap; }
+        td { padding: 15px; border-bottom: 1px solid var(--panel-border); vertical-align: middle; }
+        tr:hover { background: var(--table-hover); }
+        tr:last-child td { border-bottom: none; }
+        
+        .channel-info { display: flex; align-items: center; gap: 12px; }
+        .channel-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--panel-border); }
+        .channel-name { font-weight: 700; color: var(--primary-accent); font-size: 1rem; }
+        
+        .btn-action { background: rgba(255,255,255,0.1); border: none; color: var(--text-main); padding: 6px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s; margin-right: 5px; }
+        .btn-action:hover { background: rgba(255,255,255,0.2); }
+        .btn-delete:hover { background: #ef4444; color: white; }
+
+        /* Modal Pengaturan */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); position: relative; }
+        .modal-close { position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+        
+        .theme-options { display: flex; gap: 10px; margin-top: 15px; }
+        .theme-btn { flex: 1; padding: 10px; border: 1px solid var(--panel-border); background: var(--input-bg); color: var(--text-main); border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .theme-btn:hover { border-color: var(--primary-accent); }
     </style>
 </head>
 <body>
 
-    <div id="toast"><i class="fas fa-info-circle"></i> <span id="toast-msg">SUCCESS</span></div>
+    <!-- Header / Navbar -->
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-satellite-dish"></i> TNC7
+        </div>
+        <div class="header-controls">
+            <div class="sync-indicator">
+                <i class="fa-solid fa-circle-dot"></i> AUTO-SYNC TIM
+            </div>
+            <button class="icon-btn" onclick="openSettings()" title="Pengaturan Tampilan"><i class="fa-solid fa-gear"></i></button>
+        </div>
+    </header>
 
-    <!-- Dashboard Utama (Langsung Terbuka Tanpa Layar Login) -->
-    <div id="dashboard-view" class="container">
+    <!-- Main Dashboard -->
+    <div class="container" id="dashboard">
         
-        <header class="panel-glass" style="padding: 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
-            <div class="flex items-center gap-4">
-                <div class="icon-box" style="background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid rgba(255, 255, 255, 0.1); position: relative;">
-                    <i class="fab fa-youtube"></i>
-                    <div style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: #10b981; border-radius: 50%; border: 2px solid var(--bg-color);"></div>
-                </div>
-                <div>
-                    <h2 class="text-lg font-bold">TNC7 MANAGEMENT</h2>
-                    <p class="text-xs text-muted" style="font-size: 0.75rem; font-family: monospace; color: var(--primary-accent); font-weight: 700;"><span id="clock"></span></p>
-                </div>
+        <!-- Form Panel -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-plus-circle"></i> Tambah / Edit Channel</h2>
             </div>
+            <form id="channelForm" onsubmit="saveChannel(event)">
+                <input type="hidden" id="editId">
+                <input type="hidden" id="avatarUrl">
+                <input type="hidden" id="ytChannelId">
 
-            <div class="flex items-center gap-2 flex-wrap justify-end">
-                <button id="btn-install" class="btn btn-pill hidden" style="background: var(--primary-accent); color: #1a1814; border: none; font-weight: bold;"><i class="fas fa-download"></i> INSTALL APP</button>
-                <div id="cloud-status-indicator" class="cloud-status">
-                    <i class="fas fa-spinner fa-spin"></i> MENGHUBUNGKAN...
-                </div>
-
-                <div id="auto-sync-badge" class="badge-live hidden"><i class="fas fa-circle"></i> AUTO-SYNC</div>
-                
-                <div class="flex items-center gap-2" style="background: var(--input-bg); padding: 4px; border-radius: 999px; border: 1px solid var(--panel-border); margin-left: 0.5rem; position: relative; z-index: 60;">
-                    <button class="btn" onclick="window.openModal('modal-settings')" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="PENGATURAN"><i class="fas fa-cog"></i></button>
-                    <div class="dropdown">
-                        <button class="btn" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="PILIH TEMA"><i class="fas fa-palette"></i></button>
-                        <div class="dropdown-content">
-                            <div class="dropdown-item" onclick="window.setTheme('dark')"><i class="fas fa-moon"></i> TEMA DARK</div>
-                            <div class="dropdown-item" onclick="window.setTheme('terang')"><i class="fas fa-sun"></i> TEMA TERANG</div>
-                            <div class="dropdown-item" onclick="window.setTheme('kuning')"><i class="fas fa-bolt"></i> TEMA KUNING</div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>ID Channel / Username YT</label>
+                        <div class="yt-search-wrapper">
+                            <input type="text" id="urlInput" placeholder="Cth: UCa_..." required>
+                            <button type="button" class="btn-primary" onclick="searchYouTube()" id="btnSearchYt" title="Cari Data di YouTube">
+                                <i class="fa-brands fa-youtube"></i> Cari YT
+                            </button>
                         </div>
                     </div>
-                </div>
-            </div>
-        </header>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
-                <div class="icon-box" style="background: rgba(250,204,21,0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);"><i class="fas fa-tv"></i></div>
-                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">TOTAL CHANNEL</p><h3 class="text-2xl font-bold" id="stat-total">0</h3></div>
-            </div>
-            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
-                <div class="icon-box" style="background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.3);"><i class="fas fa-dollar-sign"></i></div>
-                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">SUDAH MONETISASI</p><h3 class="text-2xl font-bold" id="stat-monet">0</h3></div>
-            </div>
-            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
-                <div class="icon-box" style="background: rgba(250,204,21,0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);"><i class="fas fa-tv"></i></div>
-                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">CHANNEL AKTIF</p><h3 class="text-2xl font-bold" id="stat-aktif">0</h3></div>
-            </div>
-            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
-                <div class="icon-box" style="background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);"><i class="fas fa-plus-circle"></i></div>
-                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">BARU (24 JAM)</p><h3 class="text-2xl font-bold" id="stat-new">0</h3></div>
-            </div>
-        </div>
-
-        <div class="panel-glass flex-col" style="flex-grow: 1; overflow: hidden; display: flex;">
-            <div style="padding: 1.25rem; border-bottom: 1px solid var(--panel-border);">
-                <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
-                    <h2 class="text-lg font-bold">DAFTAR CHANNEL & AKUN</h2>
-                    <div class="flex gap-2">
-                        <button class="btn btn-pill" onclick="window.openModal('modal-search-yt')"><i class="fas fa-search"></i> CARI YT</button>
-                        <button class="btn btn-pill" style="background: var(--primary-accent); color: #1a1814; font-weight: bold; border: none;" onclick="window.editItem(null)"><i class="fas fa-plus"></i> TAMBAH CHANNEL</button>
+                    <div class="input-group">
+                        <label>Nama Channel</label>
+                        <input type="text" id="nameInput" placeholder="Otomatis dari YT..." required>
+                    </div>
+                    <div class="input-group">
+                        <label>Kategori</label>
+                        <select id="categoryInput" required>
+                            <option value="Hiburan">Hiburan</option>
+                            <option value="Edukasi">Edukasi</option>
+                            <option value="Gaming">Gaming</option>
+                            <option value="Berita">Berita</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Subscriber</label>
+                        <input type="text" id="subsInput" placeholder="Otomatis / Manual">
                     </div>
                 </div>
-
-                <div class="flex items-center gap-2 flex-wrap">
-                    <div style="position: relative; flex-grow: 1; max-width: 300px;">
-                        <i class="fas fa-search text-muted" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.75rem;"></i>
-                        <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 2rem;" autocomplete="new-password" name="search_channel_input_x99" placeholder="CARI NAMA, ID, NICHE..." oninput="this.value = this.value.toUpperCase()">
-                    </div>
-                    <select id="filter-monet" class="form-select text-xs" style="width: auto;">
-                        <option value="all">SEMUA MONETISASI</option>
-                        <option value="yes">MONETISASI: YES</option>
-                        <option value="no">MONETISASI: NO</option>
-                    </select>
-                    <select id="filter-pengelola" class="form-select text-xs" style="width: auto; text-transform: uppercase;">
-                        <option value="all">SEMUA PENGELOLA</option>
-                    </select>
-                    <select id="sort-data" class="form-select text-xs" style="width: auto;">
-                        <option value="asli">URUTAN ASLI</option>
-                        <option value="views_desc">KENAIKAN VIEWS ↑</option>
-                        <option value="subs_desc">KENAIKAN SUBS ↑</option>
-                    </select>
-                    <button id="btn-reset" class="btn btn-pill text-xs"><i class="fas fa-times"></i> RESET FILTER</button>
-                </div>
-            </div>
-
-            <div class="table-container" style="flex-grow: 1;">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style="width: 50px; text-align: center;">NO</th>
-                            <th>NAMA CHANNEL</th>
-                            <th style="text-align: center;">LINK</th>
-                            <th>SUBSCRIBERS</th>
-                            <th>TOTAL VIEWS</th>
-                            <th>KENAIKAN VIEWS</th>
-                            <th style="text-align: center;">VIDEO</th>
-                            <th>PENGELOLA</th>
-                            <th>NICHE</th>
-                            <th style="text-align: center;">MONET</th>
-                            <th style="text-align: center; padding-right: 1.5rem;">AKSI</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Form Tambah/Edit -->
-    <div id="modal-form" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 700px; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1rem;">
-            <div class="modal-header" style="border-bottom: 1px solid var(--panel-border); padding: 1.5rem;">
-                <div>
-                    <p class="text-accent font-bold" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">DATA CHANNEL</p>
-                    <h3 id="modal-title" class="font-bold text-xl" style="color: white;">TAMBAH CHANNEL BARU</h3>
-                </div>
-                <button class="btn" onclick="window.closeModal('modal-form')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
-            </div>
-            
-            <form id="item-form" style="display: contents;">
-                <input type="hidden" id="item-id">
-                <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; max-height: 70vh;">
-                    <div class="form-grid">
-                        <div class="form-group full-width"><label>NAMA CHANNEL</label><input type="text" id="item-title" required placeholder="NAMA CHANNEL" oninput="this.value = this.value.toUpperCase()"></div>
-                        <div class="form-group full-width"><label>LINK CHANNEL / PROFIL</label><input type="text" id="item-link" class="case-sensitive" placeholder="HTTPS://YOUTUBE.COM/@HANDLE"></div>
-                        <div class="form-group"><label>ID CHANNEL</label><input type="text" id="item-channelId" class="case-sensitive" placeholder="UC..."></div>
-                        <div class="form-group"><label>NAMA PENGELOLA</label><input type="text" id="item-pengelola" placeholder="NAMA PENGELOLA" oninput="this.value = this.value.toUpperCase()"></div>
-                        <div class="form-group"><label>NICHE / KATEGORI</label><input type="text" id="item-niche" placeholder="KETIK NICHE" oninput="this.value = this.value.toUpperCase()"></div>
-                        <div class="form-group"><label>MONETISASI</label>
-                            <select id="item-monet">
-                                <option value="Belum">NO — BELUM MONETISASI</option>
-                                <option value="Sudah">YES — SUDAH MONETISASI</option>
-                            </select>
-                        </div>
-                        <div class="form-group full-width"><label>CATATAN PRIBADI</label><textarea id="item-notes" rows="3" placeholder="CATATAN, INFO TAMBAHAN, STRATEGI, DLL..." oninput="this.value = this.value.toUpperCase()"></textarea></div>
-
-                        <div style="display: none;">
-                            <input type="text" id="item-subs"><input type="text" id="item-views"><input type="number" id="item-video">
-                            <input type="number" id="item-subsGrowth" value="0"><input type="number" id="item-viewGrowth" value="0">
-                            <input type="checkbox" id="item-topViews"><input type="checkbox" id="item-topSubs">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer" style="padding: 1.5rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--panel-border); gap: 1rem; justify-content: flex-end;">
-                    <button type="button" class="btn" style="padding: 0.6rem 1.5rem; background: rgba(255,255,255,0.05); color: #d1d5db; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; font-size: 0.875rem;" onclick="window.closeModal('modal-form')">BATAL</button>
-                    <button type="submit" class="btn active" style="padding: 0.6rem 1.5rem; background: #38bdf8; color: #0f172a; font-weight: 600; border-radius: 0.5rem; border: none; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-save"></i> SIMPAN
+                <div style="text-align: right;">
+                    <button type="submit" class="btn-primary" id="btnSave">
+                        <i class="fa-solid fa-save"></i> Simpan Channel
                     </button>
                 </div>
             </form>
         </div>
+
+        <!-- Table Panel -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-list"></i> Database Channel Tim</h2>
+                <div class="input-group" style="width: 250px;">
+                    <input type="text" id="searchInput" placeholder="Cari channel..." onkeyup="filterTable()">
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="channelTable">
+                    <thead>
+                        <tr>
+                            <th>Channel</th>
+                            <th>Kategori</th>
+                            <th>Subscriber</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <!-- Data akan dirender di sini oleh Firebase -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
-    <!-- Modal Pengaturan -->
-    <div id="modal-settings" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <div>
-                    <p class="text-accent font-bold" style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem;">MANAJEMEN DATA</p>
-                    <h3 class="font-bold text-xl"><i class="fas fa-database"></i> BACKUP / RESTORE</h3>
-                </div>
-                <button class="btn" onclick="window.closeModal('modal-settings')" style="background: transparent; color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
-            </div>
+    <!-- Modal Pengaturan Tema -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeSettings()"><i class="fa-solid fa-times"></i></button>
+            <h2 style="margin-bottom: 1rem;"><i class="fa-solid fa-palette"></i> Pengaturan Tampilan</h2>
             
-            <div class="modal-body" style="display: block;">
-                 <div class="settings-card">
-                    <h4 class="font-bold text-sm mb-4"><i class="fas fa-download text-xs"></i> EKSPOR DATA LOKAL</h4>
-                    <p class="text-xs text-muted mb-4">SIMPAN DATA ANDA SEBAGAI FILE JSON UNTUK BACKUP.</p>
-                    <button onclick="window.exportData()" class="btn w-full" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid #38bdf8; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-export"></i> DOWNLOAD DATA (JSON)</button>
-                </div>
-                 <div class="settings-card">
-                    <h4 class="font-bold text-sm mb-4"><i class="fas fa-upload text-xs"></i> IMPOR DATA LOKAL</h4>
-                    <p class="text-xs text-muted mb-4">KEMBALIKAN DATA (RESTORE) DARI FILE JSON.</p>
-                    <input type="file" id="import-file" accept=".json" class="hidden" onchange="window.importData(event)">
-                    <button onclick="document.getElementById('import-file').click()" class="btn w-full" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-import"></i> PILIH FILE JSON</button>
-                </div>
-            </div>
-            <div class="modal-footer"><button type="button" class="btn btn-pill" style="padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--panel-border);" onclick="window.closeModal('modal-settings')">TUTUP</button></div>
-        </div>
-    </div>
-
-    <!-- Modal Cari YouTube -->
-    <div id="modal-search-yt" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 900px; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1.5rem; padding: 2rem;">
-            <div class="flex justify-between items-start mb-6">
-                <div>
-                    <p class="font-bold text-accent" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">AUTO-FETCH YOUTUBE</p>
-                    <h2 class="font-bold text-2xl" style="color: white;">CARI CHANNEL YOUTUBE</h2>
-                </div>
-                <button class="btn" onclick="window.closeModal('modal-search-yt')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;"><i class="fas fa-times"></i></button>
-            </div>
-
-            <div class="flex items-center gap-4 flex-wrap">
-                <div style="flex-grow: 1; position: relative; border: 1px solid var(--primary-accent); border-radius: 999px; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 0.25rem 0.25rem 0.25rem 1.5rem;">
-                    <i class="fas fa-search text-muted" style="font-size: 1.1rem; margin-right: 0.75rem;"></i>
-                    <input type="text" id="yt-search-input" class="case-sensitive" autocomplete="new-password" name="yt_search_input_random_z99" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="HTTPS://YOUTUBE.COM/@HANDLE ATAU NAMA CHANNEL..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
-                </div>
-                <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; font-size: 1rem; padding: 0.75rem 2rem; border-radius: 999px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
-                    <i class="fas fa-search text-sm"></i> CARI
-                </button>
+            <label style="font-size: 0.9rem; color: var(--text-muted);">Pilih Tema Aplikasi:</label>
+            <div class="theme-options">
+                <button class="theme-btn" onclick="setTheme('gelap')">Gelap</button>
+                <button class="theme-btn" onclick="setTheme('terang')">Terang</button>
+                <button class="theme-btn" onclick="setTheme('kuning')">Kuning</button>
             </div>
         </div>
     </div>
 
+    <!-- Firebase & Logic Scripts -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { initializeFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, persistentLocalCache, persistentMultipleTabManager } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'tnc7-management';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-             apiKey: "mock-key", authDomain: "mock-domain", projectId: "mock-project"
+        // ==========================================
+        // 1. KONFIGURASI FIREBASE ASLI ANDA
+        // ==========================================
+        const firebaseConfig = {
+          apiKey: "AIzaSyA1hxTceWANgQU8vwKpXDCJABvYpWQQNmk",
+          authDomain: "tnc7-visualizer.firebaseapp.com",
+          projectId: "tnc7-visualizer",
+          storageBucket: "tnc7-visualizer.firebasestorage.app",
+          messagingSenderId: "1098792876538",
+          appId: "1:1098792876538:web:28304ee128f7d156190c43"
         };
+
+        const app = initializeApp(firebaseConfig);
         
-        let app, db, auth;
-        let userId = null;
-        let unsubscribeSettings = null;
-        let unsubscribeChannels = null;
+        // Mengaktifkan Offline Caching Firestore
+        const db = initializeFirestore(app, {
+            localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
+        });
 
-        try {
-            app = initializeApp(firebaseConfig);
-            db = initializeFirestore(app, {
-                localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
-            });
-            auth = getAuth(app);
-        } catch (e) {
-            console.warn("Firebase initialization failed, falling back to local only mode.", e);
-        }
+        // ==========================================
+        // 2. API KEY YOUTUBE ANDA (Disembunyikan dari Tim)
+        // ==========================================
+        const DEFAULT_API_KEY = "AIzaSyC3bbs6Qwr54GA5O5qR4ikFWNPBttyDw1k";
 
-        let state = { items: [], theme: 'kuning', isLoggedIn: true, isCloudConnected: false };
-        // API KEY ANDA YANG BARU DIMASUKKAN DI SINI
-        const DEFAULT_API_KEY = "AIzaSyC3bbs6Qwr54GA5O5qR4ikFWNPBttyDw1k"; 
-        const el = (id) => document.getElementById(id);
+        // State Aplikasi
+        let channels = [];
+        let unsubscribeSync = null;
 
-        async function initApp() {
-            setupPWA();
-            setupEventListeners();
-            loadLocalData();
-            
-            const savedTheme = localStorage.getItem('TNC7_THEME');
-            applyTheme(savedTheme || 'kuning');
+        // Inisialisasi Aplikasi Saat Halaman Dibuka
+        window.onload = () => {
+            loadTheme();
+            startSyncingChannels(); // Langsung terhubung ke Database Tim
+        };
 
-            renderTable();
-            updateFilters();
-
-            if (auth) {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined') {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    
-                    onAuthStateChanged(auth, (user) => {
-                        if (user) {
-                            userId = user.uid;
-                            state.isCloudConnected = true;
-                            setCloudOnline();
-                            startSyncingSettings();
-                            startSyncingChannels();
-                        } else {
-                            userId = null;
-                            state.isCloudConnected = false;
-                            setCloudOffline();
-                            if (unsubscribeChannels) unsubscribeChannels();
-                        }
-                    });
-                } catch(e) {
-                    console.error("Auth error", e);
-                    setCloudOffline();
-                }
-            } else {
-                setCloudOffline();
-            }
-        }
-
-        function startSyncingSettings() {
-            if (!userId || !db) return;
-            const settingsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'preferences');
-            if (unsubscribeSettings) unsubscribeSettings();
-            unsubscribeSettings = onSnapshot(settingsDocRef, (docSnap) => {
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    if (data.theme && data.theme !== state.theme) {
-                        applyTheme(data.theme);
-                        showToast(`Tema disinkronkan: ${data.theme.toUpperCase()}`);
-                    }
-                }
-            }, (error) => console.error("Error syncing settings: ", error));
-        }
-
+        // --- SISTEM SINKRONISASI TIM (REAL-TIME CLOUD) ---
         function startSyncingChannels() {
-            if (!userId || !db) return;
-            // Public Database for team collaboration
-            const channelsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'channels');
-            if (unsubscribeChannels) unsubscribeChannels();
-            unsubscribeChannels = onSnapshot(channelsColRef, (snapshot) => {
-                const cloudItems = [];
-                snapshot.forEach(docSnap => cloudItems.push(docSnap.data()));
-                if (cloudItems.length > 0 || !snapshot.metadata.fromCache) {
-                    state.items = cloudItems.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-                    saveLocalData();
-                    renderTable();
-                    updateFilters();
-                }
-            }, (error) => console.error("Error syncing channels: ", error));
+            const channelsRef = collection(db, "public/data/channels");
+            
+            // onSnapshot otomatis update tabel saat ada perubahan di server
+            unsubscribeSync = onSnapshot(channelsRef, (snapshot) => {
+                channels = [];
+                snapshot.forEach((doc) => {
+                    channels.push({ id: doc.id, ...doc.data() });
+                });
+                renderTable();
+            }, (error) => {
+                console.error("Error Syncing Database:", error);
+                alert("Gagal terhubung ke Database Tim. Cek koneksi Anda.");
+            });
         }
 
-        async function saveThemeToCloud(theme) {
-            if (!userId || !db) return;
+        // --- MANAJEMEN DATA CHANNEL ---
+        window.saveChannel = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editId').value || Date.now().toString();
+            const newChannel = {
+                url: document.getElementById('urlInput').value,
+                name: document.getElementById('nameInput').value,
+                category: document.getElementById('categoryInput').value,
+                subscriber: document.getElementById('subsInput').value,
+                avatar: document.getElementById('avatarUrl').value || 'https://via.placeholder.com/40',
+                ytId: document.getElementById('ytChannelId').value || '',
+                timestamp: Date.now()
+            };
+
+            const btn = document.getElementById('btnSave');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+            btn.disabled = true;
+
             try {
-                const settingsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'preferences');
-                await setDoc(settingsDocRef, { theme: theme }, { merge: true });
-            } catch (error) { console.error("Gagal menyimpan tema ke cloud: ", error); }
-        }
-
-        function applyTheme(theme) {
-            state.theme = theme; 
-            document.body.setAttribute('data-theme', theme);
-            localStorage.setItem('TNC7_THEME', theme);
-        }
-
-        window.setTheme = function(theme) {
-            applyTheme(theme);
-            if (state.isCloudConnected) saveThemeToCloud(theme);
+                // Simpan langsung ke Cloud Publik
+                await setDoc(doc(db, "public/data/channels", id), newChannel);
+                resetForm();
+            } catch (error) {
+                console.error("Error Saving:", error);
+                alert("Gagal menyimpan ke Cloud!");
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Channel';
+                btn.disabled = false;
+            }
         };
 
-        function setCloudOnline() {
-            const ind = el('cloud-status-indicator');
-            if(ind) {
-                ind.className = 'cloud-status';
-                ind.innerHTML = '<i class="fas fa-cloud"></i> CLOUD SYNC AKTIF';
-            }
-            const badge = el('auto-sync-badge');
-            if(badge) badge.classList.remove('hidden');
-        }
-        
-        function setCloudOffline() {
-            const ind = el('cloud-status-indicator');
-            if(ind) {
-                ind.className = 'cloud-status offline';
-                ind.innerHTML = '<i class="fas fa-cloud-slash"></i> LOKAL MODE';
-            }
-            const badge = el('auto-sync-badge');
-            if(badge) badge.classList.add('hidden');
-        }
-
-        function loadLocalData() {
-            try {
-                const storedChannels = localStorage.getItem('tnc7_channels');
-                if (storedChannels) state.items = JSON.parse(storedChannels);
-            } catch(e) { console.error("Gagal load lokal", e); }
-        }
-
-        function saveLocalData() {
-            try { localStorage.setItem('tnc7_channels', JSON.stringify(state.items)); } 
-            catch(e) { console.error("Gagal save lokal", e); }
-        }
-
-        function showToast(msg, isError = false) {
-            const toast = el('toast');
-            el('toast-msg').innerText = msg;
-            toast.className = isError ? 'show error' : 'show';
-            toast.querySelector('i').className = isError ? 'fas fa-exclamation-circle' : 'fas fa-check-circle';
-            setTimeout(() => toast.className = '', 3000);
-        }
-
-        window.openModal = function(id) { el(id).classList.remove('hidden'); };
-        window.closeModal = function(id) { el(id).classList.add('hidden'); };
-
-        function setupEventListeners() {
-            document.addEventListener('contextmenu', event => event.preventDefault());
-
-            ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { 
-                el(id).addEventListener('input', renderTable); 
-            });
-            
-            el('btn-reset').addEventListener('click', () => {
-                el('search-input').value = ''; 
-                el('filter-monet').value = 'all'; 
-                el('filter-pengelola').value = 'all'; 
-                el('sort-data').value = 'asli';
-                renderTable();
-            });
-
-            el('item-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const id = el('item-id').value; 
-                const docId = id || Date.now().toString();
-                const newItem = {
-                    id: docId, 
-                    title: el('item-title').value, 
-                    channelId: el('item-channelId').value,
-                    link: el('item-link').value, 
-                    pengelola: el('item-pengelola').value.toUpperCase(),
-                    subs: el('item-subs').value || '0', 
-                    subsGrowth: parseInt(el('item-subsGrowth').value) || 0,
-                    views: el('item-views').value || '0', 
-                    viewGrowth: parseInt(el('item-viewGrowth').value) || 0,
-                    videoCount: parseInt(el('item-video').value) || 0, 
-                    niche: el('item-niche').value,
-                    monet: el('item-monet').value, 
-                    notes: el('item-notes').value,
-                    badges: { topViews: el('item-topViews').checked, topSubs: el('item-topSubs').checked },
-                    createdAt: id ? (state.items.find(i => i.id === id)?.createdAt || Date.now()) : Date.now()
-                };
-
-                if(id) {
-                    const idx = state.items.findIndex(i => i.id === id);
-                    if(idx > -1) state.items[idx] = newItem;
-                } else {
-                    state.items.unshift(newItem);
+        window.deleteChannel = async (id) => {
+            if(confirm('Hapus channel ini dari database tim?')) {
+                try {
+                    await deleteDoc(doc(db, "public/data/channels", id));
+                } catch (error) {
+                    console.error("Error Deleting:", error);
+                    alert("Gagal menghapus data dari Cloud!");
                 }
-                
-                saveLocalData();
+            }
+        };
 
-                if (state.isCloudConnected && db && userId) {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', docId);
-                    setDoc(docRef, newItem).catch(err => console.error("Gagal simpan ke cloud", err));
-                }
+        window.editChannel = (id) => {
+            const ch = channels.find(c => c.id === id);
+            if(ch) {
+                document.getElementById('editId').value = ch.id;
+                document.getElementById('urlInput').value = ch.url;
+                document.getElementById('nameInput').value = ch.name;
+                document.getElementById('categoryInput').value = ch.category;
+                document.getElementById('subsInput').value = ch.subscriber;
+                document.getElementById('avatarUrl').value = ch.avatar;
+                document.getElementById('ytChannelId').value = ch.ytId || '';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
 
-                renderTable();
-                window.closeModal('modal-form'); 
-                showToast('DATA BERHASIL DISIMPAN');
-            });
-        }
-
-        function updateFilters() {
-            const select = el('filter-pengelola');
-            const unique = [...new Set(state.items.map(i => i.pengelola).filter(Boolean))];
-            select.innerHTML = '<option value="all">SEMUA PENGELOLA</option>' + unique.map(p => `<option value="${p}">${p}</option>`).join('');
+        function resetForm() {
+            document.getElementById('channelForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('avatarUrl').value = '';
+            document.getElementById('ytChannelId').value = '';
         }
 
         function renderTable() {
-            if(!state.isLoggedIn) return;
-            
-            const tbody = el('table-body');
-            const sq = el('search-input').value.toLowerCase();
-            const fm = el('filter-monet').value;
-            const fp = el('filter-pengelola').value;
-            const sort = el('sort-data').value;
-
-            let filtered = state.items.filter(i => {
-                const ms = (i.title && i.title.toLowerCase().includes(sq)) || (i.niche && i.niche.toLowerCase().includes(sq)) || (i.channelId && i.channelId.toLowerCase().includes(sq));
-                const mm = fm === 'all' ? true : (fm === 'yes' ? i.monet === 'Sudah' : i.monet !== 'Sudah');
-                const mp = fp === 'all' ? true : i.pengelola === fp;
-                return ms && mm && mp;
-            });
-
-            if(sort === 'views_desc') filtered.sort((a,b) => (b.viewGrowth||0) - (a.viewGrowth||0));
-            if(sort === 'subs_desc') filtered.sort((a,b) => (b.subsGrowth||0) - (a.subsGrowth||0));
-            if(sort === 'asli') filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-
-            const now = Date.now();
-            const newChannelsCount = state.items.filter(i => (now - (i.createdAt || 0)) <= 86400000).length;
-
-            el('stat-total').innerText = state.items.length;
-            el('stat-monet').innerText = state.items.filter(i => i.monet === 'Sudah').length;
-            if(el('stat-aktif')) el('stat-aktif').innerText = state.items.length; 
-            if(el('stat-new')) el('stat-new').innerText = newChannelsCount;
-
+            const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
-            if(filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="11" class="text-center text-muted" style="padding: 3rem;">BELUM ADA DATA...</td></tr>`;
-                return;
-            }
-
-            filtered.forEach((item, idx) => {
-                let badge = '';
-                if(item.badges?.topViews) badge += `<span class="badge-views"><i class="fas fa-fire"></i> TOP VIEWS</span> `;
-                if(item.badges?.topSubs) badge += `<span class="badge-subs"><i class="fas fa-chart-line"></i> TOP SUBS</span>`;
-
-                let sG = item.subsGrowth > 0 ? `<div class="text-emerald text-xs font-bold">▲ +${item.subsGrowth}</div>` : `<div class="text-muted text-xs">± 0</div>`;
-                let vG = item.viewGrowth > 0 ? `<div><span class="text-emerald font-bold text-sm">▲ +${item.viewGrowth}</span></div>` : `<div><span class="text-muted text-sm font-bold">0</span></div>`;
-                let monetHtml = item.monet === 'Sudah' ? `<div style="width:20px;height:20px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
-                let linkUrl = item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '#');
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="text-center text-muted">${idx+1}</td>
-                        <td><div class="font-bold text-sm mb-1">${item.title}</div><div>${badge}</div></td>
-                        <td class="text-center">${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.65rem; font-weight: bold; text-decoration: none;">BUKA <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
-                        <td><div class="font-bold text-sm">${item.subs||'0'}</div>${sG}</td>
-                        <td class="font-bold text-sm">${item.views||'0'}</td><td>${vG}</td>
-                        <td class="text-center font-semibold text-sm">${item.videoCount}</td>
-                        <td class="text-xs text-muted font-semibold" style="text-transform: uppercase;">${item.pengelola||'-'}</td>
-                        <td class="text-xs text-muted">${item.niche||'-'}</td><td class="text-center">${monetHtml}</td>
-                        <td style="padding-right: 1.5rem;">
-                            <div class="flex gap-2 justify-end">
-                                <button onclick="window.editItem('${item.id}')" class="btn btn-pill" style="padding: 2px 8px; font-size: 0.65rem;">EDIT</button>
-                                <button onclick="window.deleteItem('${item.id}')" class="btn btn-pill text-red" style="padding: 2px 8px; font-size: 0.65rem;"><i class="fas fa-trash"></i></button>
+            
+            channels.sort((a,b) => b.timestamp - a.timestamp).forEach(ch => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="channel-info">
+                            <img src="${ch.avatar}" class="channel-avatar" alt="Avatar">
+                            <div>
+                                <div class="channel-name">${ch.name}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted);">${ch.url.substring(0, 20)}...</div>
                             </div>
-                        </td>
-                    </tr>
+                        </div>
+                    </td>
+                    <td><span style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${ch.category}</span></td>
+                    <td><i class="fa-solid fa-users" style="color: var(--text-muted);"></i> ${ch.subscriber}</td>
+                    <td>
+                        <button class="btn-action" onclick="editChannel('${ch.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-action btn-delete" onclick="deleteChannel('${ch.id}')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                    </td>
                 `;
+                tbody.appendChild(tr);
             });
         }
 
-        window.editItem = function(id) {
-            el('item-form').reset(); 
-            el('item-id').value = '';
-            if (id) {
-                const item = state.items.find(i => i.id === id);
-                if (item) {
-                    el('modal-title').innerHTML = 'EDIT DATA CHANNEL'; 
-                    el('item-id').value = item.id;
-                    el('item-title').value = item.title; 
-                    el('item-channelId').value = item.channelId || '';
-                    el('item-link').value = item.link || ''; 
-                    el('item-pengelola').value = item.pengelola || '';
-                    el('item-subs').value = item.subs || ''; 
-                    el('item-subsGrowth').value = item.subsGrowth || 0;
-                    el('item-views').value = item.views || ''; 
-                    el('item-viewGrowth').value = item.viewGrowth || 0;
-                    el('item-video').value = item.videoCount || 0; 
-                    el('item-niche').value = item.niche || '';
-                    el('item-monet').value = item.monet || 'Belum'; 
-                    el('item-notes').value = item.notes || '';
-                    el('item-topViews').checked = !!item.badges?.topViews; 
-                    el('item-topSubs').checked = !!item.badges?.topSubs;
-                }
-            } else { 
-                el('modal-title').innerHTML = 'TAMBAH CHANNEL BARU'; 
-            }
-            window.openModal('modal-form');
+        window.filterTable = () => {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.getElementById('tableBody').getElementsByTagName('tr');
+            Array.from(rows).forEach(row => {
+                const name = row.cells[0].innerText.toLowerCase();
+                row.style.display = name.includes(query) ? '' : 'none';
+            });
         };
 
-        window.deleteItem = function(id) {
-            if(confirm('HAPUS CHANNEL INI?')) {
-                state.items = state.items.filter(i => i.id !== id);
-                saveLocalData();
+        // --- PENCARIAN YOUTUBE API ---
+        window.searchYouTube = async () => {
+            let inputUrl = document.getElementById('urlInput').value.trim();
+            if(!inputUrl) return alert("Masukkan ID Channel, Username (@), atau URL YouTube!");
 
-                if (state.isCloudConnected && db && userId) {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', id);
-                    deleteDoc(docRef).catch(err => console.error("Gagal hapus dari cloud", err));
-                }
-
-                renderTable();
-                showToast('DATA BERHASIL DIHAPUS');
-            }
-        };
-
-        window.searchYouTubeChannel = async function() {
-            const query = el('yt-search-input').value.trim();
-            if (!query) return;
-
-            const btn = el('btn-yt-search'); 
-            const originalText = btn.innerHTML;
-            const apiKeyToUse = DEFAULT_API_KEY;
-
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> MENCARI...'; 
+            const btn = document.getElementById('btnSearchYt');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
             btn.disabled = true;
 
-            let handle = query.includes('@') ? query.split('@')[1].split('/')[0].split('?')[0] : null;
-
             try {
-                let channelData = null;
-                if (handle) {
-                    const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&forHandle=${handle}&key=${apiKeyToUse}`);
-                    const data = await res.json(); 
-                    if (data.error) throw new Error(data.error.message);
-                    if (data.items) channelData = data.items[0];
+                let channelId = "";
+                
+                // Ekstrak ID/Username dari URL
+                if (inputUrl.includes('youtube.com/channel/')) {
+                    channelId = inputUrl.split('youtube.com/channel/')[1].split('/')[0].split('?')[0];
+                } else if (inputUrl.includes('youtube.com/@') || inputUrl.startsWith('@')) {
+                    let username = inputUrl.includes('youtube.com/@') ? inputUrl.split('youtube.com/@')[1].split('/')[0].split('?')[0] : inputUrl.substring(1);
+                    const handleRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${username}&key=${DEFAULT_API_KEY}`);
+                    const handleData = await handleRes.json();
+                    if (handleData.items && handleData.items.length > 0) channelId = handleData.items[0].snippet.channelId;
                 } else {
-                    const searchRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(query)}&key=${apiKeyToUse}`);
-                    const searchData = await searchRes.json();
-                    if (searchData.error) throw new Error(searchData.error.message);
-                    
-                    if (searchData.items && searchData.items.length > 0) {
-                        const statRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${searchData.items[0].snippet.channelId}&key=${apiKeyToUse}`);
-                        const statData = await statRes.json(); 
-                        if (statData.items) channelData = statData.items[0];
-                    }
+                    channelId = inputUrl; 
                 }
 
-                if (channelData) {
-                    const formatNumber = (numStr) => {
-                        const num = parseInt(numStr);
-                        if (isNaN(num)) return '0';
-                        if (num >= 1000000) return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
-                        if (num >= 1000) return (num / 1000).toFixed(1).replace('.0', '') + 'K';
-                        return num.toString();
-                    };
+                if (!channelId) throw new Error("ID/Username Channel tidak ditemukan.");
 
-                    window.closeModal('modal-search-yt'); 
-                    window.editItem(null); 
-                    el('item-title').value = channelData.snippet.title; 
-                    el('item-channelId').value = channelData.id;
-                    el('item-link').value = channelData.snippet.customUrl ? `https://youtube.com/${channelData.snippet.customUrl}` : `https://youtube.com/channel/${channelData.id}`;
-                    el('item-subs').value = formatNumber(channelData.statistics.subscriberCount);
-                    el('item-views').value = formatNumber(channelData.statistics.viewCount);
-                    el('item-video').value = channelData.statistics.videoCount;
-                    el('yt-search-input').value = ''; 
-                    showToast('CHANNEL DITEMUKAN!');
-                } else alert('CHANNEL TIDAK DITEMUKAN.'); 
-            } catch (err) { 
-                console.error(err);
-                alert('KESALAHAN PENCARIAN: ' + err.message); 
-            } finally { 
-                btn.innerHTML = originalText; 
-                btn.disabled = false; 
+                // Ambil Detail Channel
+                const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${DEFAULT_API_KEY}`);
+                const data = await res.json();
+
+                if(data.items && data.items.length > 0) {
+                    const snippet = data.items[0].snippet;
+                    const stats = data.items[0].statistics;
+                    
+                    document.getElementById('nameInput').value = snippet.title;
+                    document.getElementById('subsInput').value = formatNumber(stats.subscriberCount);
+                    document.getElementById('avatarUrl').value = snippet.thumbnails.default.url;
+                    document.getElementById('ytChannelId').value = channelId;
+                } else {
+                    alert("Data channel tidak ditemukan di YouTube.");
+                }
+            } catch (error) {
+                console.error("YouTube API Error:", error);
+                alert("Gagal mengambil data dari YouTube. Cek URL/ID atau limit API Key.");
+            } finally {
+                btn.innerHTML = '<i class="fa-brands fa-youtube"></i> Cari YT';
+                btn.disabled = false;
             }
         };
 
-        window.exportData = function() {
-            const dataToExport = { channels: state.items, exportDate: new Date().toISOString() };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "TNC7_BACKUP_" + new Date().getTime() + ".json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-            showToast('DATA BERHASIL DIEKSPOR');
+        function formatNumber(num) {
+            if(!num) return "0";
+            if(num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if(num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+
+        // --- PENGATURAN UI (TEMA) ---
+        window.openSettings = () => document.getElementById('settingsModal').style.display = 'flex';
+        window.closeSettings = () => document.getElementById('settingsModal').style.display = 'none';
+        
+        window.setTheme = (themeName) => {
+            document.body.setAttribute('data-theme', themeName);
+            localStorage.setItem('tnc7_theme', themeName); // Tema tetap disimpan lokal per perangkat
         };
 
-        window.importData = function(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const imported = JSON.parse(e.target.result);
-                    if(imported.channels && Array.isArray(imported.channels)) state.items = imported.channels;
-                    saveLocalData();
-                    renderTable();
-                    showToast('DATA BERHASIL DIIMPOR');
-                    el('import-file').value = ''; 
-                } catch(err) { alert('GAGAL MEMBACA FILE JSON: ' + err.message); }
-            };
-            reader.readAsText(file);
-        };
-
-        window.onload = () => {
-            setInterval(() => { 
-                const now = new Date();
-                const timeString = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                const dateString = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
-                const clockEl = el('clock');
-                if(clockEl) clockEl.innerText = `${dateString} — ${timeString} WIB`;
-            }, 1000);
-            initApp();
-        };
-
-        function setupPWA() {
-            const iconDataUri = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231a1f2c'/%3E%3Cpath d='M190 160 L370 256 L190 352 Z' fill='%23facc15'/%3E%3Ctext x='256' y='440' font-family='sans-serif' font-size='100' font-weight='900' letter-spacing='-2' fill='%23ffffff' text-anchor='middle'%3ETNC7%3C/text%3E%3C/svg%3E";
-
-            const manifest = {
-                "name": "TNC7 Management", "short_name": "TNC7",
-                "start_url": window.location.pathname, "display": "standalone",
-                "background_color": "#161921", "theme_color": "#161921",
-                "icons": [{ "src": iconDataUri, "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }]
-            };
-            
-            const manifestUrl = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
-            let link = document.querySelector('link[rel="manifest"]');
-            if (!link) { link = document.createElement('link'); link.rel = 'manifest'; document.head.appendChild(link); }
-            link.href = manifestUrl;
-
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register(URL.createObjectURL(new Blob([`self.addEventListener('fetch', (e) => {});`], { type: 'application/javascript' }))).catch(() => {});
-            }
-
-            let deferredPrompt;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault(); deferredPrompt = e;
-                const installBtn = document.getElementById('btn-install');
-                if(installBtn) { installBtn.classList.remove('hidden'); installBtn.style.animation = 'pulse 2s infinite'; }
-            });
-
-            const installBtn = document.getElementById('btn-install');
-            if(installBtn) {
-                installBtn.addEventListener('click', async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        if (outcome === 'accepted') installBtn.classList.add('hidden');
-                        deferredPrompt = null;
-                    }
-                });
-            }
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('tnc7_theme') || 'gelap';
+            setTheme(savedTheme);
         }
     </script>
 </body>
