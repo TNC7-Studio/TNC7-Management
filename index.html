@@ -293,14 +293,7 @@
                 
                 <div class="flex items-center gap-2" style="background: var(--input-bg); padding: 4px; border-radius: 999px; border: 1px solid var(--panel-border); margin-left: 0.5rem; position: relative; z-index: 60;">
                     <button class="btn" onclick="window.openModal('modal-settings')" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="PENGATURAN"><i class="fas fa-cog"></i></button>
-                    <div class="dropdown">
-                        <button class="btn" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="PILIH TEMA"><i class="fas fa-palette"></i></button>
-                        <div class="dropdown-content">
-                            <div class="dropdown-item" onclick="window.setTheme('dark')"><i class="fas fa-moon"></i> TEMA DARK</div>
-                            <div class="dropdown-item" onclick="window.setTheme('terang')"><i class="fas fa-sun"></i> TEMA TERANG</div>
-                            <div class="dropdown-item" onclick="window.setTheme('kuning')"><i class="fas fa-bolt"></i> TEMA KUNING</div>
-                        </div>
-                    </div>
+                    <button id="btn-theme-toggle" class="btn" onclick="window.cycleTheme()" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted); transition: all 0.3s;" title="GANTI TEMA"><i class="fas fa-moon"></i></button>
                 </div>
             </div>
         </header>
@@ -315,8 +308,8 @@
                 <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">SUDAH MONETISASI</p><h3 class="text-2xl font-bold" id="stat-monet">0</h3></div>
             </div>
             <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
-                <div class="icon-box" style="background: rgba(250,204,21,0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);"><i class="fas fa-tv"></i></div>
-                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">CHANNEL AKTIF</p><h3 class="text-2xl font-bold" id="stat-aktif">0</h3></div>
+                <div class="icon-box" style="background: rgba(148,163,184,0.1); color: var(--text-muted); border: 1px solid rgba(148,163,184,0.3);"><i class="fas fa-dollar-sign"></i></div>
+                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">BELUM MONET</p><h3 class="text-2xl font-bold" id="stat-aktif">0</h3></div>
             </div>
             <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
                 <div class="icon-box" style="background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);"><i class="fas fa-plus-circle"></i></div>
@@ -348,13 +341,11 @@
                         <option value="all">SEMUA PENGELOLA</option>
                     </select>
                     <select id="sort-data" class="form-select text-xs" style="width: auto;">
+                        <option value="views_month_desc">TOTAL VIEWS TERTINGGI</option>
                         <option value="asli">URUTAN ASLI</option>
                         <option value="views_desc">KENAIKAN VIEWS ↑</option>
                         <option value="subs_desc">KENAIKAN SUBS ↑</option>
-                        <option value="views_month_desc">VIEWS TERTINGGI (BULAN INI) ↑</option>
                     </select>
-                    <button id="btn-view-toggle" class="btn btn-pill text-xs" onclick="window.toggleViewMode()"><i class="fas fa-th"></i> GRID</button>
-                    <button id="btn-chart-toggle" class="btn btn-pill text-xs" onclick="window.toggleChart()"><i class="fas fa-chart-bar"></i> GRAFIK</button>
                     <button id="btn-reset" class="btn btn-pill text-xs"><i class="fas fa-times"></i> RESET FILTER</button>
                 </div>
             </div>
@@ -631,7 +622,11 @@
             loadLocalData();
             
             const savedTheme = localStorage.getItem('TNC7_THEME');
-            applyTheme(savedTheme || 'kuning');
+            
+            // Menggunakan tema kuning sebagai default jika belum ada preferensi yang tersimpan
+            let initialTheme = savedTheme ? savedTheme : 'kuning';
+            
+            applyTheme(initialTheme);
 
             renderTable();
             updateFilters();
@@ -710,11 +705,28 @@
             state.theme = theme; 
             document.body.setAttribute('data-theme', theme);
             localStorage.setItem('TNC7_THEME', theme);
+            
+            // Perbarui ikon pada tombol tema cepat
+            const themeBtn = document.getElementById('btn-theme-toggle');
+            if (themeBtn) {
+                if (theme === 'terang') themeBtn.innerHTML = '<i class="fas fa-sun" style="color: #f59e0b;"></i>';
+                else if (theme === 'kuning') themeBtn.innerHTML = '<i class="fas fa-bolt" style="color: #eab308;"></i>';
+                else themeBtn.innerHTML = '<i class="fas fa-moon" style="color: #60a5fa;"></i>';
+            }
         }
 
         window.setTheme = function(theme) {
             applyTheme(theme);
             if (state.isCloudConnected) saveThemeToCloud(theme);
+        };
+
+        window.cycleTheme = function() {
+            const themes = ['dark', 'terang', 'kuning'];
+            let currentIdx = themes.indexOf(state.theme);
+            if (currentIdx === -1) currentIdx = 0;
+            let nextTheme = themes[(currentIdx + 1) % themes.length];
+            window.setTheme(nextTheme);
+            showToast('TEMA: ' + nextTheme.toUpperCase());
         };
 
         function setCloudOnline() {
@@ -771,7 +783,7 @@
                 el('search-input').value = ''; 
                 el('filter-monet').value = 'all'; 
                 el('filter-pengelola').value = 'all'; 
-                el('sort-data').value = 'asli';
+                el('sort-data').value = 'views_month_desc';
                 renderTable();
             });
 
@@ -935,18 +947,8 @@
 
             el('stat-total').innerText = state.items.length;
             el('stat-monet').innerText = state.items.filter(i => i.monet === 'Sudah').length;
-            if(el('stat-aktif')) el('stat-aktif').innerText = state.items.length; 
+            if(el('stat-aktif')) el('stat-aktif').innerText = state.items.filter(i => i.monet !== 'Sudah').length; 
             if(el('stat-new')) el('stat-new').innerText = newChannelsCount;
-
-            if (state.showChart) updateChartData(filtered);
-
-            if (state.viewMode === 'table') {
-                tableEl.classList.remove('hidden');
-                gridEl.classList.add('hidden');
-            } else {
-                tableEl.classList.add('hidden');
-                gridEl.classList.remove('hidden');
-            }
 
             tbody.innerHTML = '';
             gridEl.innerHTML = '';
