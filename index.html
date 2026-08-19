@@ -3,496 +3,495 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#161921">
-    <title>TNC7 MANAGEMENT - TEAM SYNC</title>
-    
-    <!-- FontAwesome & Google Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>TNC7 Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --bg-color: #161921;
-            --panel-bg: rgba(26, 31, 41, 0.95);
-            --panel-border: rgba(56, 189, 248, 0.25);
-            --text-main: #e2e8f0;
-            --text-muted: #94a3b8;
-            --input-bg: rgba(13, 16, 21, 0.7);
-            --primary-accent: #facc15;
-            --primary-hover: #eab308;
-            --table-hover: rgba(56, 189, 248, 0.08);
-            --header-bg: rgba(26, 31, 41, 0.98);
-        }
-
-        [data-theme="terang"] {
-            --bg-color: #f8fafc;
-            --panel-bg: rgba(255, 255, 255, 0.9);
-            --panel-border: #e2e8f0;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --input-bg: rgba(241, 245, 249, 0.7);
-            --primary-accent: #3b82f6;
-            --primary-hover: #2563eb;
-            --table-hover: rgba(59, 130, 246, 0.05);
-            --header-bg: rgba(255, 255, 255, 0.98);
-        }
-
-        [data-theme="kuning"] {
-            --bg-color: #1a1c19;
-            --panel-bg: rgba(26, 28, 25, 0.95);
-            --panel-border: rgba(250, 204, 21, 0.3);
-            --text-main: #fefce8;
-            --text-muted: #a1a1aa;
-            --input-bg: rgba(0, 0, 0, 0.5);
-            --primary-accent: #facc15;
-            --primary-hover: #eab308;
-            --table-hover: rgba(250, 204, 21, 0.08);
-            --header-bg: rgba(26, 28, 25, 0.98);
+            --bg-dark: #121212;
+            --panel-bg: #1e1e1e;
+            --border-color: #333333;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent-yellow: #facc15;
+            --accent-green: #22c55e;
+            --accent-blue: #3b82f6;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        
-        body { 
-            background-color: var(--bg-color); 
+
+        body {
+            background-color: var(--bg-dark);
             color: var(--text-main);
+            padding: 1rem;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        /* Navbar / Header */
+        /* Top Glowing Border */
+        .app-container {
+            border-top: 2px solid var(--accent-yellow);
+            box-shadow: 0 -10px 20px rgba(250, 204, 21, 0.05);
+            max-width: 1400px;
+            margin: 0 auto;
+            border-radius: 12px;
+        }
+
+        /* HEADER */
         header {
-            background: var(--header-bg);
-            border-bottom: 1px solid var(--panel-border);
-            padding: 1rem 2rem;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
+            margin-bottom: 1.5rem;
         }
 
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-accent); letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
-        .logo i { font-size: 1.8rem; }
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .logo-box { 
+            background: rgba(250, 204, 21, 0.1); width: 45px; height: 45px; 
+            border-radius: 12px; display: flex; justify-content: center; align-items: center;
+            border: 1px solid rgba(250, 204, 21, 0.3); position: relative;
+        }
+        .logo-box i { color: var(--accent-yellow); font-size: 1.5rem; }
+        .status-dot { 
+            position: absolute; bottom: -2px; right: -2px; width: 10px; height: 10px; 
+            background: var(--accent-green); border-radius: 50%; border: 2px solid var(--panel-bg);
+        }
+        .title h1 { font-size: 1.1rem; font-weight: 800; letter-spacing: 1px; }
+        .title p { color: var(--accent-yellow); font-size: 0.75rem; font-weight: 600; margin-top: 2px; text-transform: uppercase; }
+
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .badge { 
+            border: 1px solid rgba(34, 197, 94, 0.4); background: rgba(34, 197, 94, 0.05);
+            color: var(--accent-green); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .icon-group { display: flex; gap: 5px; border: 1px solid var(--border-color); border-radius: 20px; padding: 4px; }
+        .icon-btn { background: transparent; border: none; color: var(--text-muted); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; transition: 0.2s; }
+        .icon-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+        /* STATS GRID */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card {
+            background-color: var(--panel-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 1.2rem 1.5rem; display: flex; align-items: center; gap: 15px;
+        }
+        .stat-icon {
+            width: 45px; height: 45px; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 1.2rem;
+        }
+        .stat-card:nth-child(1) .stat-icon { background: rgba(250, 204, 21, 0.1); color: var(--accent-yellow); border: 1px solid rgba(250, 204, 21, 0.3); }
+        .stat-card:nth-child(2) .stat-icon { background: rgba(34, 197, 94, 0.1); color: var(--accent-green); border: 1px solid rgba(34, 197, 94, 0.3); }
+        .stat-card:nth-child(3) .stat-icon { background: rgba(250, 204, 21, 0.1); color: var(--accent-yellow); border: 1px solid rgba(250, 204, 21, 0.3); }
+        .stat-card:nth-child(4) .stat-icon { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.3); }
         
-        .header-controls { display: flex; align-items: center; gap: 15px; }
+        .stat-info p { color: var(--text-muted); font-size: 0.75rem; font-weight: 700; margin-bottom: 2px; }
+        .stat-info h3 { font-size: 1.5rem; font-weight: 800; }
+
+        /* MAIN PANEL */
+        .main-panel { background-color: var(--panel-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 1.5rem; min-height: 500px; }
         
-        /* Auto Sync Indicator */
-        .sync-indicator {
-            background: rgba(34, 197, 94, 0.2);
-            color: #22c55e;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid rgba(34, 197, 94, 0.5);
-        }
-        .sync-indicator i { font-size: 0.7rem; animation: pulse 2s infinite; }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
-
-        .icon-btn {
-            background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem;
-            cursor: pointer; transition: color 0.2s, transform 0.2s; padding: 8px;
-        }
-        .icon-btn:hover { color: var(--primary-accent); transform: scale(1.1); }
-
-        /* Main Container */
-        .container { padding: 2rem; max-width: 1400px; margin: 0 auto; width: 100%; flex: 1; }
+        .toolbar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .toolbar-top h2 { font-size: 1.1rem; font-weight: 800; text-transform: uppercase; }
+        .toolbar-actions { display: flex; gap: 10px; }
         
-        .panel {
-            background: var(--panel-bg); border: 1px solid var(--panel-border);
-            border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); backdrop-filter: blur(12px);
+        .btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-main); padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); border-color: #555; }
+        .btn-yellow { background: var(--accent-yellow); border: none; color: #000; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn-yellow:hover { background: #eab308; }
+
+        .filters { display: flex; gap: 10px; margin-bottom: 1.5rem; }
+        .search-box { position: relative; flex: 1; max-width: 300px; }
+        .search-box i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 0.85rem; }
+        .search-box input { 
+            width: 100%; background: transparent; border: 1px solid var(--border-color); 
+            border-radius: 8px; padding: 10px 10px 10px 35px; color: var(--text-main); outline: none; font-size: 0.85rem;
         }
+        .filter-select { background: transparent; border: 1px solid var(--border-color); border-radius: 8px; padding: 0 15px; color: var(--text-main); font-size: 0.85rem; font-weight: 600; outline: none; }
 
-        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--panel-border); padding-bottom: 1rem; }
-        .panel-header h2 { font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-
-        /* Input Controls */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
-        .input-group { display: flex; flex-direction: column; gap: 5px; }
-        .input-group label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
-        .input-group input, .input-group select {
-            background: var(--input-bg); border: 1px solid var(--panel-border);
-            color: var(--text-main); padding: 10px 12px; border-radius: 8px; font-size: 0.95rem; outline: none; transition: border-color 0.2s;
-        }
-        .input-group input:focus, .input-group select:focus { border-color: var(--primary-accent); }
-        
-        .yt-search-wrapper { display: flex; gap: 8px; }
-        .yt-search-wrapper input { flex: 1; }
-
-        .btn-primary { background: var(--primary-accent); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary:hover { background: var(--primary-hover); }
-
-        /* Table */
-        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid var(--panel-border); }
+        /* TABLE */
+        .table-container { overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { background: rgba(0,0,0,0.2); padding: 12px 15px; font-weight: 600; font-size: 0.9rem; color: var(--text-muted); white-space: nowrap; }
-        td { padding: 15px; border-bottom: 1px solid var(--panel-border); vertical-align: middle; }
-        tr:hover { background: var(--table-hover); }
-        tr:last-child td { border-bottom: none; }
+        th { font-size: 0.75rem; font-weight: 800; color: var(--text-main); padding: 15px 10px; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
+        td { font-size: 0.85rem; padding: 15px 10px; border-bottom: 1px solid var(--border-color); color: var(--text-muted); vertical-align: middle; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
         
-        .channel-info { display: flex; align-items: center; gap: 12px; }
-        .channel-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--panel-border); }
-        .channel-name { font-weight: 700; color: var(--primary-accent); font-size: 1rem; }
-        
-        .btn-action { background: rgba(255,255,255,0.1); border: none; color: var(--text-main); padding: 6px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s; margin-right: 5px; }
-        .btn-action:hover { background: rgba(255,255,255,0.2); }
-        .btn-delete:hover { background: #ef4444; color: white; }
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; }
 
-        /* Modal Pengaturan */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-content { background: var(--panel-bg); border: 1px solid var(--panel-border); padding: 2rem; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 15px 40px rgba(0,0,0,0.4); position: relative; }
-        .modal-close { position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+        /* MODAL FOR FORM */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: var(--panel-bg); border: 1px solid var(--border-color); padding: 2rem; border-radius: 20px; width: 90%; max-width: 500px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
         
-        .theme-options { display: flex; gap: 10px; margin-top: 15px; }
-        .theme-btn { flex: 1; padding: 10px; border: 1px solid var(--panel-border); background: var(--input-bg); color: var(--text-main); border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .theme-btn:hover { border-color: var(--primary-accent); }
+        .input-group { margin-bottom: 1rem; }
+        .input-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
+        .input-group input, .input-group select {
+            width: 100%; background: var(--bg-dark); border: 1px solid var(--border-color);
+            color: var(--text-main); padding: 10px; border-radius: 8px; font-size: 0.9rem; outline: none;
+        }
+        .input-group input:focus { border-color: var(--accent-yellow); }
     </style>
 </head>
 <body>
 
-    <!-- Header / Navbar -->
+<div class="app-container">
+    
+    <!-- HEADER -->
     <header>
-        <div class="logo">
-            <i class="fa-solid fa-satellite-dish"></i> TNC7
-        </div>
-        <div class="header-controls">
-            <div class="sync-indicator">
-                <i class="fa-solid fa-circle-dot"></i> AUTO-SYNC TIM
+        <div class="header-left">
+            <div class="logo-box">
+                <i class="fa-brands fa-youtube"></i>
+                <div class="status-dot"></div>
             </div>
-            <button class="icon-btn" onclick="openSettings()" title="Pengaturan Tampilan"><i class="fa-solid fa-gear"></i></button>
+            <div class="title">
+                <h1>TNC7 MANAGEMENT</h1>
+                <p id="clock">Memuat Waktu...</p>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="badge"><i class="fa-solid fa-cloud"></i> CLOUD SYNC AKTIF</div>
+            <div class="badge"><i class="fa-solid fa-circle-dot" style="font-size:8px;"></i> AUTO-SYNC</div>
+            <div class="icon-group">
+                <button class="icon-btn"><i class="fa-solid fa-gear"></i></button>
+                <button class="icon-btn"><i class="fa-solid fa-palette"></i></button>
+            </div>
         </div>
     </header>
 
-    <!-- Main Dashboard -->
-    <div class="container" id="dashboard">
-        
-        <!-- Form Panel -->
-        <div class="panel">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-plus-circle"></i> Tambah / Edit Channel</h2>
-            </div>
-            <form id="channelForm" onsubmit="saveChannel(event)">
-                <input type="hidden" id="editId">
-                <input type="hidden" id="avatarUrl">
-                <input type="hidden" id="ytChannelId">
-
-                <div class="form-grid">
-                    <div class="input-group">
-                        <label>ID Channel / Username YT</label>
-                        <div class="yt-search-wrapper">
-                            <input type="text" id="urlInput" placeholder="Cth: UCa_..." required>
-                            <button type="button" class="btn-primary" onclick="searchYouTube()" id="btnSearchYt" title="Cari Data di YouTube">
-                                <i class="fa-brands fa-youtube"></i> Cari YT
-                            </button>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label>Nama Channel</label>
-                        <input type="text" id="nameInput" placeholder="Otomatis dari YT..." required>
-                    </div>
-                    <div class="input-group">
-                        <label>Kategori</label>
-                        <select id="categoryInput" required>
-                            <option value="Hiburan">Hiburan</option>
-                            <option value="Edukasi">Edukasi</option>
-                            <option value="Gaming">Gaming</option>
-                            <option value="Berita">Berita</option>
-                            <option value="Lainnya">Lainnya</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Subscriber</label>
-                        <input type="text" id="subsInput" placeholder="Otomatis / Manual">
-                    </div>
-                </div>
-                <div style="text-align: right;">
-                    <button type="submit" class="btn-primary" id="btnSave">
-                        <i class="fa-solid fa-save"></i> Simpan Channel
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Table Panel -->
-        <div class="panel">
-            <div class="panel-header">
-                <h2><i class="fa-solid fa-list"></i> Database Channel Tim</h2>
-                <div class="input-group" style="width: 250px;">
-                    <input type="text" id="searchInput" placeholder="Cari channel..." onkeyup="filterTable()">
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table id="channelTable">
-                    <thead>
-                        <tr>
-                            <th>Channel</th>
-                            <th>Kategori</th>
-                            <th>Subscriber</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                        <!-- Data akan dirender di sini oleh Firebase -->
-                    </tbody>
-                </table>
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-display"></i></div>
+            <div class="stat-info">
+                <p>TOTAL CHANNEL</p>
+                <h3 id="stat-total">0</h3>
             </div>
         </div>
-
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-dollar-sign"></i></div>
+            <div class="stat-info">
+                <p>SUDAH MONETISASI</p>
+                <h3 id="stat-monet">0</h3>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-display"></i></div>
+            <div class="stat-info">
+                <p>CHANNEL AKTIF</p>
+                <h3 id="stat-aktif">0</h3>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-plus-circle"></i></div>
+            <div class="stat-info">
+                <p>BARU (24 JAM)</p>
+                <h3 id="stat-baru">0</h3>
+            </div>
+        </div>
     </div>
 
-    <!-- Modal Pengaturan Tema -->
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeSettings()"><i class="fa-solid fa-times"></i></button>
-            <h2 style="margin-bottom: 1rem;"><i class="fa-solid fa-palette"></i> Pengaturan Tampilan</h2>
+    <!-- MAIN PANEL -->
+    <div class="main-panel">
+        <div class="toolbar-top">
+            <h2>DAFTAR CHANNEL & AKUN</h2>
+            <div class="toolbar-actions">
+                <button class="btn-outline" onclick="openModal()"><i class="fa-solid fa-magnifying-glass"></i> CARI YT</button>
+                <button class="btn-yellow" onclick="openModal()"><i class="fa-solid fa-plus"></i> TAMBAH CHANNEL</button>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="CARI NAMA, ID, NICHE..." onkeyup="filterTable()">
+            </div>
+            <select class="filter-select"><option>SEMUA MONETISASI</option></select>
+            <select class="filter-select"><option>SEMUA PENGELOLA</option></select>
+            <select class="filter-select"><option>URUTAN ASLI</option></select>
+            <button class="btn-outline" style="border-radius: 20px;"><i class="fa-solid fa-xmark"></i> RESET FILTER</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>NAMA CHANNEL</th>
+                        <th>LINK</th>
+                        <th>SUBSCRIBERS</th>
+                        <th>TOTAL VIEWS</th>
+                        <th>VIDEO</th>
+                        <th>PENGELOLA</th>
+                        <th>NICHE</th>
+                        <th>MONET</th>
+                        <th>AKSI</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="10" class="empty-state">BELUM ADA DATA...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL TAMBAH/EDIT -->
+<div class="modal" id="formModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fa-solid fa-plus-circle" style="color: var(--accent-yellow);"></i> Data Channel</h3>
+            <button class="icon-btn" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="channelForm" onsubmit="saveChannel(event)">
+            <input type="hidden" id="editId">
+            <input type="hidden" id="avatarUrl">
+            <input type="hidden" id="ytChannelId">
+
+            <div class="input-group">
+                <label>Pencarian Otomatis YT (Masukkan URL/ID/Username)</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="urlInput" placeholder="Cth: https://youtube.com/@..." required style="flex:1;">
+                    <button type="button" class="btn-yellow" onclick="searchYouTube()" id="btnSearchYt">CARI YT</button>
+                </div>
+            </div>
             
-            <label style="font-size: 0.9rem; color: var(--text-muted);">Pilih Tema Aplikasi:</label>
-            <div class="theme-options">
-                <button class="theme-btn" onclick="setTheme('gelap')">Gelap</button>
-                <button class="theme-btn" onclick="setTheme('terang')">Terang</button>
-                <button class="theme-btn" onclick="setTheme('kuning')">Kuning</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="input-group">
+                    <label>Nama Channel</label>
+                    <input type="text" id="nameInput" required>
+                </div>
+                <div class="input-group">
+                    <label>Pengelola</label>
+                    <input type="text" id="pengelolaInput" placeholder="Nama Tim">
+                </div>
+                <div class="input-group">
+                    <label>Niche / Kategori</label>
+                    <select id="categoryInput">
+                        <option value="Hiburan">Hiburan</option>
+                        <option value="Gaming">Gaming</option>
+                        <option value="Edukasi">Edukasi</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Status Monet</label>
+                    <select id="monetInput">
+                        <option value="Belum">Belum</option>
+                        <option value="Sudah">Sudah</option>
+                    </select>
+                </div>
             </div>
-        </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                <div class="input-group"><label>Subscribers</label><input type="text" id="subsInput" value="0"></div>
+                <div class="input-group"><label>Total Views</label><input type="text" id="viewsInput" value="0"></div>
+                <div class="input-group"><label>Total Video</label><input type="text" id="videoInput" value="0"></div>
+            </div>
+
+            <div style="text-align: right; margin-top: 10px;">
+                <button type="submit" class="btn-yellow" id="btnSave">SIMPAN DATA</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <!-- Firebase & Logic Scripts -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+<!-- Scripts Khusus UI (Jam) -->
+<script>
+    function updateClock() {
+        const now = new Date();
+        const options = { day: 'numeric', month: 'short', year: 'numeric' };
+        let dateStr = now.toLocaleDateString('id-ID', options).toUpperCase();
+        let timeStr = now.toLocaleTimeString('id-ID').replace(/\./g, ':');
+        document.getElementById('clock').innerText = `${dateStr} – ${timeStr} WIB`;
+    }
+    setInterval(updateClock, 1000); updateClock();
 
-        // ==========================================
-        // 1. KONFIGURASI FIREBASE ASLI ANDA
-        // ==========================================
-        const firebaseConfig = {
-          apiKey: "AIzaSyA1hxTceWANgQU8vwKpXDCJABvYpWQQNmk",
-          authDomain: "tnc7-visualizer.firebaseapp.com",
-          projectId: "tnc7-visualizer",
-          storageBucket: "tnc7-visualizer.firebasestorage.app",
-          messagingSenderId: "1098792876538",
-          appId: "1:1098792876538:web:28304ee128f7d156190c43"
-        };
+    function openModal() { document.getElementById('formModal').style.display = 'flex'; }
+    function closeModal() { 
+        document.getElementById('formModal').style.display = 'none'; 
+        document.getElementById('channelForm').reset();
+        document.getElementById('editId').value = '';
+    }
+</script>
 
-        const app = initializeApp(firebaseConfig);
-        
-        // Mengaktifkan Offline Caching Firestore
-        const db = initializeFirestore(app, {
-            localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
+<!-- Script Firebase & Backend -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Kofigurasi Firebase Anda
+    const firebaseConfig = {
+      apiKey: "AIzaSyA1hxTceWANgQU8vwKpXDCJABvYpWQQNmk",
+      authDomain: "tnc7-visualizer.firebaseapp.com",
+      projectId: "tnc7-visualizer",
+      storageBucket: "tnc7-visualizer.firebasestorage.app",
+      messagingSenderId: "1098792876538",
+      appId: "1:1098792876538:web:28304ee128f7d156190c43"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = initializeFirestore(app, { localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()}) });
+
+    // API YT
+    const DEFAULT_API_KEY = "AIzaSyC3bbs6Qwr54GA5O5qR4ikFWNPBttyDw1k";
+
+    let channels = [];
+
+    // Mulai Sync Realtime
+    window.onload = () => {
+        const channelsRef = collection(db, "public/data/channels");
+        onSnapshot(channelsRef, (snapshot) => {
+            channels = [];
+            let totalMonet = 0;
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                channels.push({ id: doc.id, ...data });
+                if(data.monet === 'Sudah') totalMonet++;
+            });
+            renderTable();
+            
+            // Update Stat Cards
+            document.getElementById('stat-total').innerText = channels.length;
+            document.getElementById('stat-monet').innerText = totalMonet;
+            document.getElementById('stat-aktif').innerText = channels.length; // Asumsi semua aktif
         });
+    };
 
-        // ==========================================
-        // 2. API KEY YOUTUBE ANDA (Disembunyikan dari Tim)
-        // ==========================================
-        const DEFAULT_API_KEY = "AIzaSyC3bbs6Qwr54GA5O5qR4ikFWNPBttyDw1k";
-
-        // State Aplikasi
-        let channels = [];
-        let unsubscribeSync = null;
-
-        // Inisialisasi Aplikasi Saat Halaman Dibuka
-        window.onload = () => {
-            loadTheme();
-            startSyncingChannels(); // Langsung terhubung ke Database Tim
+    window.saveChannel = async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('editId').value || Date.now().toString();
+        const newChannel = {
+            url: document.getElementById('urlInput').value,
+            name: document.getElementById('nameInput').value,
+            category: document.getElementById('categoryInput').value,
+            monet: document.getElementById('monetInput').value,
+            pengelola: document.getElementById('pengelolaInput').value || '-',
+            subscriber: document.getElementById('subsInput').value,
+            views: document.getElementById('viewsInput').value,
+            videos: document.getElementById('videoInput').value,
+            avatar: document.getElementById('avatarUrl').value || 'https://via.placeholder.com/40',
+            ytId: document.getElementById('ytChannelId').value || '',
+            timestamp: Date.now()
         };
 
-        // --- SISTEM SINKRONISASI TIM (REAL-TIME CLOUD) ---
-        function startSyncingChannels() {
-            const channelsRef = collection(db, "public/data/channels");
-            
-            // onSnapshot otomatis update tabel saat ada perubahan di server
-            unsubscribeSync = onSnapshot(channelsRef, (snapshot) => {
-                channels = [];
-                snapshot.forEach((doc) => {
-                    channels.push({ id: doc.id, ...doc.data() });
-                });
-                renderTable();
-            }, (error) => {
-                console.error("Error Syncing Database:", error);
-                alert("Gagal terhubung ke Database Tim. Cek koneksi Anda.");
-            });
+        const btn = document.getElementById('btnSave');
+        btn.innerText = 'MENYIMPAN...'; btn.disabled = true;
+
+        try {
+            await setDoc(doc(db, "public/data/channels", id), newChannel);
+            closeModal();
+        } catch (error) { alert("Gagal menyimpan ke Cloud!"); } 
+        finally { btn.innerText = 'SIMPAN DATA'; btn.disabled = false; }
+    };
+
+    window.deleteChannel = async (id) => {
+        if(confirm('Hapus channel ini?')) await deleteDoc(doc(db, "public/data/channels", id));
+    };
+
+    window.editChannel = (id) => {
+        const ch = channels.find(c => c.id === id);
+        if(ch) {
+            document.getElementById('editId').value = ch.id;
+            document.getElementById('urlInput').value = ch.url;
+            document.getElementById('nameInput').value = ch.name;
+            document.getElementById('categoryInput').value = ch.category;
+            document.getElementById('monetInput').value = ch.monet || 'Belum';
+            document.getElementById('pengelolaInput').value = ch.pengelola || '';
+            document.getElementById('subsInput').value = ch.subscriber;
+            document.getElementById('viewsInput').value = ch.views || '0';
+            document.getElementById('videoInput').value = ch.videos || '0';
+            document.getElementById('avatarUrl').value = ch.avatar;
+            document.getElementById('ytChannelId').value = ch.ytId || '';
+            openModal();
         }
+    };
 
-        // --- MANAJEMEN DATA CHANNEL ---
-        window.saveChannel = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('editId').value || Date.now().toString();
-            const newChannel = {
-                url: document.getElementById('urlInput').value,
-                name: document.getElementById('nameInput').value,
-                category: document.getElementById('categoryInput').value,
-                subscriber: document.getElementById('subsInput').value,
-                avatar: document.getElementById('avatarUrl').value || 'https://via.placeholder.com/40',
-                ytId: document.getElementById('ytChannelId').value || '',
-                timestamp: Date.now()
-            };
-
-            const btn = document.getElementById('btnSave');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
-            btn.disabled = true;
-
-            try {
-                // Simpan langsung ke Cloud Publik
-                await setDoc(doc(db, "public/data/channels", id), newChannel);
-                resetForm();
-            } catch (error) {
-                console.error("Error Saving:", error);
-                alert("Gagal menyimpan ke Cloud!");
-            } finally {
-                btn.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Channel';
-                btn.disabled = false;
-            }
-        };
-
-        window.deleteChannel = async (id) => {
-            if(confirm('Hapus channel ini dari database tim?')) {
-                try {
-                    await deleteDoc(doc(db, "public/data/channels", id));
-                } catch (error) {
-                    console.error("Error Deleting:", error);
-                    alert("Gagal menghapus data dari Cloud!");
-                }
-            }
-        };
-
-        window.editChannel = (id) => {
-            const ch = channels.find(c => c.id === id);
-            if(ch) {
-                document.getElementById('editId').value = ch.id;
-                document.getElementById('urlInput').value = ch.url;
-                document.getElementById('nameInput').value = ch.name;
-                document.getElementById('categoryInput').value = ch.category;
-                document.getElementById('subsInput').value = ch.subscriber;
-                document.getElementById('avatarUrl').value = ch.avatar;
-                document.getElementById('ytChannelId').value = ch.ytId || '';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        };
-
-        function resetForm() {
-            document.getElementById('channelForm').reset();
-            document.getElementById('editId').value = '';
-            document.getElementById('avatarUrl').value = '';
-            document.getElementById('ytChannelId').value = '';
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        if(channels.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="10" class="empty-state">BELUM ADA DATA...</td></tr>';
+            return;
         }
-
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
-            
-            channels.sort((a,b) => b.timestamp - a.timestamp).forEach(ch => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <div class="channel-info">
-                            <img src="${ch.avatar}" class="channel-avatar" alt="Avatar">
-                            <div>
-                                <div class="channel-name">${ch.name}</div>
-                                <div style="font-size: 0.8rem; color: var(--text-muted);">${ch.url.substring(0, 20)}...</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${ch.category}</span></td>
-                    <td><i class="fa-solid fa-users" style="color: var(--text-muted);"></i> ${ch.subscriber}</td>
-                    <td>
-                        <button class="btn-action" onclick="editChannel('${ch.id}')" title="Edit"><i class="fa-solid fa-pen"></i></button>
-                        <button class="btn-action btn-delete" onclick="deleteChannel('${ch.id}')" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        window.filterTable = () => {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const rows = document.getElementById('tableBody').getElementsByTagName('tr');
-            Array.from(rows).forEach(row => {
-                const name = row.cells[0].innerText.toLowerCase();
-                row.style.display = name.includes(query) ? '' : 'none';
-            });
-        };
-
-        // --- PENCARIAN YOUTUBE API ---
-        window.searchYouTube = async () => {
-            let inputUrl = document.getElementById('urlInput').value.trim();
-            if(!inputUrl) return alert("Masukkan ID Channel, Username (@), atau URL YouTube!");
-
-            const btn = document.getElementById('btnSearchYt');
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
-            btn.disabled = true;
-
-            try {
-                let channelId = "";
-                
-                // Ekstrak ID/Username dari URL
-                if (inputUrl.includes('youtube.com/channel/')) {
-                    channelId = inputUrl.split('youtube.com/channel/')[1].split('/')[0].split('?')[0];
-                } else if (inputUrl.includes('youtube.com/@') || inputUrl.startsWith('@')) {
-                    let username = inputUrl.includes('youtube.com/@') ? inputUrl.split('youtube.com/@')[1].split('/')[0].split('?')[0] : inputUrl.substring(1);
-                    const handleRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${username}&key=${DEFAULT_API_KEY}`);
-                    const handleData = await handleRes.json();
-                    if (handleData.items && handleData.items.length > 0) channelId = handleData.items[0].snippet.channelId;
-                } else {
-                    channelId = inputUrl; 
-                }
-
-                if (!channelId) throw new Error("ID/Username Channel tidak ditemukan.");
-
-                // Ambil Detail Channel
-                const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${DEFAULT_API_KEY}`);
-                const data = await res.json();
-
-                if(data.items && data.items.length > 0) {
-                    const snippet = data.items[0].snippet;
-                    const stats = data.items[0].statistics;
-                    
-                    document.getElementById('nameInput').value = snippet.title;
-                    document.getElementById('subsInput').value = formatNumber(stats.subscriberCount);
-                    document.getElementById('avatarUrl').value = snippet.thumbnails.default.url;
-                    document.getElementById('ytChannelId').value = channelId;
-                } else {
-                    alert("Data channel tidak ditemukan di YouTube.");
-                }
-            } catch (error) {
-                console.error("YouTube API Error:", error);
-                alert("Gagal mengambil data dari YouTube. Cek URL/ID atau limit API Key.");
-            } finally {
-                btn.innerHTML = '<i class="fa-brands fa-youtube"></i> Cari YT';
-                btn.disabled = false;
-            }
-        };
-
-        function formatNumber(num) {
-            if(!num) return "0";
-            if(num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-            if(num >= 1000) return (num / 1000).toFixed(1) + 'K';
-            return num.toString();
-        }
-
-        // --- PENGATURAN UI (TEMA) ---
-        window.openSettings = () => document.getElementById('settingsModal').style.display = 'flex';
-        window.closeSettings = () => document.getElementById('settingsModal').style.display = 'none';
         
-        window.setTheme = (themeName) => {
-            document.body.setAttribute('data-theme', themeName);
-            localStorage.setItem('tnc7_theme', themeName); // Tema tetap disimpan lokal per perangkat
-        };
+        channels.sort((a,b) => b.timestamp - a.timestamp).forEach((ch, index) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td style="color: #fff; font-weight: bold;">${index + 1}</td>
+                <td style="color: #fff; font-weight: bold; display: flex; align-items: center; gap:10px;">
+                    <img src="${ch.avatar}" style="width: 30px; height: 30px; border-radius: 50%;"> 
+                    ${ch.name}
+                </td>
+                <td><a href="${ch.url}" target="_blank" style="color: var(--accent-blue); text-decoration: none;">Link YT</a></td>
+                <td style="color: #fff;">${ch.subscriber}</td>
+                <td>${ch.views || '0'}</td>
+                <td>${ch.videos || '0'}</td>
+                <td>${ch.pengelola || '-'}</td>
+                <td><span style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">${ch.category}</span></td>
+                <td>
+                    <span style="color: ${ch.monet === 'Sudah' ? 'var(--accent-green)' : 'var(--text-muted)'}; font-weight: bold;">
+                        ${ch.monet || 'Belum'}
+                    </span>
+                </td>
+                <td>
+                    <button class="icon-btn" onclick="editChannel('${ch.id}')"><i class="fa-solid fa-pen"></i></button>
+                    <button class="icon-btn" onclick="deleteChannel('${ch.id}')" style="color:#ef4444;"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
 
-        function loadTheme() {
-            const savedTheme = localStorage.getItem('tnc7_theme') || 'gelap';
-            setTheme(savedTheme);
-        }
-    </script>
+    window.filterTable = () => {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const rows = document.getElementById('tableBody').getElementsByTagName('tr');
+        if(rows.length === 1 && rows[0].innerText.includes("BELUM ADA DATA")) return;
+        Array.from(rows).forEach(row => {
+            const name = row.cells[1].innerText.toLowerCase();
+            row.style.display = name.includes(query) ? '' : 'none';
+        });
+    };
+
+    window.searchYouTube = async () => {
+        let inputUrl = document.getElementById('urlInput').value.trim();
+        if(!inputUrl) return alert("Masukkan ID/URL YouTube!");
+        const btn = document.getElementById('btnSearchYt');
+        btn.innerText = '...'; btn.disabled = true;
+
+        try {
+            let channelId = "";
+            if (inputUrl.includes('youtube.com/channel/')) {
+                channelId = inputUrl.split('youtube.com/channel/')[1].split('/')[0].split('?')[0];
+            } else if (inputUrl.includes('youtube.com/@') || inputUrl.startsWith('@')) {
+                let username = inputUrl.includes('youtube.com/@') ? inputUrl.split('youtube.com/@')[1].split('/')[0].split('?')[0] : inputUrl.substring(1);
+                const handleRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${username}&key=${DEFAULT_API_KEY}`);
+                const handleData = await handleRes.json();
+                if (handleData.items && handleData.items.length > 0) channelId = handleData.items[0].snippet.channelId;
+            } else { channelId = inputUrl; }
+
+            const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${channelId}&key=${DEFAULT_API_KEY}`);
+            const data = await res.json();
+            if(data.items && data.items.length > 0) {
+                const snippet = data.items[0].snippet;
+                const stats = data.items[0].statistics;
+                document.getElementById('nameInput').value = snippet.title;
+                document.getElementById('subsInput').value = formatNumber(stats.subscriberCount);
+                document.getElementById('viewsInput').value = formatNumber(stats.viewCount);
+                document.getElementById('videoInput').value = formatNumber(stats.videoCount);
+                document.getElementById('avatarUrl').value = snippet.thumbnails.default.url;
+                document.getElementById('ytChannelId').value = channelId;
+            }
+        } catch (e) { alert("Gagal mengambil data YT."); } 
+        finally { btn.innerText = 'CARI YT'; btn.disabled = false; }
+    };
+
+    function formatNumber(num) {
+        if(!num) return "0";
+        if(num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+        if(num >= 1000) return (num / 1000).toFixed(1) + 'K';
+        return num.toString();
+    }
+</script>
 </body>
 </html>
