@@ -1,4 +1,4 @@
-html_content = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
@@ -53,11 +53,7 @@ html_content = """<!DOCTYPE html>
             --header-bg: rgba(39, 39, 42, 0.95);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -71,114 +67,54 @@ html_content = """<!DOCTYPE html>
         }
 
         .container {
-            width: 100%;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
+            width: 100%; max-width: 1600px; margin: 0 auto; padding: 1.5rem;
+            flex-grow: 1; display: flex; flex-direction: column; gap: 1.5rem;
         }
 
         .hidden { display: none !important; }
 
         .panel-glass {
-            background: var(--panel-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--panel-border);
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            background: var(--panel-bg); backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px); border: 1px solid var(--panel-border);
+            border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
 
         .btn {
-            cursor: pointer;
-            border: none;
-            outline: none;
-            font-family: inherit;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            cursor: pointer; border: none; outline: none; font-family: inherit;
+            transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
         }
 
         .btn-pill {
-            padding: 0.4rem 1rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background: transparent;
-            border: 1px solid var(--panel-border);
-            color: var(--text-main);
+            padding: 0.4rem 1rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600;
+            background: transparent; border: 1px solid var(--panel-border); color: var(--text-main);
         }
 
         .btn-pill:hover {
-            color: var(--primary-accent);
-            border-color: var(--primary-accent);
-            background: rgba(250, 204, 21, 0.05);
+            color: var(--primary-accent); border-color: var(--primary-accent); background: rgba(250, 204, 21, 0.05);
         }
 
         .btn-pill.active {
-            background-color: var(--primary-accent);
-            color: #000 !important;
-            border-color: var(--primary-accent);
+            background-color: var(--primary-accent); color: #000 !important; border-color: var(--primary-accent);
             box-shadow: 0 0 15px rgba(250, 204, 21, 0.15);
         }
 
-        [data-theme="kuning"] .btn-pill.active { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
-
         .form-input, .form-select {
-            width: 100%;
-            background-color: var(--input-bg);
-            border: 1px solid var(--panel-border);
-            color: var(--text-main);
-            border-radius: 0.75rem;
-            padding: 0.7rem 1rem;
-            font-size: 0.9rem;
-            font-family: inherit;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%; background-color: var(--input-bg); border: 1px solid var(--panel-border);
+            color: var(--text-main); border-radius: 0.75rem; padding: 0.7rem 1rem; font-size: 0.9rem;
+            font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
         }
         
         .form-select { cursor: pointer; appearance: none; font-weight: 600; }
-
-        .form-input:focus, .form-select:focus {
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2);
-        }
-
+        .form-input:focus, .form-select:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2); }
         .form-input::placeholder, .form-select::placeholder { color: #64748b; }
 
         .table-container { overflow-x: auto; }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1200px;
-        }
-
+        table { width: 100%; border-collapse: collapse; min-width: 1200px; }
         th {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #cbd5e1;
-            font-weight: 800; 
-            padding: 1.25rem 1rem;
-            border-bottom: 2px solid var(--panel-border);
-            text-align: left;
-            white-space: nowrap;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #cbd5e1;
+            font-weight: 800; padding: 1.25rem 1rem; border-bottom: 2px solid var(--panel-border); text-align: left; white-space: nowrap;
         }
-
-        td {
-            padding: 1rem;
-            font-size: 0.9rem;
-            border-bottom: 1px solid var(--panel-border);
-            vertical-align: middle;
-            font-weight: 500;
-        }
-
+        td { padding: 1rem; font-size: 0.9rem; border-bottom: 1px solid var(--panel-border); vertical-align: middle; font-weight: 500; }
         tr:hover td { background-color: var(--table-hover); cursor: default; }
 
         .text-xs { font-size: 0.75rem; }
@@ -206,155 +142,41 @@ html_content = """<!DOCTYPE html>
         #login-view { margin: auto; max-width: 400px; width: 100%; }
 
         .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(4px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            padding: 1rem;
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center; z-index: 100; padding: 1rem;
         }
 
         .modal-content {
-            background: var(--bg-color);
-            border: 1px solid var(--panel-border);
-            border-radius: 1rem;
-            width: 100%;
-            max-width: 700px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
+            background: var(--bg-color); border: 1px solid var(--panel-border);
+            border-radius: 1rem; width: 100%; max-width: 700px; max-height: 90vh; display: flex; flex-direction: column;
         }
+        .modal-header { padding: 1rem 1.5rem; border-bottom: 1px solid var(--panel-border); display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 1.5rem; overflow-y: auto; flex-grow: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--panel-border); display: flex; justify-content: flex-end; gap: 0.5rem; }
 
-        .modal-header {
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid var(--panel-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-            overflow-y: auto;
-            flex-grow: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .modal-footer {
-            padding: 1rem 1.5rem;
-            border-top: 1px solid var(--panel-border);
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-        }
-
-        .badge-views {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
-            border: 1px solid rgba(249, 115, 22, 0.5); color: #fb923c; background: rgba(249, 115, 22, 0.1);
-        }
-        .badge-subs {
-            display: inline-flex; align-items: center; gap: 4px;
-            font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
-            border: 1px solid rgba(59, 130, 246, 0.5); color: #60a5fa; background: rgba(59, 130, 246, 0.1);
-        }
-        .icon-box {
-            width: 40px; height: 40px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-        }
+        .badge-views { display: inline-flex; align-items: center; gap: 4px; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(249, 115, 22, 0.5); color: #fb923c; background: rgba(249, 115, 22, 0.1); }
+        .badge-subs { display: inline-flex; align-items: center; gap: 4px; font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; border: 1px solid rgba(59, 130, 246, 0.5); color: #60a5fa; background: rgba(59, 130, 246, 0.1); }
+        .icon-box { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
 
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content {
-            display: none; position: absolute; right: 0; top: 100%;
-            background-color: var(--panel-bg); min-width: 120px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2); border: 1px solid var(--panel-border);
-            z-index: 1; border-radius: 0.5rem; padding: 0.5rem; margin-top: 0.5rem;
-        }
+        .dropdown-content { display: none; position: absolute; right: 0; top: 100%; background-color: var(--panel-bg); min-width: 120px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); border: 1px solid var(--panel-border); z-index: 1; border-radius: 0.5rem; padding: 0.5rem; margin-top: 0.5rem; }
         .dropdown:hover .dropdown-content { display: flex; flex-direction: column; gap: 0.25rem; }
-        .dropdown-item {
-            padding: 0.5rem; cursor: pointer; border-radius: 0.25rem; font-size: 0.75rem; color: var(--text-main);
-        }
+        .dropdown-item { padding: 0.5rem; cursor: pointer; border-radius: 0.25rem; font-size: 0.75rem; color: var(--text-main); }
         .dropdown-item:hover { background-color: var(--table-hover); }
 
         #toast {
-            position: fixed; top: 20px; right: 20px; z-index: 200;
-            background: #10b981; color: white; padding: 10px 20px;
-            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transform: translateY(-150%); transition: transform 0.3s ease;
-            font-size: 0.875rem; font-weight: bold;
+            position: fixed; top: 20px; right: 20px; z-index: 200; background: #10b981; color: white; padding: 10px 20px;
+            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transform: translateY(-150%); transition: transform 0.3s ease; font-size: 0.875rem; font-weight: bold;
         }
         #toast.show { transform: translateY(0); }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 4px; }
-
-        .settings-tab-btn {
-            flex: 1; padding: 0.75rem; text-align: center; background: transparent;
-            border: 1px solid var(--panel-border); color: var(--text-muted);
-            font-weight: 600; border-radius: 999px; cursor: pointer; transition: all 0.2s;
-        }
-        .settings-tab-btn.active {
-            background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
-            color: white; border-color: #0ea5e9; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
-        }
-        .settings-card {
-            background: rgba(17, 24, 39, 0.4); border: 1px solid var(--panel-border);
-            border-radius: 1rem; padding: 1.25rem; margin-bottom: 1rem;
-        }
-        .api-key-item {
-            background: var(--input-bg); border: 1px solid var(--panel-border);
-            border-radius: 0.75rem; padding: 1rem; margin-bottom: 0.75rem;
-        }
-        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.7rem; border-radius: 0.5rem; }
-
-        .tip-card {
-            border-radius: 0.75rem; padding: 1rem; display: flex;
-            flex-direction: column; gap: 0.5rem; border: 1px solid transparent;
-        }
-        .tip-card.green { background: rgba(74, 222, 128, 0.05); border-color: rgba(74, 222, 128, 0.3); }
-        .tip-card.green .tip-label { color: #4ade80; }
-        .tip-card.blue { background: rgba(56, 189, 248, 0.05); border-color: rgba(56, 189, 248, 0.3); }
-        .tip-card.blue .tip-label { color: #38bdf8; }
-        .tip-card.yellow { background: rgba(250, 204, 21, 0.05); border-color: rgba(250, 204, 21, 0.3); }
-        .tip-card.yellow .tip-label { color: #facc15; }
-        .tip-card.red { background: rgba(248, 113, 113, 0.05); border-color: rgba(248, 113, 113, 0.3); }
-        .tip-card.red .tip-label { color: #f87171; }
-
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
-        .form-group.full-width { grid-column: span 2; }
-        .form-group label {
-            font-size: 0.75rem; color: #cbd5e1; font-weight: 700; letter-spacing: 0.02em;
-        }
-        .form-group input, .form-group textarea, .form-group select {
-            background-color: rgba(0, 0, 0, 0.5); border: 1px solid var(--panel-border); 
-            color: var(--text-main); border-radius: 0.5rem; padding: 0.75rem 1rem;
-            font-size: 0.875rem; font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
-            border-color: var(--primary-accent); box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.2);
-        }
-        
         .cloud-status {
             display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem;
-            background: rgba(16, 185, 129, 0.1); color: #10b981;
-            padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
+            background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
         }
-        .cloud-status.offline {
-            background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
-            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
-        }
+        .cloud-status.offline { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); } }
     </style>
 </head>
 <body>
@@ -381,7 +203,6 @@ html_content = """<!DOCTYPE html>
     </div>
 
     <div id="dashboard-view" class="container hidden">
-        
         <header class="panel-glass" style="padding: 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
             <div class="flex items-center gap-4">
                 <div class="icon-box" style="background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid rgba(255, 255, 255, 0.1); position: relative;">
@@ -399,9 +220,7 @@ html_content = """<!DOCTYPE html>
                 <div id="cloud-status-indicator" class="cloud-status">
                     <i class="fas fa-cloud-check"></i> Cloud Terhubung
                 </div>
-
                 <button id="btn-sync" class="btn btn-pill"><i class="fas fa-sync-alt"></i> Sync Stats</button>
-                
                 <div class="flex items-center gap-2" style="background: var(--input-bg); padding: 4px; border-radius: 999px; border: 1px solid var(--panel-border); margin-left: 0.5rem;">
                     <button class="btn" onclick="window.openModal('modal-settings')" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="Pengaturan"><i class="fas fa-cog"></i></button>
                     <div class="dropdown">
@@ -490,63 +309,44 @@ html_content = """<!DOCTYPE html>
                 </table>
             </div>
         </div>
-    
+    </div>
+
+    <!-- Modals -->
     <div id="modal-form" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 700px; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1rem;">
-            <div class="modal-header" style="border-bottom: 1px solid var(--panel-border); padding: 1.5rem;">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
                 <div>
                     <p class="text-accent font-bold" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">DATA CHANNEL</p>
                     <h3 id="modal-title" class="font-bold text-xl" style="color: white;">Tambah Channel Baru</h3>
                 </div>
-                <button class="btn" onclick="window.closeModal('modal-form')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
+                <button class="btn" onclick="window.closeModal('modal-form')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 0.5rem; width: 32px; height: 32px;"><i class="fas fa-times"></i></button>
             </div>
-            
             <form id="item-form" style="display: contents;">
                 <input type="hidden" id="item-id">
-                <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; max-height: 70vh;">
-                    <div class="form-grid">
-                        <div class="form-group"><label>Nama Channel</label><input type="text" id="item-title" required placeholder="NAMA CHANNEL"></div>
-                        <div class="form-group"><label>Link Channel / Profil</label><input type="text" id="item-link" placeholder="https://youtube.com/@handle"></div>
-                        <div class="form-group"><label>ID Channel</label><input type="text" id="item-channelId" placeholder="UC..."></div>
-                        <div class="form-group"><label>Nama Pengelola</label><input type="text" id="item-pengelola" placeholder="NAMA PENGELOLA" style="text-transform: uppercase;"></div>
-                        <div class="form-group"><label>Niche / Kategori</label><input type="text" id="item-niche" placeholder="Ketik niche secara manual"></div>
-                        <div class="form-group"><label>Monetisasi</label>
-                            <select id="item-monet">
-                                <option value="Belum">NO — Belum monetisasi</option>
-                                <option value="Sudah">YES — Sudah monetisasi</option>
-                            </select>
-                        </div>
-                        <div class="form-group full-width"><label>Catatan Pribadi</label><textarea id="item-notes" rows="3" placeholder="Catatan, info tambahan, strategi, dll..."></textarea></div>
-
-                        <!-- Data Tersembunyi -->
-                        <div style="display: none;">
-                            <input type="text" id="item-subs"><input type="text" id="item-views"><input type="number" id="item-video">
-                            <input type="number" id="item-subsGrowth" value="0"><input type="number" id="item-viewGrowth" value="0">
-                            <input type="checkbox" id="item-topViews"><input type="checkbox" id="item-topSubs">
-                        </div>
+                <div class="modal-body">
+                    <div class="form-group"><label>Nama Channel</label><input type="text" id="item-title" required class="form-input" placeholder="NAMA CHANNEL"></div>
+                    <div class="form-group"><label>Link Channel / Profil</label><input type="text" id="item-link" class="form-input" placeholder="https://youtube.com/@handle"></div>
+                    <div class="form-group"><label>ID Channel</label><input type="text" id="item-channelId" class="form-input" placeholder="UC..."></div>
+                    <div class="form-group"><label>Nama Pengelola</label><input type="text" id="item-pengelola" class="form-input" placeholder="NAMA PENGELOLA" style="text-transform: uppercase;"></div>
+                    <div class="form-group"><label>Niche / Kategori</label><input type="text" id="item-niche" class="form-input" placeholder="Ketik niche..."></div>
+                    <div class="form-group"><label>Monetisasi</label>
+                        <select id="item-monet" class="form-select">
+                            <option value="Belum">NO — Belum monetisasi</option>
+                            <option value="Sudah">YES — Sudah monetisasi</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;"><label>Catatan Pribadi</label><textarea id="item-notes" rows="3" class="form-input" placeholder="Catatan..."></textarea></div>
+                    <div style="display: none;">
+                        <input type="text" id="item-subs"><input type="text" id="item-views"><input type="number" id="item-video">
+                        <input type="number" id="item-subsGrowth" value="0"><input type="number" id="item-viewGrowth" value="0">
+                        <input type="checkbox" id="item-topViews"><input type="checkbox" id="item-topSubs">
                     </div>
                 </div>
-                <div class="modal-footer" style="padding: 1.5rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--panel-border); gap: 1rem; justify-content: flex-end;">
-                    <button type="button" class="btn" style="padding: 0.6rem 1.5rem; background: rgba(255,255,255,0.05); color: #d1d5db; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; font-size: 0.875rem;" onclick="window.closeModal('modal-form')">Batal</button>
-                    <button type="submit" class="btn active" style="padding: 0.6rem 1.5rem; background: #38bdf8; color: #0f172a; font-weight: 600; border-radius: 0.5rem; border: none; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-save"></i> Simpan
-                    </button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-pill" onclick="window.closeModal('modal-form')">Batal</button>
+                    <button type="submit" class="btn active" style="padding: 0.6rem 1.5rem; background: #38bdf8; color: #0f172a; font-weight: 600; border-radius: 0.5rem; border: none;"><i class="fas fa-save"></i> Simpan</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <div id="modal-detail" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 350px; text-align: center;">
-            <div class="modal-body flex-col items-center" style="display: flex;">
-                <div class="icon-box" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(239, 68, 68, 0.1); color: #ef4444; font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fab fa-youtube"></i></div>
-                <h3 id="det-title" class="font-bold text-lg">Name</h3>
-                <p id="det-pengelola" class="text-xs text-muted font-semibold" style="text-transform: uppercase; margin-bottom: 1.5rem;">Manager</p>
-                <div style="width: 100%; text-align: left; background: var(--input-bg); border: 1px solid var(--panel-border); padding: 1rem; border-radius: 0.75rem; font-size: 0.85rem;">
-                    <p class="text-muted" style="font-size: 0.75rem;">Info detail dapat diakses di menu Edit.</p>
-                </div>
-            </div>
-            <div class="modal-footer" style="justify-content: center;"><button type="button" class="btn btn-pill" style="width: 100%; padding: 0.5rem;" onclick="window.closeModal('modal-detail')">Tutup</button></div>
         </div>
     </div>
 
@@ -557,86 +357,70 @@ html_content = """<!DOCTYPE html>
                     <p class="text-accent font-bold" style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem;">KONFIGURASI</p>
                     <h3 class="font-bold text-xl"><i class="fas fa-cog"></i> Pengaturan</h3>
                 </div>
-                <button class="btn" onclick="window.closeModal('modal-settings')" style="background: transparent; color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
+                <button class="btn" onclick="window.closeModal('modal-settings')" style="background: transparent; color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 32px; height: 32px;"><i class="fas fa-times"></i></button>
             </div>
-            
-            <div style="padding: 1.5rem 1.5rem 0;">
-                <div class="flex gap-2" style="background: var(--input-bg); padding: 0.25rem; border-radius: 9999px; border: 1px solid var(--panel-border);">
-                    <button class="settings-tab-btn active"><i class="fas fa-key text-yellow-400"></i> API Key</button>
-                    <button class="settings-tab-btn"><i class="fas fa-lock text-orange-400"></i> Keamanan</button>
-                </div>
-            </div>
-
             <div class="modal-body" style="display: block; overflow-y: auto;">
-                <div class="settings-card">
+                <div class="panel-glass" style="padding: 1.25rem; margin-bottom: 1rem;">
                     <h4 class="font-bold text-sm mb-4"><i class="fas fa-plus text-xs"></i> Tambah YouTube API Key</h4>
-                    <div class="flex-col gap-2 mb-4"><label class="text-xs font-bold text-main">YouTube Data API v3 Key</label><input type="password" id="new-api-key" autocomplete="new-password" class="form-input font-mono text-sm" placeholder="AIzaSy..." style="background: rgba(0,0,0,0.2);"></div>
+                    <div class="flex-col gap-2 mb-4"><label class="text-xs font-bold text-main">YouTube Data API v3 Key</label><input type="password" id="new-api-key" autocomplete="new-password" class="form-input font-mono text-sm" placeholder="AIzaSy..."></div>
                     <div class="flex-col gap-2 mb-4">
                         <label class="text-xs font-bold text-main">Label</label>
                         <div class="flex gap-3">
-                            <input type="text" id="new-api-label" autocomplete="off" class="form-input text-sm" placeholder="Label otomatis..." style="background: rgba(0,0,0,0.2); flex-grow: 1;">
-                            <button onclick="window.addApiKey()" class="btn" style="background: #eab308; color: #1a1814; font-weight: bold; padding: 0 1.25rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-plus"></i> Tambah</button>
+                            <input type="text" id="new-api-label" autocomplete="off" class="form-input text-sm" placeholder="Label..." style="flex-grow: 1;">
+                            <button onclick="window.addApiKey()" class="btn" style="background: #eab308; color: #1a1814; font-weight: bold; padding: 0 1.25rem; border-radius: 0.5rem;"><i class="fas fa-plus"></i> Tambah</button>
                         </div>
                     </div>
                 </div>
-
-                <div class="settings-card">
+                <div class="panel-glass" style="padding: 1.25rem;">
                     <div class="flex justify-between items-center mb-2">
                         <h4 class="font-bold text-sm"><i class="fas fa-key text-xs"></i> Keys Tersimpan</h4>
-                        <div class="flex items-center gap-2">
-                            <span class="text-xs" style="color: #10b981; font-weight: 600;"><i class="fas fa-cloud-check"></i> Cloud Sync</span>
-                            <span id="api-key-count" class="text-xs" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(14, 165, 233, 0.3);">0 aktif / 0 total</span>
-                        </div>
+                        <span id="api-key-count" class="text-xs" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9; padding: 0.25rem 0.75rem; border-radius: 999px;">0 aktif / 0 total</span>
                     </div>
                     <div id="api-keys-list"></div>
                 </div>
             </div>
-            <div class="modal-footer" style="border-top: none; padding-top: 0;"><button type="button" class="btn btn-pill" style="padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--panel-border);" onclick="window.closeModal('modal-settings')">Tutup</button></div>
+            <div class="modal-footer" style="border-top: none;"><button type="button" class="btn btn-pill" onclick="window.closeModal('modal-settings')">Tutup</button></div>
         </div>
     </div>
 
     <div id="modal-search-yt" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 900px; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1.5rem; padding: 2rem;">
+        <div class="modal-content" style="max-width: 900px; padding: 2rem;">
             <div class="flex justify-between items-start mb-6">
                 <div>
                     <p class="font-bold text-accent" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">AUTO-FETCH YOUTUBE</p>
                     <h2 class="font-bold text-2xl" style="color: white;">Cari Channel YouTube</h2>
                 </div>
-                <button class="btn" onclick="window.closeModal('modal-search-yt')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;"><i class="fas fa-times"></i></button>
+                <button class="btn" onclick="window.closeModal('modal-search-yt')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 0.5rem; width: 36px; height: 36px;"><i class="fas fa-times"></i></button>
             </div>
-
-            <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; padding: 1.5rem; background: rgba(0,0,0,0.3); margin-bottom: 1.5rem;">
-                <p class="font-bold text-sm mb-4" style="color: white;">💡 Tips pencarian yang akurat:</p>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
-                    <div class="tip-card green"><div class="tip-label text-xs font-bold">✓ PALING AKURAT</div><div class="font-bold text-sm" style="color: white;">URL channel lengkap</div></div>
-                    <div class="tip-card blue"><div class="tip-label text-xs font-bold">↗ AKURAT</div><div class="font-bold text-sm" style="color: white;">@handle channel</div></div>
-                    <div class="tip-card yellow"><div class="tip-label text-xs font-bold">~ MUNGKIN DITEMUKAN</div><div class="font-bold text-sm" style="color: white;">Nama channel</div></div>
-                </div>
-            </div>
-
             <div class="flex items-center gap-4 flex-wrap">
                 <div style="flex-grow: 1; position: relative; border: 1px solid var(--primary-accent); border-radius: 999px; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 0.25rem 0.25rem 0.25rem 1.5rem;">
-                    <i class="fas fa-search text-muted" style="font-size: 1.1rem; margin-right: 0.75rem;"></i>
-                    <input type="text" id="yt-search-input" autocomplete="off" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="https://youtube.com/@handle atau nama channel..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
+                    <i class="fas fa-search text-muted" style="margin-right: 0.75rem;"></i>
+                    <input type="text" id="yt-search-input" autocomplete="off" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="https://youtube.com/@handle..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
                 </div>
-                <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; font-size: 1rem; padding: 0.75rem 2rem; border-radius: 999px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
-                    <i class="fas fa-search text-sm"></i> Cari
-                </button>
+                <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; padding: 0.75rem 2rem; border-radius: 999px;"><i class="fas fa-search"></i> Cari</button>
             </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // === KONFIGURASI FIREBASE MILIK ANDA ("TNC7 Visualizer") ===
+        const firebaseConfig = {
+          apiKey: "AIzaSyA1hxTceWANgQU8vwKpXDCJABvYpWQQNmk",
+          authDomain: "tnc7-visualizer.firebaseapp.com",
+          projectId: "tnc7-visualizer",
+          storageBucket: "tnc7-visualizer.firebasestorage.app",
+          messagingSenderId: "1098792876538",
+          appId: "1:1098792876538:web:28304ee128f7d156190c43"
+        };
+        const appId = "tnc7-visualizer-main";
 
         let state = { items: [], apiKeys: [], theme: 'dark', isLoggedIn: false };
         let db, auth;
         let deferredPrompt;
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
         const el = (id) => document.getElementById(id);
 
         async function initApp() {
@@ -647,23 +431,21 @@ html_content = """<!DOCTYPE html>
             setInterval(() => { el('clock').innerText = new Date().toLocaleString('id-ID'); }, 1000);
             setupEventListeners();
 
-            if (firebaseConfig) {
-                try {
-                    const app = initializeApp(firebaseConfig);
-                    db = getFirestore(app);
-                    enableIndexedDbPersistence(db).catch((err) => { console.warn("Offline persistence:", err.code); });
-                    auth = getAuth(app);
-                    
-                    if (typeof __initial_auth_token !== 'undefined') await signInWithCustomToken(auth, __initial_auth_token);
-                    else await signInAnonymously(auth);
-                    
-                    el('cloud-status-indicator').classList.remove('offline');
-                    el('cloud-status-indicator').innerHTML = '<i class="fas fa-cloud-check"></i> Cloud Terhubung';
-                    setupRealtimeListeners();
-                } catch (e) {
-                    setCloudOffline();
-                }
-            } else { setCloudOffline(); }
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                enableIndexedDbPersistence(db).catch((err) => console.warn("Offline persistence:", err.code));
+                auth = getAuth(app);
+                
+                await signInAnonymously(auth);
+                
+                el('cloud-status-indicator').classList.remove('offline');
+                el('cloud-status-indicator').innerHTML = '<i class="fas fa-cloud-check"></i> Cloud Terhubung';
+                setupRealtimeListeners();
+            } catch (e) {
+                console.error(e);
+                setCloudOffline();
+            }
         }
 
         function setCloudOffline() {
@@ -680,7 +462,7 @@ html_content = """<!DOCTYPE html>
                 snapshot.forEach((doc) => { state.items.push({ id: doc.id, ...doc.data() }); });
                 state.items.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
                 updateFilters(); renderTable();
-            }, (err) => { setCloudOffline(); });
+            }, (err) => setCloudOffline());
 
             const keysRef = collection(db, 'artifacts', appId, 'public', 'data', 'apikeys');
             onSnapshot(keysRef, (snapshot) => {
@@ -712,13 +494,6 @@ html_content = """<!DOCTYPE html>
 
         window.openModal = function(id) { el(id).classList.remove('hidden'); if(id === 'modal-settings') renderApiKeys(); };
         window.closeModal = function(id) { el(id).classList.add('hidden'); };
-        window.openDetail = function(id) {
-            const item = state.items.find(i => i.id === id);
-            if (item) {
-                el('det-title').innerText = item.title; el('det-pengelola').innerText = item.pengelola || 'Tanpa Pengelola';
-                window.openModal('modal-detail');
-            }
-        };
 
         function setupEventListeners() {
             el('login-form').addEventListener('submit', (e) => {
@@ -726,7 +501,7 @@ html_content = """<!DOCTYPE html>
                 if(el('username').value === 'admin' && el('password').value === 'admin') handleLoginSuccess();
             });
             el('btn-logout').addEventListener('click', handleLogout);
-            el('btn-sync').addEventListener('click', () => showToast('Sinkronisasi API YouTube sedang dijalankan...'));
+            el('btn-sync').addEventListener('click', () => showToast('Sinkronisasi API YouTube berjalan...'));
             ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { el(id).addEventListener('input', renderTable); });
             
             el('btn-reset').addEventListener('click', () => {
@@ -745,14 +520,11 @@ html_content = """<!DOCTYPE html>
                     views: el('item-views').value || '0', viewGrowth: parseInt(el('item-viewGrowth').value) || 0,
                     videoCount: parseInt(el('item-video').value) || 0, niche: el('item-niche').value,
                     monet: el('item-monet').value, notes: el('item-notes').value,
-                    badges: { topViews: el('item-topViews').checked, topSubs: el('item-topSubs').checked },
                     createdAt: id ? (state.items.find(i => i.id === id)?.createdAt || Date.now()) : Date.now()
                 };
-
                 try {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', docId);
-                    await setDoc(docRef, newItem);
-                    window.closeModal('modal-form'); showToast('Data Channel tersimpan ke Cloud!');
+                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'channels', docId), newItem);
+                    window.closeModal('modal-form'); showToast('Data tersimpan ke Cloud!');
                 } catch(error) { alert("Gagal menyimpan data."); }
             });
         }
@@ -795,10 +567,6 @@ html_content = """<!DOCTYPE html>
             }
 
             filtered.forEach((item, idx) => {
-                let badge = '';
-                if(item.badges?.topViews) badge += `<span class="badge-views"><i class="fas fa-fire"></i> Top Views</span> `;
-                if(item.badges?.topSubs) badge += `<span class="badge-subs"><i class="fas fa-chart-line"></i> Top Subs</span>`;
-
                 let sG = item.subsGrowth > 0 ? `<div class="text-emerald text-xs font-bold">▲ +${item.subsGrowth}</div>` : `<div class="text-muted text-xs">± 0</div>`;
                 let vG = item.viewGrowth > 0 ? `<div><span class="text-emerald font-bold text-sm">▲ +${item.viewGrowth}</span></div>` : `<div><span class="text-muted text-sm font-bold">0</span></div>`;
                 let monetHtml = item.monet === 'Sudah' ? `<div style="width:20px;height:20px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
@@ -807,7 +575,7 @@ html_content = """<!DOCTYPE html>
                 tbody.innerHTML += `
                     <tr>
                         <td class="text-center text-muted">${idx+1}</td>
-                        <td><div class="font-bold text-sm mb-1">${item.title}</div><div>${badge}</div></td>
+                        <td><div class="font-bold text-sm mb-1">${item.title}</div></td>
                         <td class="text-center">${item.channelId || item.link ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.65rem; font-weight: bold; text-decoration: none;">Buka <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
                         <td><div class="font-bold text-sm">${item.subs||'0'}</div>${sG}</td>
                         <td class="font-bold text-sm">${item.views||'0'}</td><td>${vG}</td>
@@ -837,7 +605,6 @@ html_content = """<!DOCTYPE html>
                     el('item-views').value = item.views || ''; el('item-viewGrowth').value = item.viewGrowth || 0;
                     el('item-video').value = item.videoCount || 0; el('item-niche').value = item.niche || '';
                     el('item-monet').value = item.monet || 'Belum'; el('item-notes').value = item.notes || '';
-                    el('item-topViews').checked = !!item.badges?.topViews; el('item-topSubs').checked = !!item.badges?.topSubs;
                 }
             } else { el('modal-title').innerHTML = 'Tambah Channel Baru'; }
             window.openModal('modal-form');
@@ -854,31 +621,25 @@ html_content = """<!DOCTYPE html>
             const listContainer = el('api-keys-list');
             if(!listContainer) return; listContainer.innerHTML = '';
             const activeCount = state.apiKeys.filter(k => k.active).length;
-            const countEl = el('api-key-count');
-            if(countEl) countEl.innerText = `${activeCount} aktif / ${state.apiKeys.length} total`;
-            const labelInput = el('new-api-label');
-            if (labelInput) labelInput.value = 'Key ' + (state.apiKeys.length + 1);
+            if(el('api-key-count')) el('api-key-count').innerText = `${activeCount} aktif / ${state.apiKeys.length} total`;
+            if (el('new-api-label')) el('new-api-label').value = 'Key ' + (state.apiKeys.length + 1);
 
             if (state.apiKeys.length === 0) { listContainer.innerHTML = `<p class="text-center text-muted text-sm py-4">Belum ada API Key.</p>`; return; }
 
             [...state.apiKeys].sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0)).forEach((apiKey, index) => {
-                const isActive = apiKey.active; const borderColor = isActive ? '#0ea5e9' : 'var(--panel-border)';
-                const activeBadge = isActive ? `<span style="font-size: 0.65rem; border: 1px solid rgba(16,185,129,0.5); color: #34d399; padding: 2px 8px; border-radius: 999px; background: rgba(16,185,129,0.1);"><i class="fas fa-check"></i> Aktif & Tersinkron Cloud</span>` : `<span style="font-size: 0.65rem; color: var(--text-muted);"><i class="fas fa-cloud"></i> Tersimpan Cloud</span>`;
+                const isActive = apiKey.active;
+                const activeBadge = isActive ? `<span style="font-size: 0.65rem; color: #34d399;">Aktif & Tersinkron Cloud</span>` : `<span style="font-size: 0.65rem; color: var(--text-muted);">Tersimpan</span>`;
                 const setBtnAction = isActive ? '' : `onclick="window.setActiveApiKey('${apiKey.id}')"`;
-                const setBtnStyle = isActive ? 'border: 1px solid rgba(16,185,129,0.5); color: #34d399; background: rgba(16,185,129,0.1); cursor: default;' : 'border: 1px solid var(--panel-border); color: #34d399; background: transparent;';
 
                 listContainer.innerHTML += `
-                    <div class="api-key-item" style="border: 1px solid ${borderColor}; background: rgba(17, 24, 39, 0.4);">
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex gap-3 items-center">
-                                <div style="width: 28px; height: 28px; background: #eab308; color: #1a1814; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">${index + 1}</div>
-                                <div><h5 class="font-bold text-sm" style="color: var(--text-main);">${apiKey.label}</h5></div>
-                            </div>
+                    <div class="panel-glass" style="padding: 1rem; margin-bottom: 0.75rem;">
+                        <div class="flex justify-between items-start mb-2">
+                            <h5 class="font-bold text-sm">${apiKey.label}</h5>
                             ${activeBadge}
                         </div>
-                        <div class="flex gap-2 flex-wrap">
-                            <button ${setBtnAction} class="btn btn-pill btn-sm" style="${setBtnStyle}"><i class="fas fa-check"></i> Aktifkan</button>
-                            <button onclick="window.deleteApiKey('${apiKey.id}')" class="btn btn-pill btn-sm text-red" style="background: transparent; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);"><i class="fas fa-trash"></i> Hapus</button>
+                        <div class="flex gap-2">
+                            <button ${setBtnAction} class="btn btn-pill text-xs">Aktifkan</button>
+                            <button onclick="window.deleteApiKey('${apiKey.id}')" class="btn btn-pill text-xs text-red">Hapus</button>
                         </div>
                     </div>
                 `;
@@ -886,14 +647,12 @@ html_content = """<!DOCTYPE html>
         }
 
         window.addApiKey = async function() {
-            if(!db) { alert('Tidak ada koneksi Cloud!'); return; }
+            if(!db) return;
             const keyVal = el('new-api-key').value.trim(); let labelVal = el('new-api-label').value.trim();
             if(!keyVal) { showToast('API Key kosong!'); return; }
-            if(!labelVal) labelVal = 'Key ' + ((state.apiKeys?.length || 0) + 1);
-            
             try {
                 const docId = Date.now().toString();
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'apikeys', docId), { key: keyVal, label: labelVal, active: state.apiKeys.length === 0, createdAt: Date.now() });
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'apikeys', docId), { key: keyVal, label: labelVal || 'Key', active: state.apiKeys.length === 0, createdAt: Date.now() });
                 el('new-api-key').value = ''; showToast('API Key tersimpan ke Cloud!');
             } catch(e) { alert("Gagal menyimpan API Key."); }
         };
@@ -908,7 +667,7 @@ html_content = """<!DOCTYPE html>
         
         window.deleteApiKey = async function(id) {
             if(!db) return;
-            if(confirm('Hapus API Key ini dari Cloud secara permanen?')) {
+            if(confirm('Hapus API Key ini?')) {
                 try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'apikeys', id)); showToast('API Key dihapus!'); } catch(e) {}
             }
         };
@@ -916,16 +675,11 @@ html_content = """<!DOCTYPE html>
         window.searchYouTubeChannel = async function() {
             const query = el('yt-search-input').value.trim();
             if (!query) return;
-
             const activeKeyObj = state.apiKeys.find(k => k.active);
-            if (!activeKeyObj || !activeKeyObj.key) {
-                alert('API Key YouTube belum aktif!'); window.closeModal('modal-search-yt'); window.openModal('modal-settings'); return;
-            }
+            if (!activeKeyObj || !activeKeyObj.key) { alert('API Key YouTube belum aktif!'); window.closeModal('modal-search-yt'); window.openModal('modal-settings'); return; }
+            
             const apiKey = activeKeyObj.key;
             let handle = query.includes('@') ? query.split('@')[1].split('/')[0].split('?')[0] : null;
-
-            const btn = el('btn-yt-search'); const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...'; btn.disabled = true;
 
             try {
                 let channelData = null;
@@ -940,38 +694,26 @@ html_content = """<!DOCTYPE html>
                         const statData = await statRes.json(); if (statData.items) channelData = statData.items[0];
                     }
                 }
-
                 if (channelData) {
-                    const formatNumber = (numStr) => {
-                        const num = parseInt(numStr);
-                        if (isNaN(num)) return '0';
-                        if (num >= 1000000) return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
-                        if (num >= 1000) return (num / 1000).toFixed(1).replace('.0', '') + 'K';
-                        return num.toString();
-                    };
-
                     window.closeModal('modal-search-yt'); window.editItem(null); 
                     el('item-title').value = channelData.snippet.title; el('item-channelId').value = channelData.id;
                     el('item-link').value = channelData.snippet.customUrl ? `https://youtube.com/${channelData.snippet.customUrl}` : `https://youtube.com/channel/${channelData.id}`;
-                    el('item-subs').value = formatNumber(channelData.statistics.subscriberCount);
-                    el('item-views').value = formatNumber(channelData.statistics.viewCount);
+                    el('item-subs').value = channelData.statistics.subscriberCount;
+                    el('item-views').value = channelData.statistics.viewCount;
                     el('item-video').value = channelData.statistics.videoCount;
-                    el('yt-search-input').value = ''; showToast('Data ditemukan!');
+                    showToast('Data ditemukan!');
                 } else { alert('Channel tidak ditemukan.'); }
-            } catch (err) { alert('Terjadi kesalahan pencarian API.'); } 
-            finally { btn.innerHTML = originalText; btn.disabled = false; }
+            } catch (err) { alert('Gagal memanggil YouTube API.'); }
         };
 
         window.onload = initApp;
 
         function setupPWA() {
             const manifest = {
-                "name": "TNC7 Management", "short_name": "TNC7",
-                "start_url": window.location.pathname, "display": "standalone",
-                "background_color": "#161921", "theme_color": "#161921",
-                "icons": [{ "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }]
+                "name": "TNC7 Management", "short_name": "TNC7", "start_url": window.location.pathname,
+                "display": "standalone", "background_color": "#161921", "theme_color": "#161921",
+                "icons": [{ "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png", "sizes": "512x512", "type": "image/png" }]
             };
-            
             const manifestUrl = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
             let link = document.querySelector('link[rel="manifest"]');
             if (!link) { link = document.createElement('link'); link.rel = 'manifest'; document.head.appendChild(link); }
@@ -981,14 +723,9 @@ html_content = """<!DOCTYPE html>
                 const swCode = `
                     self.addEventListener('install', (e) => self.skipWaiting());
                     self.addEventListener('activate', (e) => self.clients.claim());
-                    self.addEventListener('fetch', (e) => {
-                        e.respondWith(fetch(e.request).catch(err => console.log('Bypass SW', err)));
-                    });
+                    self.addEventListener('fetch', (e) => { e.respondWith(fetch(e.request).catch(() => {})); });
                 `;
-                const swUrl = URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }));
-                navigator.serviceWorker.register(swUrl).then(() => {
-                    console.log("PWA Service Worker registered.");
-                }).catch((err) => { console.warn("SW gagal:", err); });
+                navigator.serviceWorker.register(URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }))).catch(() => {});
             }
 
             window.addEventListener('beforeinstallprompt', (e) => {
@@ -1012,6 +749,3 @@ html_content = """<!DOCTYPE html>
     </script>
 </body>
 </html>
-"""
-with open("/mnt/data/index_fixed.html", "w") as f:
-    f.write(html_content)
