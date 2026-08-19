@@ -706,11 +706,140 @@
         </div>
     </div>
 
-    <script>
-        let state = { items: [], apiKeys: [], theme: 'kuning', isLoggedIn: false, isCloudConnected: true };
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'tnc7-management';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+             // Mock config for fallback if not in environment
+             apiKey: "mock-key",
+             authDomain: "mock-domain",
+             projectId: "mock-project"
+        };
+        
+        let app, db, auth;
+        let userId = null;
+        let unsubscribeSettings = null;
+
+        // Try to initialize Firebase, catch errors if running locally without proper config
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } catch (e) {
+            console.warn("Firebase initialization failed, falling back to local only mode.", e);
+        }
+
+        let state = { items: [], apiKeys: [], theme: 'kuning', isLoggedIn: false, isCloudConnected: false };
         const DEFAULT_API_KEY = "AIzaSyDJbN1UQy17B_hqVTQE4zNOpJJZFqh2eMc";
-        const APP_ID = 'tnc7-management';
         const el = (id) => document.getElementById(id);
+
+        async function initApp() {
+            setupPWA();
+            setupEventListeners();
+            loadLocalData();
+            
+            // Set initial theme before cloud sync
+            const savedTheme = localStorage.getItem('TNC7_THEME');
+            applyTheme(savedTheme || 'kuning');
+
+            if (auth) {
+                try {
+                    // Start Cloud Connection
+                    if (typeof __initial_auth_token !== 'undefined') {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    
+                    onAuthStateChanged(auth, (user) => {
+                        if (user) {
+                            userId = user.uid;
+                            state.isCloudConnected = true;
+                            setCloudOnline();
+                            startSyncingSettings();
+                        } else {
+                            userId = null;
+                            state.isCloudConnected = false;
+                            setCloudOffline();
+                        }
+                    });
+                } catch(e) {
+                    console.error("Auth error", e);
+                    setCloudOffline();
+                }
+            } else {
+                setCloudOffline();
+            }
+        }
+
+        function startSyncingSettings() {
+            if (!userId || !db) return;
+            
+            // Rule 1: Strict paths. Private data for user settings.
+            const settingsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'preferences');
+            
+            if (unsubscribeSettings) unsubscribeSettings();
+
+            // Rule 3: Guard with error callback
+            unsubscribeSettings = onSnapshot(settingsDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.theme && data.theme !== state.theme) {
+                        applyTheme(data.theme);
+                        showToast(`Tema disinkronkan: ${data.theme.toUpperCase()}`);
+                    }
+                }
+            }, (error) => {
+                console.error("Error syncing settings: ", error);
+            });
+        }
+
+        async function saveThemeToCloud(theme) {
+            if (!userId || !db) return;
+            try {
+                const settingsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'preferences');
+                await setDoc(settingsDocRef, { theme: theme }, { merge: true });
+            } catch (error) {
+                console.error("Gagal menyimpan tema ke cloud: ", error);
+            }
+        }
+
+        function applyTheme(theme) {
+            state.theme = theme; 
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('TNC7_THEME', theme);
+        }
+
+        // Make functions globally available for inline HTML onclick handlers
+        window.setTheme = function(theme) {
+            applyTheme(theme);
+            if (state.isCloudConnected) {
+                saveThemeToCloud(theme);
+            }
+        };
+
+        function setCloudOnline() {
+            const ind = el('cloud-status-indicator');
+            if(ind) {
+                ind.className = 'cloud-status';
+                ind.innerHTML = '<i class="fas fa-cloud"></i> CLOUD SYNC AKTIF';
+            }
+            const badge = el('auto-sync-badge');
+            if(badge) badge.classList.remove('hidden');
+        }
+        
+        function setCloudOffline() {
+            const ind = el('cloud-status-indicator');
+            if(ind) {
+                ind.className = 'cloud-status offline';
+                ind.innerHTML = '<i class="fas fa-cloud-slash"></i> LOKAL MODE';
+            }
+            const badge = el('auto-sync-badge');
+            if(badge) badge.classList.add('hidden');
+        }
 
         function loadLocalData() {
             try {
@@ -737,32 +866,7 @@
             try {
                 localStorage.setItem('tnc7_channels', JSON.stringify(state.items));
                 localStorage.setItem('tnc7_apikeys', JSON.stringify(state.apiKeys));
-                localStorage.setItem('TNC7_THEME', state.theme);
             } catch(e) { console.error("Gagal save lokal", e); }
-        }
-
-        function initApp() {
-            setupPWA();
-            const savedTheme = localStorage.getItem('TNC7_THEME');
-            window.setTheme(savedTheme || 'kuning');
-            setupEventListeners();
-            loadLocalData();
-            
-            if(state.items.length > 0 || state.apiKeys.length > 0) {
-                // Auto load state
-            }
-            
-            setCloudOnline();
-        }
-
-        function setCloudOnline() {
-            const ind = el('cloud-status-indicator');
-            if(ind) {
-                ind.className = 'cloud-status';
-                ind.innerHTML = '<i class="fas fa-cloud"></i> AUTO-SYNC AKTIF';
-            }
-            const badge = el('auto-sync-badge');
-            if(badge) badge.classList.remove('hidden');
         }
 
         function showToast(msg, isError = false) {
@@ -786,12 +890,6 @@
             el('dashboard-view').classList.add('hidden');
             el('login-view').classList.remove('hidden');
         }
-
-        window.setTheme = function(theme) {
-            state.theme = theme; 
-            document.body.setAttribute('data-theme', theme);
-            saveLocalData();
-        };
 
         window.openModal = function(id) { 
             el(id).classList.remove('hidden'); 
