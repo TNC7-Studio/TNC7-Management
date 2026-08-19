@@ -697,7 +697,7 @@
             <div class="flex items-center gap-4 flex-wrap">
                 <div style="flex-grow: 1; position: relative; border: 1px solid var(--primary-accent); border-radius: 999px; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 0.25rem 0.25rem 0.25rem 1.5rem;">
                     <i class="fas fa-search text-muted" style="font-size: 1.1rem; margin-right: 0.75rem;"></i>
-                    <input type="text" id="yt-search-input" class="case-sensitive" autocomplete="new-password" name="yt_search_input_random_z99" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="HTTPS://YOUTUBE.COM/@HANDLE ATAU NAMA CHANNEL..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
+                    <input type="text" id="yt-search-input" class="case-sensitive" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="Cari channel YouTube..."
                 </div>
                 <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; font-size: 1rem; padding: 0.75rem 2rem; border-radius: 999px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
                     <i class="fas fa-search text-sm"></i> CARI
