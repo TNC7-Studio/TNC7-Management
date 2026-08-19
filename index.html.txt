@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#161921">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>TNC7 Management</title>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #161921;
+            --panel-bg: rgba(26, 31, 41, 0.95);
+            --panel-border: rgba(56, 189, 248, 0.25);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --input-bg: rgba(13, 16, 21, 0.7);
+            --primary-accent: #facc15;
+            --primary-hover: #eab308;
+            --table-hover: rgba(56, 189, 248, 0.08);
+            --header-bg: rgba(26, 31, 41, 0.98);
+        }
+
+        [data-theme="terang"] {
+            --bg-color: #f8fafc;
+            --panel-bg: rgba(255, 255, 255, 0.9);
+            --panel-border: #e2e8f0;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --input-bg: #f1f5f9;
+            --table-hover: rgba(0, 0, 0, 0.03);
+            --primary-accent: #2563eb;
+            --primary-hover: #1d4ed8;
+            --header-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        [data-theme="kuning"] {
+            --bg-color: #1a1814;
+            --panel-bg: rgba(39, 39, 42, 0.8);
+            --panel-border: #52525b;
+            --text-main: #fef3c7;
+            --text-muted: #d4d4d8;
+            --input-bg: #27272a;
+            --table-hover: rgba(255, 255, 255, 0.05);
+            --primary-accent: #f59e0b;
+            --primary-hover: #d97706;
+            --header-bg: rgba(39, 39, 42, 0.95);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .hidden { display: none !important; }
+
+        .panel-glass {
+            background: var(--panel-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--panel-border);
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        .btn {
+            cursor: pointer;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-pill {
+            padding: 0.4rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: transparent;
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+        }
+
+        .btn-pill:hover {
+            color: var(--primary-accent);
+            border-color: var(--primary-accent);
+            background: rgba(250, 204, 21, 0.05);
+        }
+
+        .btn-pill.active {
+            background-color: var(--primary-accent);
+            color: #000 !important;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.15);
+        }
+
+        [data-theme="kuning"] .btn-pill.active { box-shadow: 0 0 15px rgba(245, 158, 11, 0.3); }
+
+        .form-input, .form-select {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-main);
+            border-radius: 0.75rem;
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-select { cursor: pointer; appearance: none; font-weight: 600; }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2);
+        }
+
+        .form-input::placeholder, .form-select::placeholder { color: #64748b; }
+
+        .table-container { overflow-x: auto; }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1200px;
+        }
+
+        th {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #cbd5e1;
+            font-weight: 800; 
+            padding: 1.25rem 1rem;
+            border-bottom: 2px solid var(--panel-border);
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 1rem;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--panel-border);
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
+        tr:hover td { background-color: var(--table-hover); cursor: default; }
+
+        .text-xs { font-size: 0.75rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-lg { font-size: 1.125rem; }
+        .text-xl { font-size: 1.25rem; }
+        .text-2xl { font-size: 1.5rem; }
+        .font-bold { font-weight: 700; }
+        .font-semibold { font-weight: 600; }
+        .text-muted { color: var(--text-muted); }
+        .text-accent { color: var(--primary-accent); }
+        .text-emerald { color: #10b981; }
+        .text-red { color: #ef4444; }
+        
+        .flex { display: flex; }
+        .flex-col { display: flex; flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .w-full { width: 100%; }
+        .text-center { text-align: center; }
+        
+        #login-view { margin: auto; max-width: 400px; width: 100%; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            background: var(--bg-color);
+            border: 1px solid var(--panel-border);
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .badge-views {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
+            border: 1px solid rgba(249, 115, 22, 0.5); color: #fb923c; background: rgba(249, 115, 22, 0.1);
+        }
+        .badge-subs {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
+            border: 1px solid rgba(59, 130, 246, 0.5); color: #60a5fa; background: rgba(59, 130, 246, 0.1);
+        }
+        .icon-box {
+            width: 40px; height: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+        }
+
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content {
+            display: none; position: absolute; right: 0; top: 100%;
+            background-color: var(--panel-bg); min-width: 120px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2); border: 1px solid var(--panel-border);
+            z-index: 1; border-radius: 0.5rem; padding: 0.5rem; margin-top: 0.5rem;
+        }
+        .dropdown:hover .dropdown-content { display: flex; flex-direction: column; gap: 0.25rem; }
+        .dropdown-item {
+            padding: 0.5rem; cursor: pointer; border-radius: 0.25rem; font-size: 0.75rem; color: var(--text-main);
+        }
+        .dropdown-item:hover { background-color: var(--table-hover); }
+
+        #toast {
+            position: fixed; top: 20px; right: 20px; z-index: 200;
+            background: #10b981; color: white; padding: 10px 20px;
+            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transform: translateY(-150%); transition: transform 0.3s ease;
+            font-size: 0.875rem; font-weight: bold;
+        }
+        #toast.show { transform: translateY(0); }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 4px; }
+
+        .settings-tab-btn {
+            flex: 1; padding: 0.75rem; text-align: center; background: transparent;
+            border: 1px solid var(--panel-border); color: var(--text-muted);
+            font-weight: 600; border-radius: 9999px; cursor: pointer; transition: all 0.2s;
+        }
+        .settings-tab-btn.active {
+            background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+            color: white; border-color: #0ea5e9; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+        }
+        .settings-card {
+            background: rgba(17, 24, 39, 0.4); border: 1px solid var(--panel-border);
+            border-radius: 1rem; padding: 1.25rem; margin-bottom: 1rem;
+        }
+        .api-key-item {
+            background: var(--input-bg); border: 1px solid var(--panel-border);
+            border-radius: 0.75rem; padding: 1rem; margin-bottom: 0.75rem;
+        }
+        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.7rem; border-radius: 0.5rem; }
+
+        .tip-card {
+            border-radius: 0.75rem; padding: 1rem; display: flex;
+            flex-direction: column; gap: 0.5rem; border: 1px solid transparent;
+        }
+        .tip-card.green { background: rgba(74, 222, 128, 0.05); border-color: rgba(74, 222, 128, 0.3); }
+        .tip-card.green .tip-label { color: #4ade80; }
+        .tip-card.blue { background: rgba(56, 189, 248, 0.05); border-color: rgba(56, 189, 248, 0.3); }
+        .tip-card.blue .tip-label { color: #38bdf8; }
+        .tip-card.yellow { background: rgba(250, 204, 21, 0.05); border-color: rgba(250, 204, 21, 0.3); }
+        .tip-card.yellow .tip-label { color: #facc15; }
+        .tip-card.red { background: rgba(248, 113, 113, 0.05); border-color: rgba(248, 113, 113, 0.3); }
+        .tip-card.red .tip-label { color: #f87171; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-group.full-width { grid-column: span 2; }
+        .form-group label {
+            font-size: 0.75rem; color: #cbd5e1; font-weight: 700; letter-spacing: 0.02em;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            background-color: rgba(0, 0, 0, 0.5); border: 1px solid var(--panel-border); 
+            color: var(--text-main); border-radius: 0.5rem; padding: 0.75rem 1rem;
+            font-size: 0.875rem; font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--primary-accent); box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.2);
+        }
+        
+        .cloud-status {
+            display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem;
+            background: rgba(16, 185, 129, 0.1); color: #10b981;
+            padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .cloud-status.offline {
+            background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="toast"><i class="fas fa-check-circle"></i> <span id="toast-msg">Success</span></div>
+
+    <!-- Login View -->
+    <div id="login-view" class="container" style="justify-content: center;">
+        <div class="panel-glass" style="padding: 2rem; text-align: center;">
+            <div class="icon-box" style="margin: 0 auto 1rem; background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);">
+                <i class="fab fa-youtube"></i>
+            </div>
+            <h1 class="text-xl font-bold" style="margin-bottom: 0.25rem;">TNC7 Management</h1>
+            <p class="text-xs text-muted" style="margin-bottom: 1.5rem;">Akses Sinkronisasi Cloud Real-time</p>
+            
+            <form id="login-form" class="flex-col gap-4">
+                <input type="text" id="username" class="form-input text-center" placeholder="Username" value="admin" required>
+                <input type="password" id="password" class="form-input text-center" placeholder="Password" value="admin" required>
+                <button type="submit" class="btn" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; background: var(--primary-accent); color: white; font-weight: bold;">
+                    Masuk Sistem
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="dashboard-view" class="container hidden">
+        
+        <header class="panel-glass" style="padding: 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+            <div class="flex items-center gap-4">
+                <div class="icon-box" style="background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid rgba(255, 255, 255, 0.1); position: relative;">
+                    <i class="fab fa-youtube"></i>
+                    <div style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: #10b981; border-radius: 50%; border: 2px solid var(--bg-color);"></div>
+                </div>
+                <div>
+                    <h2 class="text-lg font-bold">TNC7 Management</h2>
+                    <p class="text-xs text-muted" style="font-size: 0.65rem;"><span id="clock"></span></p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap justify-end">
+                <button id="btn-install" class="btn btn-pill hidden" style="background: var(--primary-accent); color: #1a1814; border: none; font-weight: bold;"><i class="fas fa-download"></i> Install App</button>
+                <div id="cloud-status-indicator" class="cloud-status">
+                    <i class="fas fa-cloud-check"></i> Cloud Terhubung
+                </div>
+
+                <button id="btn-sync" class="btn btn-pill"><i class="fas fa-sync-alt"></i> Sync Stats</button>
+                
+                <div class="flex items-center gap-2" style="background: var(--input-bg); padding: 4px; border-radius: 999px; border: 1px solid var(--panel-border); margin-left: 0.5rem;">
+                    <button class="btn" onclick="window.openModal('modal-settings')" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="Pengaturan"><i class="fas fa-cog"></i></button>
+                    <div class="dropdown">
+                        <button class="btn" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);"><i class="fas fa-palette"></i></button>
+                        <div class="dropdown-content">
+                            <div class="dropdown-item" onclick="window.setTheme('dark')">🌙 Tema Dark</div>
+                            <div class="dropdown-item" onclick="window.setTheme('terang')">☀️ Tema Terang</div>
+                            <div class="dropdown-item" onclick="window.setTheme('kuning')">⚡ Tema Kuning</div>
+                        </div>
+                    </div>
+                    <button id="btn-logout" class="btn text-xs font-bold" style="background: transparent; color: #ef4444; padding: 0 10px;">Keluar <i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+        </header>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
+                <div class="icon-box" style="background: rgba(250,204,21,0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);"><i class="fas fa-tv"></i></div>
+                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">Total Channel</p><h3 class="text-2xl font-bold" id="stat-total">0</h3></div>
+            </div>
+            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
+                <div class="icon-box" style="background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.3);"><i class="fas fa-dollar-sign"></i></div>
+                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">Sudah Monetisasi</p><h3 class="text-2xl font-bold" id="stat-monet">0</h3></div>
+            </div>
+            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
+                <div class="icon-box" style="background: rgba(250,204,21,0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);"><i class="fas fa-tv"></i></div>
+                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">Channel Aktif</p><h3 class="text-2xl font-bold" id="stat-aktif">0</h3></div>
+            </div>
+            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
+                <div class="icon-box" style="background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);"><i class="fas fa-plus-circle"></i></div>
+                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">Baru (24 Jam)</p><h3 class="text-2xl font-bold" id="stat-new">0</h3></div>
+            </div>
+        </div>
+
+        <div class="panel-glass flex-col" style="flex-grow: 1; overflow: hidden; display: flex;">
+            <div style="padding: 1.25rem; border-bottom: 1px solid var(--panel-border);">
+                <p class="text-accent font-bold" style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem;">KOLEKSI PRIBADI</p>
+                <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
+                    <h2 class="text-lg font-bold">Daftar Channel & Akun</h2>
+                    <div class="flex gap-2">
+                        <button class="btn btn-pill" onclick="window.openModal('modal-search-yt')"><i class="fas fa-search"></i> Cari YT</button>
+                        <button class="btn btn-pill" style="background: var(--primary-accent); color: #1a1814; font-weight: bold; border: none;" onclick="window.editItem(null)"><i class="fas fa-plus"></i> Tambah Channel</button>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 flex-wrap">
+                    <div style="position: relative; flex-grow: 1; max-width: 300px;">
+                        <i class="fas fa-search text-muted" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.75rem;"></i>
+                        <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 2rem;" placeholder="Cari nama, ID, niche...">
+                    </div>
+                    <select id="filter-monet" class="form-select text-xs" style="width: auto;">
+                        <option value="all">SEMUA MONETISASI</option>
+                        <option value="yes">Monetisasi: YES</option>
+                        <option value="no">Monetisasi: NO</option>
+                    </select>
+                    <select id="filter-pengelola" class="form-select text-xs" style="width: auto; text-transform: uppercase;">
+                        <option value="all">SEMUA PENGELOLA</option>
+                    </select>
+                    <select id="sort-data" class="form-select text-xs" style="width: auto;">
+                        <option value="asli">Urutan asli</option>
+                        <option value="views_desc">Kenaikan views ↑</option>
+                        <option value="subs_desc">Kenaikan subs ↑</option>
+                    </select>
+                    <button id="btn-reset" class="btn btn-pill text-xs"><i class="fas fa-times"></i> Reset Filter</button>
+                </div>
+            </div>
+
+            <div class="table-container" style="flex-grow: 1;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 50px; text-align: center;">NO</th>
+                            <th>NAMA CHANNEL</th>
+                            <th style="text-align: center;">LINK</th>
+                            <th>SUBSCRIBERS</th>
+                            <th>TOTAL VIEWS</th>
+                            <th>KENAIKAN VIEWS</th>
+                            <th style="text-align: center;">VIDEO</th>
+                            <th>PENGELOLA</th>
+                            <th>NICHE</th>
+                            <th style="text-align: center;">MONET</th>
+                            <th style="text-align: center; padding-right: 1.5rem;">AKSI</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+    
+    <div id="modal-form" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 700px; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1rem;">
+            <div class="modal-header" style="border-bottom: 1px solid var(--panel-border); padding: 1.5rem;">
+                <div>
+                    <p class="text-accent font-bold" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">DATA CHANNEL</p>
+                    <h3 id="modal-title" class="font-bold text-xl" style="color: white;">Tambah Channel Baru</h3>
+                </div>
+                <button class="btn" onclick="window.closeModal('modal-form')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <form id="item-form" style="display: contents;">
+                <input type="hidden" id="item-id">
+                <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; max-height: 70vh;">
+                    <div class="form-grid">
+                        <div class="form-group"><label>Nama Channel</label><input type="text" id="item-title" required placeholder="NAMA CHANNEL"></div>
+                        <div class="form-group"><label>Link Channel / Profil</label><input type="text" id="item-link" placeholder="https://youtube.com/@handle"></div>
+                        <div class="form-group"><label>ID Channel</label><input type="text" id="item-channelId" placeholder="UC..."></div>
+                        <div class="form-group"><label>Nama Pengelola</label><input type="text" id="item-pengelola" placeholder="NAMA PENGELOLA" style="text-transform: uppercase;"></div>
+                        <div class="form-group"><label>Niche / Kategori</label><input type="text" id="item-niche" placeholder="Ketik niche secara manual"></div>
+                        <div class="form-group"><label>Monetisasi</label>
+                            <select id="item-monet">
+                                <option value="Belum">NO — Belum monetisasi</option>
+                                <option value="Sudah">YES — Sudah monetisasi</option>
+                            </select>
+                        </div>
+                        <div class="form-group full-width"><label>Catatan Pribadi</label><textarea id="item-notes" rows="3" placeholder="Catatan, info tambahan, strategi, dll..."></textarea></div>
+
+                        <!-- Data Tersembunyi -->
+                        <div style="display: none;">
+                            <input type="text" id="item-subs"><input type="text" id="item-views"><input type="number" id="item-video">
+                            <input type="number" id="item-subsGrowth" value="0"><input type="number" id="item-viewGrowth" value="0">
+                            <input type="checkbox" id="item-topViews"><input type="checkbox" id="item-topSubs">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 1.5rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--panel-border); gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn" style="padding: 0.6rem 1.5rem; background: rgba(255,255,255,0.05); color: #d1d5db; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; font-size: 0.875rem;" onclick="window.closeModal('modal-form')">Batal</button>
+                    <button type="submit" class="btn active" style="padding: 0.6rem 1.5rem; background: #38bdf8; color: #0f172a; font-weight: 600; border-radius: 0.5rem; border: none; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-save"></i> Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-detail" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 350px; text-align: center;">
+            <div class="modal-body flex-col items-center" style="display: flex;">
+                <div class="icon-box" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(239, 68, 68, 0.1); color: #ef4444; font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fab fa-youtube"></i></div>
+                <h3 id="det-title" class="font-bold text-lg">Name</h3>
+                <p id="det-pengelola" class="text-xs text-muted font-semibold" style="text-transform: uppercase; margin-bottom: 1.5rem;">Manager</p>
+                <div style="width: 100%; text-align: left; background: var(--input-bg); border: 1px solid var(--panel-border); padding: 1rem; border-radius: 0.75rem; font-size: 0.85rem;">
+                    <p class="text-muted" style="font-size: 0.75rem;">Info detail dapat diakses di menu Edit.</p>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: center;"><button type="button" class="btn btn-pill" style="width: 100%; padding: 0.5rem;" onclick="window.closeModal('modal-detail')">Tutup</button></div>
+        </div>
+    </div>
+
+    <div id="modal-settings" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 800px; height: 90vh;">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+                <div>
+                    <p class="text-accent font-bold" style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem;">KONFIGURASI</p>
+                    <h3 class="font-bold text-xl"><i class="fas fa-cog"></i> Pengaturan</h3>
+                </div>
+                <button class="btn" onclick="window.closeModal('modal-settings')" style="background: transparent; color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div style="padding: 1.5rem 1.5rem 0;">
+                <div class="flex gap-2" style="background: var(--input-bg); padding: 0.25rem; border-radius: 9999px; border: 1px solid var(--panel-border);">
+                    <button class="settings-tab-btn active"><i class="fas fa-key text-yellow-400"></i> API Key</button>
+                    <button class="settings-tab-btn"><i class="fas fa-lock text-orange-400"></i> Keamanan</button>
+                </div>
+            </div>
+
+            <div class="modal-body" style="display: block; overflow-y: auto;">
+                <div class="settings-card">
+                    <h4 class="font-bold text-sm mb-4"><i class="fas fa-plus text-xs"></i> Tambah YouTube API Key</h4>
+                    <div class="flex-col gap-2 mb-4"><label class="text-xs font-bold text-main">YouTube Data API v3 Key</label><input type="password" id="new-api-key" class="form-input font-mono text-sm" placeholder="AIzaSy..." style="background: rgba(0,0,0,0.2);"></div>
+                    <div class="flex-col gap-2 mb-4">
+                        <label class="text-xs font-bold text-main">Label</label>
+                        <div class="flex gap-3">
+                            <input type="text" id="new-api-label" class="form-input text-sm" placeholder="Label otomatis..." style="background: rgba(0,0,0,0.2); flex-grow: 1;">
+                            <button onclick="window.addApiKey()" class="btn" style="background: #eab308; color: #1a1814; font-weight: bold; padding: 0 1.25rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-plus"></i> Tambah</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-sm"><i class="fas fa-key text-xs"></i> Keys Tersimpan</h4>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs" style="color: #10b981; font-weight: 600;"><i class="fas fa-cloud-check"></i> Cloud Sync</span>
+                            <span id="api-key-count" class="text-xs" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(14, 165, 233, 0.3);">0 aktif / 0 total</span>
+                        </div>
+                    </div>
+                    <div id="api-keys-list"></div>
+                </div>
+            </div>
+            <div class="modal-footer" style="border-top: none; padding-top: 0;"><button type="button" class="btn btn-pill" style="padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--panel-border);" onclick="window.closeModal('modal-settings')">Tutup</button></div>
+        </div>
+    </div>
+
+    <div id="modal-search-yt" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 900px; background: var(--bg-color); border: 1px solid var(--panel-border); border-radius: 1.5rem; padding: 2rem;">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <p class="font-bold text-accent" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">AUTO-FETCH YOUTUBE</p>
+                    <h2 class="font-bold text-2xl" style="color: white;">Cari Channel YouTube</h2>
+                </div>
+                <button class="btn" onclick="window.closeModal('modal-search-yt')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; padding: 1.5rem; background: rgba(0,0,0,0.3); margin-bottom: 1.5rem;">
+                <p class="font-bold text-sm mb-4" style="color: white;">💡 Tips pencarian yang akurat:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                    <div class="tip-card green"><div class="tip-label text-xs font-bold">✓ PALING AKURAT</div><div class="font-bold text-sm" style="color: white;">URL channel lengkap</div></div>
+                    <div class="tip-card blue"><div class="tip-label text-xs font-bold">↗ AKURAT</div><div class="font-bold text-sm" style="color: white;">@handle channel</div></div>
+                    <div class="tip-card yellow"><div class="tip-label text-xs font-bold">~ MUNGKIN DITEMUKAN</div><div class="font-bold text-sm" style="color: white;">Nama channel</div></div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 flex-wrap">
+                <div style="flex-grow: 1; position: relative; border: 1px solid var(--primary-accent); border-radius: 999px; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 0.25rem 0.25rem 0.25rem 1.5rem;">
+                    <i class="fas fa-search text-muted" style="font-size: 1.1rem; margin-right: 0.75rem;"></i>
+                    <input type="text" id="yt-search-input" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="https://youtube.com/@handle atau nama channel..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
+                </div>
+                <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; font-size: 1rem; padding: 0.75rem 2rem; border-radius: 999px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
+                    <i class="fas fa-search text-sm"></i> Cari
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        let state = { items: [], apiKeys: [], theme: 'dark', isLoggedIn: false };
+        let db, auth;
+        let deferredPrompt;
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const el = (id) => document.getElementById(id);
+
+        async function initApp() {
+            setupPWA();
+            const savedTheme = localStorage.getItem('TNC7_THEME');
+            window.setTheme(savedTheme || 'dark');
+            handleLoginSuccess();
+            setInterval(() => { el('clock').innerText = new Date().toLocaleString('id-ID'); }, 1000);
+            setupEventListeners();
+
+            if (firebaseConfig) {
+                try {
+                    const app = initializeApp(firebaseConfig);
+                    db = getFirestore(app);
+                    enableIndexedDbPersistence(db).catch((err) => { console.warn("Offline persistence:", err.code); });
+                    auth = getAuth(app);
+                    
+                    if (typeof __initial_auth_token !== 'undefined') await signInWithCustomToken(auth, __initial_auth_token);
+                    else await signInAnonymously(auth);
+                    
+                    el('cloud-status-indicator').classList.remove('offline');
+                    el('cloud-status-indicator').innerHTML = '<i class="fas fa-cloud-check"></i> Cloud Terhubung';
+                    setupRealtimeListeners();
+                } catch (e) {
+                    setCloudOffline();
+                }
+            } else { setCloudOffline(); }
+        }
+
+        function setCloudOffline() {
+            el('cloud-status-indicator').classList.add('offline');
+            el('cloud-status-indicator').innerHTML = '<i class="fas fa-cloud-times"></i> Koneksi Cloud Terputus';
+            showToast('Berjalan offline/lokal.');
+        }
+
+        function setupRealtimeListeners() {
+            if (!db) return;
+            const channelsRef = collection(db, 'artifacts', appId, 'public', 'data', 'channels');
+            onSnapshot(channelsRef, (snapshot) => {
+                state.items = [];
+                snapshot.forEach((doc) => { state.items.push({ id: doc.id, ...doc.data() }); });
+                state.items.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+                updateFilters(); renderTable();
+            }, (err) => { setCloudOffline(); });
+
+            const keysRef = collection(db, 'artifacts', appId, 'public', 'data', 'apikeys');
+            onSnapshot(keysRef, (snapshot) => {
+                state.apiKeys = [];
+                snapshot.forEach((doc) => { state.apiKeys.push({ id: doc.id, ...doc.data() }); });
+                renderApiKeys();
+            });
+        }
+
+        function showToast(msg) {
+            el('toast-msg').innerText = msg;
+            el('toast').classList.add('show');
+            setTimeout(() => el('toast').classList.remove('show'), 2500);
+        }
+
+        function handleLoginSuccess() {
+            state.isLoggedIn = true; el('login-view').classList.add('hidden');
+            el('dashboard-view').classList.remove('hidden'); updateFilters(); renderTable();
+        }
+        function handleLogout() {
+            state.isLoggedIn = false; el('dashboard-view').classList.add('hidden');
+            el('login-view').classList.remove('hidden');
+        }
+
+        window.setTheme = function(theme) {
+            state.theme = theme; document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('TNC7_THEME', theme);
+        };
+
+        window.openModal = function(id) { el(id).classList.remove('hidden'); if(id === 'modal-settings') renderApiKeys(); };
+        window.closeModal = function(id) { el(id).classList.add('hidden'); };
+        window.openDetail = function(id) {
+            const item = state.items.find(i => i.id === id);
+            if (item) {
+                el('det-title').innerText = item.title; el('det-pengelola').innerText = item.pengelola || 'Tanpa Pengelola';
+                window.openModal('modal-detail');
+            }
+        };
+
+        function setupEventListeners() {
+            el('login-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                if(el('username').value === 'admin' && el('password').value === 'admin') handleLoginSuccess();
+            });
+            el('btn-logout').addEventListener('click', handleLogout);
+            el('btn-sync').addEventListener('click', () => showToast('Sinkronisasi API YouTube sedang dijalankan...'));
+            ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { el(id).addEventListener('input', renderTable); });
+            
+            el('btn-reset').addEventListener('click', () => {
+                el('search-input').value = ''; el('filter-monet').value = 'all'; el('filter-pengelola').value = 'all'; el('sort-data').value = 'asli';
+                renderTable();
+            });
+            
+            el('item-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if(!db) { alert("Tidak ada koneksi Cloud!"); return; }
+                const id = el('item-id').value; const docId = id || Date.now().toString();
+                const newItem = {
+                    id: docId, title: el('item-title').value, channelId: el('item-channelId').value,
+                    link: el('item-link').value, pengelola: el('item-pengelola').value.toUpperCase(),
+                    subs: el('item-subs').value || '0', subsGrowth: parseInt(el('item-subsGrowth').value) || 0,
+                    views: el('item-views').value || '0', viewGrowth: parseInt(el('item-viewGrowth').value) || 0,
+                    videoCount: parseInt(el('item-video').value) || 0, niche: el('item-niche').value,
+                    monet: el('item-monet').value, notes: el('item-notes').value,
+                    badges: { topViews: el('item-topViews').checked, topSubs: el('item-topSubs').checked },
+                    createdAt: id ? (state.items.find(i => i.id === id)?.createdAt || Date.now()) : Date.now()
+                };
+
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', docId);
+                    await setDoc(docRef, newItem);
+                    window.closeModal('modal-form'); showToast('Data Channel tersimpan ke Cloud!');
+                } catch(error) { alert("Gagal menyimpan data."); }
+            });
+        }
+
+        function updateFilters() {
+            const select = el('filter-pengelola');
+            const unique = [...new Set(state.items.map(i => i.pengelola).filter(Boolean))];
+            select.innerHTML = '<option value="all">SEMUA PENGELOLA</option>' + unique.map(p => `<option value="${p}">${p}</option>`).join('');
+        }
+
+        function renderTable() {
+            const tbody = el('table-body');
+            const sq = el('search-input').value.toLowerCase();
+            const fm = el('filter-monet').value;
+            const fp = el('filter-pengelola').value;
+            const sort = el('sort-data').value;
+
+            let filtered = state.items.filter(i => {
+                const ms = i.title.toLowerCase().includes(sq) || (i.niche && i.niche.toLowerCase().includes(sq)) || (i.channelId && i.channelId.toLowerCase().includes(sq));
+                const mm = fm === 'all' ? true : (fm === 'yes' ? i.monet === 'Sudah' : i.monet !== 'Sudah');
+                const mp = fp === 'all' ? true : i.pengelola === fp;
+                return ms && mm && mp;
+            });
+
+            if(sort === 'views_desc') filtered.sort((a,b) => (b.viewGrowth||0) - (a.viewGrowth||0));
+            if(sort === 'subs_desc') filtered.sort((a,b) => (b.subsGrowth||0) - (a.subsGrowth||0));
+
+            const now = Date.now();
+            const newChannelsCount = state.items.filter(i => (now - (i.createdAt || 0)) <= 86400000).length;
+
+            el('stat-total').innerText = state.items.length;
+            el('stat-monet').innerText = state.items.filter(i => i.monet === 'Sudah').length;
+            if(el('stat-aktif')) el('stat-aktif').innerText = state.items.length; 
+            if(el('stat-new')) el('stat-new').innerText = newChannelsCount;
+
+            tbody.innerHTML = '';
+            if(filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="11" class="text-center text-muted" style="padding: 3rem;">Belum ada data...</td></tr>`;
+                return;
+            }
+
+            filtered.forEach((item, idx) => {
+                let badge = '';
+                if(item.badges?.topViews) badge += `<span class="badge-views"><i class="fas fa-fire"></i> Top Views</span> `;
+                if(item.badges?.topSubs) badge += `<span class="badge-subs"><i class="fas fa-chart-line"></i> Top Subs</span>`;
+
+                let sG = item.subsGrowth > 0 ? `<div class="text-emerald text-xs font-bold">▲ +${item.subsGrowth}</div>` : `<div class="text-muted text-xs">± 0</div>`;
+                let vG = item.viewGrowth > 0 ? `<div><span class="text-emerald font-bold text-sm">▲ +${item.viewGrowth}</span></div>` : `<div><span class="text-muted text-sm font-bold">0</span></div>`;
+                let monetHtml = item.monet === 'Sudah' ? `<div style="width:20px;height:20px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
+                let linkUrl = item.link && item.link.trim() !== '' ? item.link : `https://youtube.com/channel/${item.channelId}`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="text-center text-muted">${idx+1}</td>
+                        <td><div class="font-bold text-sm mb-1">${item.title}</div><div>${badge}</div></td>
+                        <td class="text-center">${item.channelId || item.link ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.65rem; font-weight: bold; text-decoration: none;">Buka <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
+                        <td><div class="font-bold text-sm">${item.subs||'0'}</div>${sG}</td>
+                        <td class="font-bold text-sm">${item.views||'0'}</td><td>${vG}</td>
+                        <td class="text-center font-semibold text-sm">${item.videoCount}</td>
+                        <td class="text-xs text-muted font-semibold" style="text-transform: uppercase;">${item.pengelola||'-'}</td>
+                        <td class="text-xs text-muted">${item.niche||'-'}</td><td class="text-center">${monetHtml}</td>
+                        <td style="padding-right: 1.5rem;">
+                            <div class="flex gap-2 justify-end">
+                                <button onclick="window.editItem('${item.id}')" class="btn btn-pill" style="padding: 2px 8px; font-size: 0.65rem;">Edit</button>
+                                <button onclick="window.deleteItem('${item.id}')" class="btn btn-pill text-red" style="padding: 2px 8px; font-size: 0.65rem;"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.editItem = function(id) {
+            el('item-form').reset(); el('item-id').value = '';
+            if (id) {
+                const item = state.items.find(i => i.id === id);
+                if (item) {
+                    el('modal-title').innerHTML = 'Edit Data Channel'; el('item-id').value = item.id;
+                    el('item-title').value = item.title; el('item-channelId').value = item.channelId || '';
+                    el('item-link').value = item.link || ''; el('item-pengelola').value = item.pengelola || '';
+                    el('item-subs').value = item.subs || ''; el('item-subsGrowth').value = item.subsGrowth || 0;
+                    el('item-views').value = item.views || ''; el('item-viewGrowth').value = item.viewGrowth || 0;
+                    el('item-video').value = item.videoCount || 0; el('item-niche').value = item.niche || '';
+                    el('item-monet').value = item.monet || 'Belum'; el('item-notes').value = item.notes || '';
+                    el('item-topViews').checked = !!item.badges?.topViews; el('item-topSubs').checked = !!item.badges?.topSubs;
+                }
+            } else { el('modal-title').innerHTML = 'Tambah Channel Baru'; }
+            window.openModal('modal-form');
+        };
+
+        window.deleteItem = async function(id) {
+            if(confirm('Hapus channel ini dari Cloud?')) {
+                if(!db) return;
+                try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'channels', id)); showToast('Dihapus dari Cloud!'); } catch(e) {}
+            }
+        };
+
+        function renderApiKeys() {
+            const listContainer = el('api-keys-list');
+            if(!listContainer) return; listContainer.innerHTML = '';
+            const activeCount = state.apiKeys.filter(k => k.active).length;
+            const countEl = el('api-key-count');
+            if(countEl) countEl.innerText = `${activeCount} aktif / ${state.apiKeys.length} total`;
+            const labelInput = el('new-api-label');
+            if (labelInput) labelInput.value = 'Key ' + (state.apiKeys.length + 1);
+
+            if (state.apiKeys.length === 0) { listContainer.innerHTML = `<p class="text-center text-muted text-sm py-4">Belum ada API Key.</p>`; return; }
+
+            [...state.apiKeys].sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0)).forEach((apiKey, index) => {
+                const isActive = apiKey.active; const borderColor = isActive ? '#0ea5e9' : 'var(--panel-border)';
+                const activeBadge = isActive ? `<span style="font-size: 0.65rem; border: 1px solid rgba(16,185,129,0.5); color: #34d399; padding: 2px 8px; border-radius: 999px; background: rgba(16,185,129,0.1);"><i class="fas fa-check"></i> Aktif & Tersinkron Cloud</span>` : `<span style="font-size: 0.65rem; color: var(--text-muted);"><i class="fas fa-cloud"></i> Tersimpan Cloud</span>`;
+                const setBtnAction = isActive ? '' : `onclick="window.setActiveApiKey('${apiKey.id}')"`;
+                const setBtnStyle = isActive ? 'border: 1px solid rgba(16,185,129,0.5); color: #34d399; background: rgba(16,185,129,0.1); cursor: default;' : 'border: 1px solid var(--panel-border); color: #34d399; background: transparent;';
+
+                listContainer.innerHTML += `
+                    <div class="api-key-item" style="border: 1px solid ${borderColor}; background: rgba(17, 24, 39, 0.4);">
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex gap-3 items-center">
+                                <div style="width: 28px; height: 28px; background: #eab308; color: #1a1814; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">${index + 1}</div>
+                                <div><h5 class="font-bold text-sm" style="color: var(--text-main);">${apiKey.label}</h5></div>
+                            </div>
+                            ${activeBadge}
+                        </div>
+                        <div class="flex gap-2 flex-wrap">
+                            <button ${setBtnAction} class="btn btn-pill btn-sm" style="${setBtnStyle}"><i class="fas fa-check"></i> Aktifkan</button>
+                            <button onclick="window.deleteApiKey('${apiKey.id}')" class="btn btn-pill btn-sm text-red" style="background: transparent; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);"><i class="fas fa-trash"></i> Hapus</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.addApiKey = async function() {
+            if(!db) { alert('Tidak ada koneksi Cloud!'); return; }
+            const keyVal = el('new-api-key').value.trim(); let labelVal = el('new-api-label').value.trim();
+            if(!keyVal) { showToast('API Key kosong!'); return; }
+            if(!labelVal) labelVal = 'Key ' + ((state.apiKeys?.length || 0) + 1);
+            
+            try {
+                const docId = Date.now().toString();
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'apikeys', docId), { key: keyVal, label: labelVal, active: state.apiKeys.length === 0, createdAt: Date.now() });
+                el('new-api-key').value = ''; showToast('API Key tersimpan ke Cloud!');
+            } catch(e) { alert("Gagal menyimpan API Key."); }
+        };
+
+        window.setActiveApiKey = async function(id) {
+            if(!db) return;
+            try {
+                for (const k of state.apiKeys) await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'apikeys', k.id), { active: (k.id === id) }, { merge: true });
+                showToast('API Key aktif diubah!');
+            } catch(e) {}
+        };
+        
+        window.deleteApiKey = async function(id) {
+            if(!db) return;
+            if(confirm('Hapus API Key ini dari Cloud secara permanen?')) {
+                try { await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'apikeys', id)); showToast('API Key dihapus!'); } catch(e) {}
+            }
+        };
+
+        window.searchYouTubeChannel = async function() {
+            const query = el('yt-search-input').value.trim();
+            if (!query) return;
+
+            const activeKeyObj = state.apiKeys.find(k => k.active);
+            if (!activeKeyObj || !activeKeyObj.key) {
+                alert('API Key YouTube belum aktif!'); window.closeModal('modal-search-yt'); window.openModal('modal-settings'); return;
+            }
+            const apiKey = activeKeyObj.key;
+            let handle = query.includes('@') ? query.split('@')[1].split('/')[0].split('?')[0] : null;
+
+            const btn = el('btn-yt-search'); const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...'; btn.disabled = true;
+
+            try {
+                let channelData = null;
+                if (handle) {
+                    const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&forHandle=${handle}&key=${apiKey}`);
+                    const data = await res.json(); if (data.items) channelData = data.items[0];
+                } else {
+                    const searchRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${encodeURIComponent(query)}&key=${apiKey}`);
+                    const searchData = await searchRes.json();
+                    if (searchData.items && searchData.items.length > 0) {
+                        const statRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,statistics&id=${searchData.items[0].snippet.channelId}&key=${apiKey}`);
+                        const statData = await statRes.json(); if (statData.items) channelData = statData.items[0];
+                    }
+                }
+
+                if (channelData) {
+                    const formatNumber = (numStr) => {
+                        const num = parseInt(numStr);
+                        if (isNaN(num)) return '0';
+                        if (num >= 1000000) return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
+                        if (num >= 1000) return (num / 1000).toFixed(1).replace('.0', '') + 'K';
+                        return num.toString();
+                    };
+
+                    window.closeModal('modal-search-yt'); window.editItem(null); 
+                    el('item-title').value = channelData.snippet.title; el('item-channelId').value = channelData.id;
+                    el('item-link').value = channelData.snippet.customUrl ? `https://youtube.com/${channelData.snippet.customUrl}` : `https://youtube.com/channel/${channelData.id}`;
+                    el('item-subs').value = formatNumber(channelData.statistics.subscriberCount);
+                    el('item-views').value = formatNumber(channelData.statistics.viewCount);
+                    el('item-video').value = channelData.statistics.videoCount;
+                    el('yt-search-input').value = ''; showToast('Data ditemukan!');
+                } else { alert('Channel tidak ditemukan.'); }
+            } catch (err) { alert('Terjadi kesalahan pencarian API.'); } 
+            finally { btn.innerHTML = originalText; btn.disabled = false; }
+        };
+
+        window.onload = initApp;
+
+        function setupPWA() {
+            const manifest = {
+                "name": "TNC7 Management", "short_name": "TNC7",
+                "start_url": window.location.pathname, "display": "standalone",
+                "background_color": "#161921", "theme_color": "#161921",
+                "icons": [{ "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }]
+            };
+            
+            const manifestUrl = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
+            let link = document.querySelector('link[rel="manifest"]');
+            if (!link) { link = document.createElement('link'); link.rel = 'manifest'; document.head.appendChild(link); }
+            link.href = manifestUrl;
+
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    self.addEventListener('install', (e) => self.skipWaiting());
+                    self.addEventListener('activate', (e) => self.clients.claim());
+                    self.addEventListener('fetch', (e) => {
+                        e.respondWith(fetch(e.request).catch(err => console.log('Bypass SW', err)));
+                    });
+                `;
+                const swUrl = URL.createObjectURL(new Blob([swCode], { type: 'application/javascript' }));
+                navigator.serviceWorker.register(swUrl).then(() => {
+                    console.log("PWA Service Worker registered.");
+                }).catch((err) => { console.warn("SW gagal:", err); });
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault(); deferredPrompt = e;
+                const installBtn = document.getElementById('btn-install');
+                if(installBtn) { installBtn.classList.remove('hidden'); installBtn.style.animation = 'pulse 2s infinite'; }
+            });
+
+            const installBtn = document.getElementById('btn-install');
+            if(installBtn) {
+                installBtn.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') installBtn.classList.add('hidden');
+                        deferredPrompt = null;
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
