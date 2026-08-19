@@ -8,6 +8,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>TNC7 Management</title>
     
+    <!-- App Icon / Favicon Kustom TNC7 -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231a1f2c'/%3E%3Cpath d='M190 160 L370 256 L190 352 Z' fill='%23facc15'/%3E%3Ctext x='256' y='440' font-family='sans-serif' font-size='100' font-weight='900' letter-spacing='-2' fill='%23ffffff' text-anchor='middle'%3ETNC7%3C/text%3E%3C/svg%3E">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231a1f2c'/%3E%3Cpath d='M190 160 L370 256 L190 352 Z' fill='%23facc15'/%3E%3Ctext x='256' y='440' font-family='sans-serif' font-size='100' font-weight='900' letter-spacing='-2' fill='%23ffffff' text-anchor='middle'%3ETNC7%3C/text%3E%3C/svg%3E">
+
     <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1338,11 +1342,13 @@
         };
 
         function setupPWA() {
+            const iconDataUri = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%231a1f2c'/%3E%3Cpath d='M190 160 L370 256 L190 352 Z' fill='%23facc15'/%3E%3Ctext x='256' y='440' font-family='sans-serif' font-size='100' font-weight='900' letter-spacing='-2' fill='%23ffffff' text-anchor='middle'%3ETNC7%3C/text%3E%3C/svg%3E";
+
             const manifest = {
                 "name": "TNC7 Management", "short_name": "TNC7",
                 "start_url": window.location.pathname, "display": "standalone",
                 "background_color": "#161921", "theme_color": "#161921",
-                "icons": [{ "src": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }]
+                "icons": [{ "src": iconDataUri, "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }]
             };
             
             const manifestUrl = 'data:application/manifest+json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
