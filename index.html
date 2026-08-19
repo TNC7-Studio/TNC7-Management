@@ -53,11 +53,7 @@
             --header-bg: rgba(39, 39, 42, 0.95);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
@@ -70,6 +66,7 @@
             overflow-x: hidden;
         }
 
+        /* Topbar Kuning */
         body::before {
             content: '';
             position: fixed;
@@ -477,7 +474,6 @@
                 <div class="flex items-center gap-2 flex-wrap">
                     <div style="position: relative; flex-grow: 1; max-width: 300px;">
                         <i class="fas fa-search text-muted" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.75rem;"></i>
-                        <!-- Kotak Pencarian dibersihkan dari nilai email default -->
                         <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 2rem;" placeholder="Cari nama, ID, niche...">
                     </div>
                     <select id="filter-monet" class="form-select text-xs" style="width: auto;">
@@ -546,7 +542,7 @@
                         </div>
                         <div class="form-group full-width"><label>Catatan Pribadi</label><textarea id="item-notes" rows="3" placeholder="Catatan, info tambahan, strategi, dll..."></textarea></div>
 
-                        <!-- Data Tersembunyi -->
+                        <!-- Data Tersembunyi untuk auto-fetch API -->
                         <div style="display: none;">
                             <input type="text" id="item-subs"><input type="text" id="item-views"><input type="number" id="item-video">
                             <input type="number" id="item-subsGrowth" value="0"><input type="number" id="item-viewGrowth" value="0">
@@ -622,7 +618,7 @@
                     </div>
                 </div>
 
-                <!-- Backup/Restore Section (Hidden by default) -->
+                <!-- Backup/Restore Section -->
                 <div id="tab-backup" class="hidden">
                      <div class="settings-card">
                         <h4 class="font-bold text-sm mb-4"><i class="fas fa-download text-xs"></i> Ekspor Data Lokal</h4>
@@ -687,16 +683,13 @@
             appId: "1:1098792876538:web:28304ee128f7d156190c43"
         };
 
-        // Default API Key dari Google Cloud (Khusus untuk fitur Cari YouTube)
         const DEFAULT_API_KEY = "AIzaSyDJbN1UQy17B_hqVTQE4zNOpJJZFqh2eMc";
 
         let state = { items: [], apiKeys: [], theme: 'dark', isLoggedIn: false, isCloudConnected: false };
         let db, auth;
         let deferredPrompt;
 
-        const USER_ID = 'user_default'; 
         const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'tnc7-management';
-        
         const el = (id) => document.getElementById(id);
 
         function loadLocalData() {
@@ -705,9 +698,7 @@
                 if (storedChannels) state.items = JSON.parse(storedChannels);
                 
                 const storedKeys = localStorage.getItem('tnc7_apikeys');
-                if (storedKeys) {
-                    state.apiKeys = JSON.parse(storedKeys);
-                }
+                if (storedKeys) state.apiKeys = JSON.parse(storedKeys);
                 
                 if (!state.apiKeys || state.apiKeys.length === 0) {
                     state.apiKeys = [{
@@ -722,9 +713,7 @@
                     let hasActive = false;
                     for (let i = 0; i < state.apiKeys.length; i++) {
                         state.apiKeys[i].active = (state.apiKeys[i].active === true || state.apiKeys[i].active === "true");
-                        if (state.apiKeys[i].active) {
-                            hasActive = true;
-                        }
+                        if (state.apiKeys[i].active) hasActive = true;
                     }
                     if (!hasActive && state.apiKeys.length > 0) {
                         state.apiKeys[0].active = true;
@@ -748,9 +737,7 @@
             setupEventListeners();
             
             loadLocalData();
-            if(state.items.length > 0 || state.apiKeys.length > 0) {
-                 handleLoginSuccess(); 
-            }
+            if(state.items.length > 0 || state.apiKeys.length > 0) handleLoginSuccess(); 
 
             const configToUse = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : MY_FIREBASE_CONFIG;
             const hasValidConfig = Object.keys(configToUse).length > 0;
@@ -766,11 +753,8 @@
                     auth = getAuth(app);
                     
                     const token = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                    if (token) {
-                        await signInWithCustomToken(auth, token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
+                    if (token) await signInWithCustomToken(auth, token);
+                    else await signInAnonymously(auth);
                     
                     state.isCloudConnected = true;
                     setCloudOnline();
@@ -778,16 +762,9 @@
 
                 } catch (e) {
                     console.error("Firebase init error:", e);
-                    if (e.code === 'auth/api-key-not-valid' || e.code === 'auth/operation-not-allowed') {
-                         showToast('Akses Ditolak: Periksa Kunci API/Auth di Google Cloud', true);
-                    } else if (e.code === 'permission-denied') {
-                         showToast('Akses Firestore Ditolak: Periksa Security Rules!', true);
-                    }
                     setCloudOffline();
                 }
-            } else { 
-                setCloudLocalOnly(); 
-            }
+            } else { setCloudLocalOnly(); }
         }
 
         function setCloudOnline() {
@@ -795,12 +772,6 @@
             ind.className = 'cloud-status';
             ind.innerHTML = '<i class="fas fa-cloud-check"></i> Cloud Terhubung';
             el('auto-sync-badge').classList.remove('hidden');
-            
-            const apiSync = el('api-sync-status');
-            if(apiSync) {
-                apiSync.style.color = '#10b981';
-                apiSync.innerHTML = '<i class="fas fa-cloud-check"></i> Tersinkron Cloud';
-            }
         }
 
         function setCloudOffline() {
@@ -823,6 +794,7 @@
         function setupRealtimeListeners() {
             if (!db || !auth.currentUser) return;
             
+            // Listener real-time super cepat (Public Data scope)
             const channelsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'channels');
             onSnapshot(channelsRef, (snapshot) => {
                 let cloudItems = [];
@@ -834,9 +806,6 @@
                 if(state.isLoggedIn) { updateFilters(); renderTable(); }
             }, (err) => { 
                 console.error("Firebase listener error:", err);
-                if(err.code === 'permission-denied') {
-                    showToast('Akses Ditolak: Ubah Aturan (Rules) Firestore Anda!', true);
-                }
                 setCloudOffline(); 
             });
 
@@ -850,33 +819,7 @@
                      saveLocalData();
                 }
                 renderApiKeys();
-            }, (err) => {
-                console.error("Firebase keys listener error:", err);
-            });
-        }
-        
-        async function syncLocalToCloud() {
-            if(!db || !state.isCloudConnected || !auth.currentUser) return;
-            
-            try {
-                const channelsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'channels');
-                for(const item of state.items) {
-                    await setDoc(doc(channelsRef, item.id), item, { merge: true });
-                }
-                
-                const keysRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'apikeys');
-                for(const key of state.apiKeys) {
-                    await setDoc(doc(keysRef, key.id), key, { merge: true });
-                }
-                showToast('Data berhasil disinkronkan ke Cloud!');
-            } catch(e) {
-                console.error("Gagal sync ke cloud", e);
-                if(e.code === 'permission-denied') {
-                     showToast('Gagal Sync: Akses Ditolak Aturan Firestore', true);
-                } else {
-                     showToast('Gagal Sinkronisasi ke Cloud', true);
-                }
-            }
+            }, (err) => { console.error("Firebase keys listener error:", err); });
         }
 
         function showToast(msg, isError = false) {
@@ -977,25 +920,23 @@
                 if(id) {
                     const idx = state.items.findIndex(i => i.id === id);
                     if(idx > -1) state.items[idx] = newItem;
-                } else {
-                    state.items.unshift(newItem);
-                }
+                } else state.items.unshift(newItem);
+                
                 saveLocalData();
                 renderTable();
                 window.closeModal('modal-form'); 
 
                 if(db && state.isCloudConnected && auth.currentUser) {
                     try {
+                        // Penyimpanan instan ke Cloud (real-time listener akan terpicu otomatis)
                         const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'channels', docId);
                         await setDoc(docRef, newItem);
-                        showToast('Tersimpan ke Cloud & Lokal');
+                        showToast('Tersimpan ke Cloud Real-time');
                     } catch(error) { 
                         console.error(error);
                         showToast('Tersimpan Lokal (Cloud Gagal)', true); 
                     }
-                } else {
-                    showToast('Tersimpan secara Lokal');
-                }
+                } else showToast('Tersimpan secara Lokal');
             });
         }
 
@@ -1094,25 +1035,15 @@
                 saveLocalData();
                 renderTable();
 
-                if(db && state.isCloudConnected) {
+                if(db && state.isCloudConnected && auth.currentUser) {
                     try { 
-                        if (!auth.currentUser) {
-                            showToast('Gagal: Sesi Cloud tidak valid (Auth Null)', true);
-                            return;
-                        }
                         await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'channels', id)); 
-                        showToast('Dihapus dari Sistem'); 
+                        showToast('Dihapus dari Cloud Real-time'); 
                     } catch(e) { 
                         console.error("Error menghapus dari cloud:", e); 
-                        if(e.code === 'permission-denied') {
-                            showToast('Gagal Hapus: Ditolak oleh Aturan Firestore', true);
-                        } else {
-                            showToast('Gagal Hapus dari Cloud', true);
-                        }
+                        showToast('Gagal Hapus dari Cloud', true);
                     }
-                } else {
-                    showToast('Dihapus dari Lokal');
-                }
+                } else showToast('Dihapus dari Lokal');
             }
         };
 
@@ -1135,10 +1066,7 @@
             [...state.apiKeys].sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0)).forEach((apiKey, index) => {
                 const isActive = (apiKey.active === true || apiKey.active === 'true'); 
                 const borderColor = isActive ? '#0ea5e9' : 'var(--panel-border)';
-                const badgeStatus = state.isCloudConnected ? 
-                    `<i class="fas fa-cloud-check"></i> Cloud` : 
-                    `<i class="fas fa-hdd"></i> Lokal`;
-                    
+                const badgeStatus = state.isCloudConnected ? `<i class="fas fa-cloud-check"></i> Cloud` : `<i class="fas fa-hdd"></i> Lokal`;
                 const activeBadge = isActive ? `<span style="font-size: 0.65rem; border: 1px solid rgba(16,185,129,0.5); color: #34d399; padding: 2px 8px; border-radius: 999px; background: rgba(16,185,129,0.1);"><i class="fas fa-check"></i> Aktif (${badgeStatus})</span>` : `<span style="font-size: 0.65rem; color: var(--text-muted);">${badgeStatus}</span>`;
                 
                 const setBtnAction = isActive ? '' : `onclick="window.setActiveApiKey('${apiKey.id}')"`;
@@ -1186,9 +1114,7 @@
                     await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'apikeys', docId), newKey);
                     showToast('API Key tersimpan ke Cloud!');
                 } catch(e) { console.error(e); }
-            } else {
-                showToast('API Key tersimpan Lokal');
-            }
+            } else showToast('API Key tersimpan Lokal');
         };
 
         window.setActiveApiKey = async function(id) {
@@ -1203,9 +1129,7 @@
                     }
                     showToast('API Key aktif diubah!');
                 } catch(e) { console.error(e); }
-            } else {
-                showToast('API Key aktif diubah (Lokal)');
-            }
+            } else showToast('API Key aktif diubah (Lokal)');
         };
         
         window.deleteApiKey = async function(id) {
@@ -1227,9 +1151,7 @@
                         }
                         showToast('API Key dihapus!'); 
                     } catch(e) { console.error(e); }
-                } else {
-                    showToast('API Key dihapus (Lokal)');
-                }
+                } else showToast('API Key dihapus (Lokal)');
             }
         };
 
@@ -1241,15 +1163,10 @@
             const originalText = btn.innerHTML;
             
             let apiKeyToUse = null;
-
             let activeKeyObj = state.apiKeys.find(k => k.active === true || k.active === 'true');
-            if (activeKeyObj && activeKeyObj.key) {
-                apiKeyToUse = activeKeyObj.key;
-            } else if (state.apiKeys.length > 0 && state.apiKeys[0].key) {
-                apiKeyToUse = state.apiKeys[0].key;
-            } else {
-                apiKeyToUse = DEFAULT_API_KEY;
-            }
+            if (activeKeyObj && activeKeyObj.key) apiKeyToUse = activeKeyObj.key;
+            else if (state.apiKeys.length > 0 && state.apiKeys[0].key) apiKeyToUse = state.apiKeys[0].key;
+            else apiKeyToUse = DEFAULT_API_KEY;
 
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mencari...'; 
             btn.disabled = true;
@@ -1294,18 +1211,12 @@
                     el('item-video').value = channelData.statistics.videoCount;
                     el('yt-search-input').value = ''; 
                     showToast('Data channel ditemukan!');
-                } else { 
-                    alert('Channel tidak ditemukan.'); 
-                }
+                } else alert('Channel tidak ditemukan.'); 
             } catch (err) { 
                 console.error(err);
-                if(err.message.includes("quotaExceeded")) {
-                    alert('Error: Kuota API Key YouTube telah habis hari ini. Silakan ganti API Key di pengaturan.');
-                } else if(err.message.includes("API key not valid")) {
-                    alert('Error: API Key yang digunakan tidak valid atau salah ketik.');
-                } else {
-                    alert('Kesalahan Pencarian: ' + err.message); 
-                }
+                if(err.message.includes("quotaExceeded")) alert('Error: Kuota API Key YouTube telah habis hari ini.');
+                else if(err.message.includes("API key not valid")) alert('Error: API Key tidak valid.');
+                else alert('Kesalahan Pencarian: ' + err.message); 
             } finally { 
                 btn.innerHTML = originalText; 
                 btn.disabled = false; 
@@ -1313,12 +1224,7 @@
         };
 
         window.exportData = function() {
-            const dataToExport = {
-                channels: state.items,
-                apiKeys: state.apiKeys,
-                exportDate: new Date().toISOString()
-            };
-            
+            const dataToExport = { channels: state.items, apiKeys: state.apiKeys, exportDate: new Date().toISOString() };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
@@ -1337,32 +1243,30 @@
             reader.onload = async function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
-                    if(imported.channels && Array.isArray(imported.channels)) {
-                        state.items = imported.channels;
-                    }
+                    if(imported.channels && Array.isArray(imported.channels)) state.items = imported.channels;
                     if(imported.apiKeys && Array.isArray(imported.apiKeys)) {
                         state.apiKeys = imported.apiKeys.map(k => ({...k, active: (k.active === true || k.active === "true")}));
-                        
-                        if(state.apiKeys.length > 0 && !state.apiKeys.some(k => k.active)) {
-                            state.apiKeys[0].active = true;
-                        }
+                        if(state.apiKeys.length > 0 && !state.apiKeys.some(k => k.active)) state.apiKeys[0].active = true;
                     }
                     
                     saveLocalData();
                     renderTable();
                     renderApiKeys();
                     
-                    if(state.isCloudConnected) {
-                        syncLocalToCloud();
-                        showToast('Data diimpor & disinkronkan ke Cloud');
-                    } else {
-                        showToast('Data berhasil diimpor (Lokal)');
-                    }
+                    if(db && state.isCloudConnected && auth.currentUser) {
+                        try {
+                            const channelsRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'channels');
+                            for(const item of state.items) await setDoc(doc(channelsRef, item.id), item, { merge: true });
+                            
+                            const keysRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'apikeys');
+                            for(const key of state.apiKeys) await setDoc(doc(keysRef, key.id), key, { merge: true });
+                            
+                            showToast('Data diimpor & disinkronkan ke Cloud');
+                        } catch(err) { showToast('Gagal sinkron ke Cloud: ' + err.message, true); }
+                    } else showToast('Data berhasil diimpor (Lokal)');
                     
                     el('import-file').value = ''; 
-                } catch(err) {
-                    alert('Gagal membaca file JSON: ' + err.message);
-                }
+                } catch(err) { alert('Gagal membaca file JSON: ' + err.message); }
             };
             reader.readAsText(file);
         };
@@ -1418,7 +1322,3 @@
     </script>
 </body>
 </html>
-```
-eof
-
-Silakan perbarui file tersebut di repository GitHub Anda, tunggu hingga proses *deployment* selesai, lalu lakukan **Hard Refresh (`Ctrl + Shift + R`)** agar kotak pencarian kembali bersih dari email default!
