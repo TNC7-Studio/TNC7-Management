@@ -8,9 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>TNC7 Management</title>
     
-    <!-- FontAwesome -->
+    <!-- FontAwesome & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
@@ -37,7 +36,6 @@
             --table-hover: rgba(0, 0, 0, 0.03);
             --primary-accent: #2563eb;
             --primary-hover: #1d4ed8;
-            --header-bg: rgba(255, 255, 255, 0.95);
         }
 
         [data-theme="kuning"] {
@@ -50,7 +48,6 @@
             --table-hover: rgba(255, 255, 255, 0.05);
             --primary-accent: #f59e0b;
             --primary-hover: #d97706;
-            --header-bg: rgba(39, 39, 42, 0.95);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -64,9 +61,19 @@
             flex-direction: column;
             transition: background-color 0.3s, color 0.3s;
             overflow-x: hidden;
+            /* Anti text selection untuk UI bersih */
+            user-select: none; 
+            -webkit-user-select: none;
+            /* Mengubah semua teks di halaman menjadi huruf kapital */
+            text-transform: uppercase;
         }
 
-        /* Topbar Kuning */
+        /* Pengecualian untuk URL dan ID agar fitur tetap berfungsi (tidak error) */
+        .case-sensitive {
+            text-transform: none !important;
+        }
+
+        /* Topbar Kuning yang menyesuaikan dengan tema aksen */
         body::before {
             content: '';
             position: fixed;
@@ -77,6 +84,12 @@
             background: var(--primary-accent);
             z-index: 9999;
             box-shadow: 0 0 15px var(--primary-accent);
+        }
+
+        /* Mengizinkan teks dipilih hanya di dalam tabel, form input, dan area spesifik */
+        input, textarea, table, .allow-select {
+            user-select: text;
+            -webkit-user-select: text;
         }
 
         .container {
@@ -434,20 +447,18 @@
 
     <div id="toast"><i class="fas fa-info-circle"></i> <span id="toast-msg">Success</span></div>
 
-    <!-- Login View -->
+    <!-- Login View Super Instan -->
     <div id="login-view" class="container" style="justify-content: center;">
-        <div class="panel-glass" style="padding: 2rem; text-align: center;">
-            <div class="icon-box" style="margin: 0 auto 1rem; background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);">
+        <div class="panel-glass" style="padding: 2.5rem 2rem; text-align: center;">
+            <div class="icon-box" style="margin: 0 auto 1.5rem; width: 60px; height: 60px; font-size: 2rem; background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);">
                 <i class="fab fa-youtube"></i>
             </div>
-            <h1 class="text-xl font-bold" style="margin-bottom: 0.25rem;">TNC7 Management</h1>
-            <p class="text-xs text-muted" style="margin-bottom: 1.5rem;">Akses Sinkronisasi Cloud Real-time</p>
+            <h1 class="text-2xl font-bold" style="margin-bottom: 0.5rem;">TNC7 Management</h1>
+            <p class="text-sm text-muted" style="margin-bottom: 2rem;">Sistem Sinkronisasi Cloud Real-time</p>
             
             <form id="login-form" class="flex-col gap-4">
-                <input type="text" id="username" class="form-input text-center" placeholder="Username" value="admin" required>
-                <input type="password" id="password" class="form-input text-center" placeholder="Password" value="admin" required>
-                <button type="submit" class="btn" style="width: 100%; padding: 0.75rem; border-radius: 0.75rem; background: var(--primary-accent); color: white; font-weight: bold;">
-                    Masuk Sistem
+                <button type="submit" class="btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; border-radius: 0.75rem; background: var(--primary-accent); color: #1a1814; font-weight: bold; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
+                    <i class="fas fa-sign-in-alt"></i> Masuk Sistem
                 </button>
             </form>
         </div>
@@ -511,34 +522,33 @@
 
         <div class="panel-glass flex-col" style="flex-grow: 1; overflow: hidden; display: flex;">
             <div style="padding: 1.25rem; border-bottom: 1px solid var(--panel-border);">
-                <p class="text-accent font-bold" style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem;">KOLEKSI PRIBADI</p>
                 <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
-                    <h2 class="text-lg font-bold">Daftar Channel & Akun</h2>
+                    <h2 class="text-lg font-bold">DAFTAR CHANNEL & AKUN</h2>
                     <div class="flex gap-2">
-                        <button class="btn btn-pill" onclick="window.openModal('modal-search-yt')"><i class="fas fa-search"></i> Cari YT</button>
-                        <button class="btn btn-pill" style="background: var(--primary-accent); color: #1a1814; font-weight: bold; border: none;" onclick="window.editItem(null)"><i class="fas fa-plus"></i> Tambah Channel</button>
+                        <button class="btn btn-pill" onclick="window.openModal('modal-search-yt')"><i class="fas fa-search"></i> CARI YT</button>
+                        <button class="btn btn-pill" style="background: var(--primary-accent); color: #1a1814; font-weight: bold; border: none;" onclick="window.editItem(null)"><i class="fas fa-plus"></i> TAMBAH CHANNEL</button>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2 flex-wrap">
                     <div style="position: relative; flex-grow: 1; max-width: 300px;">
                         <i class="fas fa-search text-muted" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.75rem;"></i>
-                        <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 2rem;" placeholder="Cari nama, ID, niche...">
+                        <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 2rem;" placeholder="CARI NAMA, ID, NICHE..." oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <select id="filter-monet" class="form-select text-xs" style="width: auto;">
                         <option value="all">SEMUA MONETISASI</option>
-                        <option value="yes">Monetisasi: YES</option>
-                        <option value="no">Monetisasi: NO</option>
+                        <option value="yes">MONETISASI: YES</option>
+                        <option value="no">MONETISASI: NO</option>
                     </select>
                     <select id="filter-pengelola" class="form-select text-xs" style="width: auto; text-transform: uppercase;">
                         <option value="all">SEMUA PENGELOLA</option>
                     </select>
                     <select id="sort-data" class="form-select text-xs" style="width: auto;">
-                        <option value="asli">Urutan asli</option>
-                        <option value="views_desc">Kenaikan views ↑</option>
-                        <option value="subs_desc">Kenaikan subs ↑</option>
+                        <option value="asli">URUTAN ASLI</option>
+                        <option value="views_desc">KENAIKAN VIEWS ↑</option>
+                        <option value="subs_desc">KENAIKAN SUBS ↑</option>
                     </select>
-                    <button id="btn-reset" class="btn btn-pill text-xs"><i class="fas fa-times"></i> Reset Filter</button>
+                    <button id="btn-reset" class="btn btn-pill text-xs"><i class="fas fa-times"></i> RESET FILTER</button>
                 </div>
             </div>
 
@@ -569,7 +579,7 @@
             <div class="modal-header" style="border-bottom: 1px solid var(--panel-border); padding: 1.5rem;">
                 <div>
                     <p class="text-accent font-bold" style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">DATA CHANNEL</p>
-                    <h3 id="modal-title" class="font-bold text-xl" style="color: white;">Tambah Channel Baru</h3>
+                    <h3 id="modal-title" class="font-bold text-xl" style="color: white;">TAMBAH CHANNEL BARU</h3>
                 </div>
                 <button class="btn" onclick="window.closeModal('modal-form')" style="background: rgba(255,255,255,0.05); color: var(--text-muted); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
             </div>
@@ -578,18 +588,18 @@
                 <input type="hidden" id="item-id">
                 <div class="modal-body" style="padding: 1.5rem; overflow-y: auto; max-height: 70vh;">
                     <div class="form-grid">
-                        <div class="form-group"><label>Nama Channel</label><input type="text" id="item-title" required placeholder="NAMA CHANNEL"></div>
-                        <div class="form-group"><label>Link Channel / Profil</label><input type="text" id="item-link" placeholder="https://youtube.com/@handle"></div>
-                        <div class="form-group"><label>ID Channel</label><input type="text" id="item-channelId" placeholder="UC..."></div>
-                        <div class="form-group"><label>Nama Pengelola</label><input type="text" id="item-pengelola" placeholder="NAMA PENGELOLA" style="text-transform: uppercase;"></div>
-                        <div class="form-group"><label>Niche / Kategori</label><input type="text" id="item-niche" placeholder="Ketik niche secara manual"></div>
-                        <div class="form-group"><label>Monetisasi</label>
+                        <div class="form-group full-width"><label>NAMA CHANNEL</label><input type="text" id="item-title" required placeholder="NAMA CHANNEL" oninput="this.value = this.value.toUpperCase()"></div>
+                        <div class="form-group full-width"><label>LINK CHANNEL / PROFIL</label><input type="text" id="item-link" class="case-sensitive" placeholder="https://youtube.com/@handle"></div>
+                        <div class="form-group"><label>ID CHANNEL</label><input type="text" id="item-channelId" class="case-sensitive" placeholder="UC..."></div>
+                        <div class="form-group"><label>NAMA PENGELOLA</label><input type="text" id="item-pengelola" placeholder="NAMA PENGELOLA" oninput="this.value = this.value.toUpperCase()"></div>
+                        <div class="form-group"><label>NICHE / KATEGORI</label><input type="text" id="item-niche" placeholder="KETIK NICHE SECARA MANUAL" oninput="this.value = this.value.toUpperCase()"></div>
+                        <div class="form-group"><label>MONETISASI</label>
                             <select id="item-monet">
-                                <option value="Belum">NO — Belum monetisasi</option>
-                                <option value="Sudah">YES — Sudah monetisasi</option>
+                                <option value="Belum">NO — BELUM MONETISASI</option>
+                                <option value="Sudah">YES — SUDAH MONETISASI</option>
                             </select>
                         </div>
-                        <div class="form-group full-width"><label>Catatan Pribadi</label><textarea id="item-notes" rows="3" placeholder="Catatan, info tambahan, strategi, dll..."></textarea></div>
+                        <div class="form-group full-width"><label>CATATAN PRIBADI</label><textarea id="item-notes" rows="3" placeholder="CATATAN, INFO TAMBAHAN, STRATEGI, DLL..." oninput="this.value = this.value.toUpperCase()"></textarea></div>
 
                         <!-- Data Tersembunyi untuk auto-fetch API -->
                         <div style="display: none;">
@@ -600,9 +610,9 @@
                     </div>
                 </div>
                 <div class="modal-footer" style="padding: 1.5rem; background: rgba(0,0,0,0.2); border-top: 1px solid var(--panel-border); gap: 1rem; justify-content: flex-end;">
-                    <button type="button" class="btn" style="padding: 0.6rem 1.5rem; background: rgba(255,255,255,0.05); color: #d1d5db; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; font-size: 0.875rem;" onclick="window.closeModal('modal-form')">Batal</button>
+                    <button type="button" class="btn" style="padding: 0.6rem 1.5rem; background: rgba(255,255,255,0.05); color: #d1d5db; border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; font-size: 0.875rem;" onclick="window.closeModal('modal-form')">BATAL</button>
                     <button type="submit" class="btn active" style="padding: 0.6rem 1.5rem; background: #38bdf8; color: #0f172a; font-weight: 600; border-radius: 0.5rem; border: none; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fas fa-save"></i> Simpan
+                        <i class="fas fa-save"></i> SIMPAN
                     </button>
                 </div>
             </form>
@@ -645,11 +655,11 @@
                 <div id="tab-api-key">
                     <div class="settings-card">
                         <h4 class="font-bold text-sm mb-4"><i class="fas fa-plus text-xs"></i> Tambah YouTube API Key</h4>
-                        <div class="flex-col gap-2 mb-4"><label class="text-xs font-bold text-main">YouTube Data API v3 Key</label><input type="password" id="new-api-key" class="form-input font-mono text-sm" placeholder="AIzaSy..." style="background: rgba(0,0,0,0.2);"></div>
+                        <div class="flex-col gap-2 mb-4"><label class="text-xs font-bold text-main">YouTube Data API v3 Key</label><input type="password" id="new-api-key" class="form-input font-mono text-sm case-sensitive" placeholder="AIzaSy..." style="background: rgba(0,0,0,0.2);"></div>
                         <div class="flex-col gap-2 mb-4">
                             <label class="text-xs font-bold text-main">Label</label>
                             <div class="flex gap-3">
-                                <input type="text" id="new-api-label" class="form-input text-sm" placeholder="Label otomatis..." style="background: rgba(0,0,0,0.2); flex-grow: 1;">
+                                <input type="text" id="new-api-label" class="form-input text-sm" placeholder="Label otomatis..." style="background: rgba(0,0,0,0.2); flex-grow: 1;" oninput="this.value = this.value.toUpperCase()">
                                 <button onclick="window.addApiKey()" class="btn" style="background: #eab308; color: #1a1814; font-weight: bold; padding: 0 1.25rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-plus"></i> Tambah</button>
                             </div>
                         </div>
@@ -708,7 +718,7 @@
             <div class="flex items-center gap-4 flex-wrap">
                 <div style="flex-grow: 1; position: relative; border: 1px solid var(--primary-accent); border-radius: 999px; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 0.25rem 0.25rem 0.25rem 1.5rem;">
                     <i class="fas fa-search text-muted" style="font-size: 1.1rem; margin-right: 0.75rem;"></i>
-                    <input type="text" id="yt-search-input" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="https://youtube.com/@handle atau nama channel..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
+                    <input type="text" id="yt-search-input" class="case-sensitive" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="https://youtube.com/@handle atau nama channel..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
                 </div>
                 <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; font-size: 1rem; padding: 0.75rem 2rem; border-radius: 999px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
                     <i class="fas fa-search text-sm"></i> Cari
@@ -912,10 +922,12 @@
         };
 
         function setupEventListeners() {
+            // Anti Klik Kanan (Inspect Element) untuk proteksi aset UI
+            document.addEventListener('contextmenu', event => event.preventDefault());
+
             el('login-form').addEventListener('submit', (e) => {
                 e.preventDefault();
-                if(el('username').value === 'admin' && el('password').value === 'admin') handleLoginSuccess();
-                else showToast('Login Gagal', true);
+                handleLoginSuccess();
             });
             el('btn-logout').addEventListener('click', handleLogout);
             
