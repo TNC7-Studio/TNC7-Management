@@ -292,16 +292,16 @@
             header .flex.items-center.gap-2[style*="background"] { padding: 2px !important; margin-left: 0 !important; }
             header .btn[title] { width: 20px !important; height: 20px !important; font-size: 0.6rem !important; }
 
-            /* -- MENGECILKAN PANEL STATISTIK (4 KOTAK) (~60% di HP) -- */
-            #dashboard-view > div[style*="display: grid"] { grid-template-columns: 1fr 1fr !important; gap: 0.4rem !important; }
+            /* -- MENGECILKAN PANEL STATISTIK (4 KOTAK) LEBIH KECIL 20% LAGI DI HP -- */
+            #dashboard-view > div[style*="display: grid"] { grid-template-columns: 1fr 1fr !important; gap: 0.3rem !important; }
             #dashboard-view > div[style*="display: grid"] .panel-glass { 
-                flex-direction: column; text-align: center; justify-content: center; gap: 0.25rem; padding: 0.5rem !important; 
+                flex-direction: column; text-align: center; justify-content: center; gap: 0.2rem; padding: 0.35rem !important; 
             }
             #dashboard-view > div[style*="display: grid"] .icon-box {
-                width: 20px !important; height: 20px !important; font-size: 0.65rem !important; margin: 0 auto;
+                width: 16px !important; height: 16px !important; font-size: 0.55rem !important; margin: 0 auto;
             }
-            #dashboard-view > div[style*="display: grid"] p { font-size: 0.45rem !important; line-height: 1.1; letter-spacing: 0; }
-            #stat-total, #stat-monet, #stat-aktif, #stat-new { font-size: 1.1rem !important; line-height: 1; }
+            #dashboard-view > div[style*="display: grid"] p { font-size: 0.4rem !important; line-height: 1.1; letter-spacing: 0; }
+            #stat-total, #stat-monet, #stat-aktif, #stat-new { font-size: 0.85rem !important; line-height: 1; }
 
             /* -- BAGIAN BAWAH DAFTAR CHANNEL -- */
             #dashboard-view > .panel-glass.flex-col > div:first-child { padding: 0.75rem !important; }
@@ -310,10 +310,19 @@
             
             #btn-tambah-channel-mobile { max-width: 100% !important; } /* Agar tombol nambah channel full di mobile */
 
-            .flex.items-center.gap-2.flex-wrap > div[style*="max-width: 300px"] { max-width: 100% !important; width: 100%; }
-            #search-input { width: 100%; }
-            #filter-monet, #filter-pengelola, #sort-data { flex: 1 1 calc(50% - 0.5rem); width: auto !important; }
-            #btn-reset { width: 100%; margin-top: 0.25rem; }
+            /* -- MEMPERBAIKI FILTER YANG TERPOTONG (GRID LAYOUT 2 KOLOM) -- */
+            #dashboard-view > .panel-glass.flex-col > div:first-child .flex.items-center.gap-2.flex-wrap {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr;
+                gap: 0.4rem !important;
+            }
+            #dashboard-view > .panel-glass.flex-col > div:first-child .flex.items-center.gap-2.flex-wrap > div[style*="max-width: 300px"] { 
+                max-width: 100% !important; width: 100%; grid-column: span 2; 
+            }
+            #search-input { width: 100%; font-size: 0.65rem !important; }
+            #filter-monet, #filter-pengelola, #sort-data { width: 100% !important; flex: none; font-size: 0.55rem !important; padding: 0.35rem !important; }
+            #btn-reset { width: 100%; margin-top: 0; font-size: 0.55rem !important; padding: 0.35rem !important; }
+            
             .table-container { -webkit-overflow-scrolling: touch; padding-bottom: 0.5rem; }
             .modal-content { max-height: 92vh; margin: 0.5rem; width: auto; border-radius: 1.25rem; }
             .modal-header, .modal-footer { padding: 1rem 1.25rem !important; }
