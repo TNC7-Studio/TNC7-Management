@@ -76,10 +76,7 @@
             text-transform: none !important;
         }
 
-        body::before {
-            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 4px;
-            background: var(--primary-accent); z-index: 99999; box-shadow: 0 0 15px var(--primary-accent);
-        }
+        /* body::before telah dihapus sepenuhnya di sini */
 
         input, textarea, table, .allow-select { user-select: text; -webkit-user-select: text; }
 
@@ -192,14 +189,14 @@
         .dropdown-item:hover { background-color: var(--table-hover); color: var(--primary-accent); }
 
         #toast {
-            position: fixed; top: 20px; right: 20px; z-index: 999999;
-            background: #10b981; color: white; padding: 10px 20px;
-            border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transform: translateY(-150%); transition: transform 0.3s ease;
-            font-size: 0.875rem; font-weight: bold;
+            display: none; align-items: center; gap: 0.5rem; font-size: 0.75rem;
+            background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.25rem 0.75rem;
+            border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
+            font-weight: bold; white-space: nowrap;
         }
-        #toast.show { transform: translateY(0); }
-        #toast.error { background: #ef4444; }
+        #toast.show { display: flex; animation: fadeInToast 0.2s ease-out forwards; }
+        #toast.error { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+        @keyframes fadeInToast { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -266,8 +263,6 @@
 </head>
 <body>
 
-    <div id="toast"><i class="fas fa-info-circle"></i> <span id="toast-msg">SUCCESS</span></div>
-
     <div id="dashboard-view" class="container">
         <header class="panel-glass" style="padding: 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
             <div class="flex items-center gap-4">
@@ -286,6 +281,8 @@
                 <div id="cloud-status-indicator" class="cloud-status">
                     <i class="fas fa-spinner fa-spin"></i> MENGHUBUNGKAN...
                 </div>
+
+                <div id="toast"><i class="fas fa-info-circle"></i> <span id="toast-msg">SUCCESS</span></div>
 
                 <div id="auto-sync-badge" class="badge-live hidden"><i class="fas fa-circle"></i> AUTO-SYNC</div>
                 
