@@ -226,8 +226,6 @@
         .gap-4 { gap: 1rem; }
         .w-full { width: 100%; }
         .text-center { text-align: center; }
-        
-        #login-view { margin: auto; max-width: 400px; width: 100%; }
 
         .modal-overlay {
             position: fixed;
@@ -292,7 +290,6 @@
             display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
         }
 
-        /* DROPDOWN TEMA DIPERBAIKI AGAR TIDAK TERTUTUP PANEL DI BAWAHNYA */
         .dropdown { position: relative; display: inline-block; }
         .dropdown-content {
             display: none; 
@@ -328,35 +325,10 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 4px; }
 
-        .settings-tab-btn {
-            flex: 1; padding: 0.75rem; text-align: center; background: transparent;
-            border: 1px solid var(--panel-border); color: var(--text-muted);
-            font-weight: 600; border-radius: 9999px; cursor: pointer; transition: all 0.2s;
-        }
-        .settings-tab-btn.active {
-            background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
-            color: white; border-color: #0ea5e9; box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
-        }
         .settings-card {
             background: rgba(17, 24, 39, 0.4); border: 1px solid var(--panel-border);
             border-radius: 1rem; padding: 1.25rem; margin-bottom: 1rem;
         }
-        .api-key-item {
-            background: var(--input-bg); border: 1px solid var(--panel-border);
-            border-radius: 0.75rem; padding: 1rem; margin-bottom: 0.75rem;
-        }
-        .btn-sm { padding: 0.3rem 0.6rem; font-size: 0.7rem; border-radius: 0.5rem; }
-
-        .tip-card {
-            border-radius: 0.75rem; padding: 1rem; display: flex;
-            flex-direction: column; gap: 0.5rem; border: 1px solid transparent;
-        }
-        .tip-card.green { background: rgba(74, 222, 128, 0.05); border-color: rgba(74, 222, 128, 0.3); }
-        .tip-card.green .tip-label { color: #4ade80; }
-        .tip-card.blue { background: rgba(56, 189, 248, 0.05); border-color: rgba(56, 189, 248, 0.3); }
-        .tip-card.blue .tip-label { color: #38bdf8; }
-        .tip-card.yellow { background: rgba(250, 204, 21, 0.05); border-color: rgba(250, 204, 21, 0.3); }
-        .tip-card.yellow .tip-label { color: #facc15; }
 
         .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
         .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -380,9 +352,6 @@
         }
         .cloud-status.offline {
             background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3);
-        }
-        .cloud-status.local {
-            background: rgba(250, 204, 21, 0.1); color: #facc15; border-color: rgba(250, 204, 21, 0.3);
         }
 
         @keyframes pulse {
@@ -431,25 +400,8 @@
 
     <div id="toast"><i class="fas fa-info-circle"></i> <span id="toast-msg">SUCCESS</span></div>
 
-    <!-- Login View Instan (Tanpa Password / Username) -->
-    <div id="login-view" class="container" style="justify-content: center;">
-        <div class="panel-glass" style="padding: 2.5rem 2rem; text-align: center;">
-            <div class="icon-box" style="margin: 0 auto 1.5rem; width: 60px; height: 60px; font-size: 2rem; background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);">
-                <i class="fab fa-youtube"></i>
-            </div>
-            <h1 class="text-2xl font-bold" style="margin-bottom: 0.5rem;">TNC7 MANAGEMENT</h1>
-            <p class="text-sm text-muted" style="margin-bottom: 2rem;">SISTEM SINKRONISASI CLOUD REAL-TIME</p>
-            
-            <form id="login-form" class="flex-col gap-4">
-                <button type="submit" class="btn" style="width: 100%; padding: 1rem; font-size: 1.1rem; border-radius: 0.75rem; background: var(--primary-accent); color: #1a1814; font-weight: bold; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
-                    <i class="fas fa-sign-in-alt"></i> MASUK SISTEM
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Dashboard Utama -->
-    <div id="dashboard-view" class="container hidden">
+    <!-- Dashboard Utama (Langsung Terbuka Tanpa Layar Login) -->
+    <div id="dashboard-view" class="container">
         
         <header class="panel-glass" style="padding: 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
             <div class="flex items-center gap-4">
@@ -481,7 +433,6 @@
                             <div class="dropdown-item" onclick="window.setTheme('kuning')"><i class="fas fa-bolt"></i> TEMA KUNING</div>
                         </div>
                     </div>
-                    <button id="btn-logout" class="btn text-xs font-bold" style="background: transparent; color: #ef4444; padding: 0 10px;">KELUAR <i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
         </header>
@@ -518,7 +469,6 @@
                 <div class="flex items-center gap-2 flex-wrap">
                     <div style="position: relative; flex-grow: 1; max-width: 300px;">
                         <i class="fas fa-search text-muted" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.75rem;"></i>
-                        <!-- Kolom pencarian dengan proteksi autofill email -->
                         <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 2rem;" autocomplete="new-password" name="search_channel_input_x99" placeholder="CARI NAMA, ID, NICHE..." oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <select id="filter-monet" class="form-select text-xs" style="width: auto;">
@@ -606,80 +556,31 @@
         </div>
     </div>
 
-    <!-- Modal Detail -->
-    <div id="modal-detail" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 350px; text-align: center;">
-            <div class="modal-body flex-col items-center" style="display: flex;">
-                <div class="icon-box" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(239, 68, 68, 0.1); color: #ef4444; font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fab fa-youtube"></i></div>
-                <h3 id="det-title" class="font-bold text-lg">NAME</h3>
-                <p id="det-pengelola" class="text-xs text-muted font-semibold" style="text-transform: uppercase; margin-bottom: 1.5rem;">MANAGER</p>
-                <div style="width: 100%; text-align: left; background: var(--input-bg); border: 1px solid var(--panel-border); padding: 1rem; border-radius: 0.75rem; font-size: 0.85rem;">
-                    <p class="text-muted" style="font-size: 0.75rem;">INFO DETAIL DAPAT DIAKSES DI MENU EDIT.</p>
-                </div>
-            </div>
-            <div class="modal-footer" style="justify-content: center;"><button type="button" class="btn btn-pill" style="width: 100%; padding: 0.5rem;" onclick="window.closeModal('modal-detail')">TUTUP</button></div>
-        </div>
-    </div>
-
     <!-- Modal Pengaturan -->
     <div id="modal-settings" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width: 800px; height: 90vh;">
-            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
                 <div>
-                    <p class="text-accent font-bold" style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem;">KONFIGURASI</p>
-                    <h3 class="font-bold text-xl"><i class="fas fa-cog"></i> PENGATURAN</h3>
+                    <p class="text-accent font-bold" style="font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem;">MANAJEMEN DATA</p>
+                    <h3 class="font-bold text-xl"><i class="fas fa-database"></i> BACKUP / RESTORE</h3>
                 </div>
                 <button class="btn" onclick="window.closeModal('modal-settings')" style="background: transparent; color: var(--text-muted); border: 1px solid var(--panel-border); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-times"></i></button>
             </div>
             
-            <div style="padding: 1.5rem 1.5rem 0;">
-                <div class="flex gap-2" style="background: var(--input-bg); padding: 0.25rem; border-radius: 9999px; border: 1px solid var(--panel-border);">
-                    <button class="settings-tab-btn active"><i class="fas fa-key text-yellow-400"></i> API KEY</button>
-                    <button class="settings-tab-btn"><i class="fas fa-database text-orange-400"></i> BACKUP / RESTORE</button>
+            <div class="modal-body" style="display: block;">
+                 <div class="settings-card">
+                    <h4 class="font-bold text-sm mb-4"><i class="fas fa-download text-xs"></i> EKSPOR DATA LOKAL</h4>
+                    <p class="text-xs text-muted mb-4">SIMPAN DATA ANDA SEBAGAI FILE JSON UNTUK BACKUP.</p>
+                    <button onclick="window.exportData()" class="btn w-full" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid #38bdf8; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-export"></i> DOWNLOAD DATA (JSON)</button>
+                </div>
+                 <div class="settings-card">
+                    <h4 class="font-bold text-sm mb-4"><i class="fas fa-upload text-xs"></i> IMPOR DATA LOKAL</h4>
+                    <p class="text-xs text-muted mb-4">KEMBALIKAN DATA (RESTORE) DARI FILE JSON.</p>
+                    <input type="file" id="import-file" accept=".json" class="hidden" onchange="window.importData(event)">
+                    <button onclick="document.getElementById('import-file').click()" class="btn w-full" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-import"></i> PILIH FILE JSON</button>
                 </div>
             </div>
-
-            <div class="modal-body" style="display: block; overflow-y: auto;">
-                <div id="tab-api-key">
-                    <div class="settings-card">
-                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-plus text-xs"></i> TAMBAH YOUTUBE API KEY</h4>
-                        <div class="flex-col gap-2 mb-4"><label class="text-xs font-bold text-main">YOUTUBE DATA API V3 KEY</label><input type="password" id="new-api-key" class="form-input font-mono text-sm case-sensitive" placeholder="AIzaSy..." style="background: rgba(0,0,0,0.2);"></div>
-                        <div class="flex-col gap-2 mb-4">
-                            <label class="text-xs font-bold text-main">LABEL</label>
-                            <div class="flex gap-3">
-                                <input type="text" id="new-api-label" class="form-input text-sm" placeholder="LABEL OTOMATIS..." style="background: rgba(0,0,0,0.2); flex-grow: 1;" oninput="this.value = this.value.toUpperCase()">
-                                <button onclick="window.addApiKey()" class="btn" style="background: #eab308; color: #1a1814; font-weight: bold; padding: 0 1.25rem; border-radius: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-plus"></i> TAMBAH</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-card">
-                        <div class="flex justify-between items-center mb-2">
-                            <h4 class="font-bold text-sm"><i class="fas fa-key text-xs"></i> KEYS TERSIMPAN</h4>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs" id="api-sync-status" style="color: #facc15; font-weight: 600;"><i class="fas fa-hdd"></i> TERSIMPAN LOKAL</span>
-                                <span id="api-key-count" class="text-xs" style="background: rgba(14, 165, 233, 0.1); color: #0ea5e9; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(14, 165, 233, 0.3);">0 AKTIF / 0 TOTAL</span>
-                            </div>
-                        </div>
-                        <div id="api-keys-list"></div>
-                    </div>
-                </div>
-
-                <div id="tab-backup" class="hidden">
-                     <div class="settings-card">
-                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-download text-xs"></i> EKSPOR DATA LOKAL</h4>
-                        <p class="text-xs text-muted mb-4">SIMPAN DATA ANDA SEBAGAI FILE JSON.</p>
-                        <button onclick="window.exportData()" class="btn w-full" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid #38bdf8; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-export"></i> DOWNLOAD DATA (JSON)</button>
-                    </div>
-                     <div class="settings-card">
-                        <h4 class="font-bold text-sm mb-4"><i class="fas fa-upload text-xs"></i> IMPOR DATA LOKAL</h4>
-                        <p class="text-xs text-muted mb-4">KEMBALIKAN DATA DARI FILE JSON.</p>
-                        <input type="file" id="import-file" accept=".json" class="hidden" onchange="window.importData(event)">
-                        <button onclick="document.getElementById('import-file').click()" class="btn w-full" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-import"></i> PILIH FILE JSON</button>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" style="border-top: none; padding-top: 0;"><button type="button" class="btn btn-pill" style="padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--panel-border);" onclick="window.closeModal('modal-settings')">TUTUP</button></div>
+            <div class="modal-footer"><button type="button" class="btn btn-pill" style="padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--panel-border);" onclick="window.closeModal('modal-settings')">TUTUP</button></div>
         </div>
     </div>
 
@@ -697,7 +598,7 @@
             <div class="flex items-center gap-4 flex-wrap">
                 <div style="flex-grow: 1; position: relative; border: 1px solid var(--primary-accent); border-radius: 999px; display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 0.25rem 0.25rem 0.25rem 1.5rem;">
                     <i class="fas fa-search text-muted" style="font-size: 1.1rem; margin-right: 0.75rem;"></i>
-                    <input type="text" id="yt-search-input" class="case-sensitive" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="Cari channel YouTube..."
+                    <input type="text" id="yt-search-input" class="case-sensitive" autocomplete="new-password" name="yt_search_input_random_z99" onkeypress="if(event.key === 'Enter') window.searchYouTubeChannel()" placeholder="HTTPS://YOUTUBE.COM/@HANDLE ATAU NAMA CHANNEL..." style="flex-grow: 1; background: transparent; border: none; outline: none; color: white; font-size: 1rem; padding: 0.75rem 0;">
                 </div>
                 <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; font-size: 1rem; padding: 0.75rem 2rem; border-radius: 999px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
                     <i class="fas fa-search text-sm"></i> CARI
@@ -709,31 +610,31 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeFirestore, doc, setDoc, deleteDoc, onSnapshot, collection, persistentLocalCache, persistentMultipleTabManager } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'tnc7-management';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-             // Mock config for fallback if not in environment
-             apiKey: "mock-key",
-             authDomain: "mock-domain",
-             projectId: "mock-project"
+             apiKey: "mock-key", authDomain: "mock-domain", projectId: "mock-project"
         };
         
         let app, db, auth;
         let userId = null;
         let unsubscribeSettings = null;
+        let unsubscribeChannels = null;
 
-        // Try to initialize Firebase, catch errors if running locally without proper config
         try {
             app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
+            db = initializeFirestore(app, {
+                localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+            });
             auth = getAuth(app);
         } catch (e) {
             console.warn("Firebase initialization failed, falling back to local only mode.", e);
         }
 
-        let state = { items: [], apiKeys: [], theme: 'kuning', isLoggedIn: false, isCloudConnected: false };
-        const DEFAULT_API_KEY = "AIzaSyDJbN1UQy17B_hqVTQE4zNOpJJZFqh2eMc";
+        let state = { items: [], theme: 'kuning', isLoggedIn: true, isCloudConnected: false };
+        // API KEY ANDA YANG BARU DIMASUKKAN DI SINI
+        const DEFAULT_API_KEY = "AIzaSyC3bbs6Qwr54GA5O5qR4ikFWNPBttyDw1k"; 
         const el = (id) => document.getElementById(id);
 
         async function initApp() {
@@ -741,13 +642,14 @@
             setupEventListeners();
             loadLocalData();
             
-            // Set initial theme before cloud sync
             const savedTheme = localStorage.getItem('TNC7_THEME');
             applyTheme(savedTheme || 'kuning');
 
+            renderTable();
+            updateFilters();
+
             if (auth) {
                 try {
-                    // Start Cloud Connection
                     if (typeof __initial_auth_token !== 'undefined') {
                         await signInWithCustomToken(auth, __initial_auth_token);
                     } else {
@@ -760,10 +662,12 @@
                             state.isCloudConnected = true;
                             setCloudOnline();
                             startSyncingSettings();
+                            startSyncingChannels();
                         } else {
                             userId = null;
                             state.isCloudConnected = false;
                             setCloudOffline();
+                            if (unsubscribeChannels) unsubscribeChannels();
                         }
                     });
                 } catch(e) {
@@ -777,13 +681,8 @@
 
         function startSyncingSettings() {
             if (!userId || !db) return;
-            
-            // Rule 1: Strict paths. Private data for user settings.
             const settingsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'preferences');
-            
             if (unsubscribeSettings) unsubscribeSettings();
-
-            // Rule 3: Guard with error callback
             unsubscribeSettings = onSnapshot(settingsDocRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
@@ -792,9 +691,24 @@
                         showToast(`Tema disinkronkan: ${data.theme.toUpperCase()}`);
                     }
                 }
-            }, (error) => {
-                console.error("Error syncing settings: ", error);
-            });
+            }, (error) => console.error("Error syncing settings: ", error));
+        }
+
+        function startSyncingChannels() {
+            if (!userId || !db) return;
+            // Public Database for team collaboration
+            const channelsColRef = collection(db, 'artifacts', appId, 'public', 'data', 'channels');
+            if (unsubscribeChannels) unsubscribeChannels();
+            unsubscribeChannels = onSnapshot(channelsColRef, (snapshot) => {
+                const cloudItems = [];
+                snapshot.forEach(docSnap => cloudItems.push(docSnap.data()));
+                if (cloudItems.length > 0 || !snapshot.metadata.fromCache) {
+                    state.items = cloudItems.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+                    saveLocalData();
+                    renderTable();
+                    updateFilters();
+                }
+            }, (error) => console.error("Error syncing channels: ", error));
         }
 
         async function saveThemeToCloud(theme) {
@@ -802,9 +716,7 @@
             try {
                 const settingsDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'preferences');
                 await setDoc(settingsDocRef, { theme: theme }, { merge: true });
-            } catch (error) {
-                console.error("Gagal menyimpan tema ke cloud: ", error);
-            }
+            } catch (error) { console.error("Gagal menyimpan tema ke cloud: ", error); }
         }
 
         function applyTheme(theme) {
@@ -813,12 +725,9 @@
             localStorage.setItem('TNC7_THEME', theme);
         }
 
-        // Make functions globally available for inline HTML onclick handlers
         window.setTheme = function(theme) {
             applyTheme(theme);
-            if (state.isCloudConnected) {
-                saveThemeToCloud(theme);
-            }
+            if (state.isCloudConnected) saveThemeToCloud(theme);
         };
 
         function setCloudOnline() {
@@ -845,28 +754,12 @@
             try {
                 const storedChannels = localStorage.getItem('tnc7_channels');
                 if (storedChannels) state.items = JSON.parse(storedChannels);
-                
-                const storedKeys = localStorage.getItem('tnc7_apikeys');
-                if (storedKeys) state.apiKeys = JSON.parse(storedKeys);
-                
-                if (!state.apiKeys || state.apiKeys.length === 0) {
-                    state.apiKeys = [{
-                        id: "default_key_" + Date.now(),
-                        key: DEFAULT_API_KEY,
-                        label: "API KEY (DEFAULT)",
-                        active: true,
-                        createdAt: Date.now()
-                    }];
-                    saveLocalData();
-                }
             } catch(e) { console.error("Gagal load lokal", e); }
         }
 
         function saveLocalData() {
-            try {
-                localStorage.setItem('tnc7_channels', JSON.stringify(state.items));
-                localStorage.setItem('tnc7_apikeys', JSON.stringify(state.apiKeys));
-            } catch(e) { console.error("Gagal save lokal", e); }
+            try { localStorage.setItem('tnc7_channels', JSON.stringify(state.items)); } 
+            catch(e) { console.error("Gagal save lokal", e); }
         }
 
         function showToast(msg, isError = false) {
@@ -877,35 +770,12 @@
             setTimeout(() => toast.className = '', 3000);
         }
 
-        function handleLoginSuccess() {
-            state.isLoggedIn = true; 
-            el('login-view').classList.add('hidden');
-            el('dashboard-view').classList.remove('hidden'); 
-            updateFilters(); 
-            renderTable();
-        }
-        
-        function handleLogout() {
-            state.isLoggedIn = false; 
-            el('dashboard-view').classList.add('hidden');
-            el('login-view').classList.remove('hidden');
-        }
-
-        window.openModal = function(id) { 
-            el(id).classList.remove('hidden'); 
-            if(id === 'modal-settings') renderApiKeys(); 
-        };
+        window.openModal = function(id) { el(id).classList.remove('hidden'); };
         window.closeModal = function(id) { el(id).classList.add('hidden'); };
 
         function setupEventListeners() {
             document.addEventListener('contextmenu', event => event.preventDefault());
 
-            el('login-form').addEventListener('submit', (e) => {
-                e.preventDefault();
-                handleLoginSuccess();
-            });
-            el('btn-logout').addEventListener('click', handleLogout);
-            
             ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { 
                 el(id).addEventListener('input', renderTable); 
             });
@@ -916,21 +786,6 @@
                 el('filter-pengelola').value = 'all'; 
                 el('sort-data').value = 'asli';
                 renderTable();
-            });
-            
-            const tabs = document.querySelectorAll('.settings-tab-btn');
-            tabs.forEach((tab, index) => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    if(index === 0) {
-                        el('tab-api-key').classList.remove('hidden');
-                        el('tab-backup').classList.add('hidden');
-                    } else {
-                        el('tab-api-key').classList.add('hidden');
-                        el('tab-backup').classList.remove('hidden');
-                    }
-                });
             });
 
             el('item-form').addEventListener('submit', (e) => {
@@ -958,9 +813,17 @@
                 if(id) {
                     const idx = state.items.findIndex(i => i.id === id);
                     if(idx > -1) state.items[idx] = newItem;
-                } else state.items.unshift(newItem);
+                } else {
+                    state.items.unshift(newItem);
+                }
                 
                 saveLocalData();
+
+                if (state.isCloudConnected && db && userId) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', docId);
+                    setDoc(docRef, newItem).catch(err => console.error("Gagal simpan ke cloud", err));
+                }
+
                 renderTable();
                 window.closeModal('modal-form'); 
                 showToast('DATA BERHASIL DISIMPAN');
@@ -1071,91 +934,14 @@
             if(confirm('HAPUS CHANNEL INI?')) {
                 state.items = state.items.filter(i => i.id !== id);
                 saveLocalData();
+
+                if (state.isCloudConnected && db && userId) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', id);
+                    deleteDoc(docRef).catch(err => console.error("Gagal hapus dari cloud", err));
+                }
+
                 renderTable();
                 showToast('DATA BERHASIL DIHAPUS');
-            }
-        };
-
-        function renderApiKeys() {
-            const listContainer = el('api-keys-list');
-            if(!listContainer) return; 
-            listContainer.innerHTML = '';
-            
-            const activeCount = state.apiKeys.filter(k => k.active === true || k.active === 'true').length;
-            const countEl = el('api-key-count');
-            if(countEl) countEl.innerText = `${activeCount} AKTIF / ${state.apiKeys.length} TOTAL`;
-            
-            const labelInput = el('new-api-label');
-            if (labelInput) labelInput.value = 'KEY ' + (state.apiKeys.length + 1);
-
-            if (state.apiKeys.length === 0) { 
-                listContainer.innerHTML = `<p class="text-center text-muted text-sm py-4">BELUM ADA API KEY.</p>`; 
-                return; 
-            }
-
-            [...state.apiKeys].sort((a,b) => (a.createdAt || 0) - (b.createdAt || 0)).forEach((apiKey, index) => {
-                const isActive = (apiKey.active === true || apiKey.active === 'true'); 
-                const borderColor = isActive ? '#0ea5e9' : 'var(--panel-border)';
-                const activeBadge = isActive ? `<span style="font-size: 0.65rem; border: 1px solid rgba(16,185,129,0.5); color: #34d399; padding: 2px 8px; border-radius: 999px; background: rgba(16,185,129,0.1);"><i class="fas fa-check"></i> AKTIF</span>` : `<span style="font-size: 0.65rem; color: var(--text-muted);">TERSIMPAN</span>`;
-                
-                const setBtnAction = isActive ? '' : `onclick="window.setActiveApiKey('${apiKey.id}')"`;
-                const setBtnStyle = isActive ? 'border: 1px solid rgba(16,185,129,0.5); color: #34d399; background: rgba(16,185,129,0.1); cursor: default;' : 'border: 1px solid var(--panel-border); color: #34d399; background: transparent;';
-
-                listContainer.innerHTML += `
-                    <div class="api-key-item" style="border: 1px solid ${borderColor}; background: rgba(17, 24, 39, 0.4);">
-                        <div class="flex justify-between items-start mb-3">
-                            <div class="flex gap-3 items-center">
-                                <div style="width: 28px; height: 28px; background: #eab308; color: #1a1814; border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem;">${index + 1}</div>
-                                <div>
-                                    <h5 class="font-bold text-sm" style="color: var(--text-main);">${apiKey.label}</h5>
-                                    <p class="text-xs text-muted font-mono mt-1">${apiKey.key.substring(0,6)}...${apiKey.key.slice(-4)}</p>
-                                </div>
-                            </div>
-                            ${activeBadge}
-                        </div>
-                        <div class="flex gap-2 flex-wrap">
-                            <button ${setBtnAction} class="btn btn-pill btn-sm" style="${setBtnStyle}"><i class="fas fa-check"></i> AKTIFKAN</button>
-                            <button onclick="window.deleteApiKey('${apiKey.id}')" class="btn btn-pill btn-sm text-red" style="background: transparent; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);"><i class="fas fa-trash"></i> HAPUS</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        window.addApiKey = function() {
-            const keyVal = el('new-api-key').value.trim(); 
-            let labelVal = el('new-api-label').value.trim();
-            
-            if(!keyVal) { showToast('API KEY KOSONG!', true); return; }
-            if(!labelVal) labelVal = 'KEY ' + ((state.apiKeys?.length || 0) + 1);
-            
-            const docId = Date.now().toString();
-            const isActive = state.apiKeys.length === 0;
-            const newKey = { id: docId, key: keyVal, label: labelVal, active: isActive, createdAt: Date.now() };
-            
-            state.apiKeys.push(newKey);
-            saveLocalData();
-            renderApiKeys();
-            el('new-api-key').value = ''; 
-            showToast('API KEY BERHASIL DITAMBAHKAN');
-        };
-
-        window.setActiveApiKey = function(id) {
-            state.apiKeys = state.apiKeys.map(k => ({ ...k, active: (k.id === id) }));
-            saveLocalData();
-            renderApiKeys();
-            showToast('API KEY AKTIF DIPERBARUI');
-        };
-        
-        window.deleteApiKey = function(id) {
-            if(confirm('HAPUS API KEY INI?')) {
-                state.apiKeys = state.apiKeys.filter(k => k.id !== id);
-                if (state.apiKeys.length > 0 && !state.apiKeys.some(k => k.active === true || k.active === 'true')) {
-                    state.apiKeys[0].active = true;
-                }
-                saveLocalData();
-                renderApiKeys();
-                showToast('API KEY DIHAPUS');
             }
         };
 
@@ -1165,12 +951,7 @@
 
             const btn = el('btn-yt-search'); 
             const originalText = btn.innerHTML;
-            
-            let apiKeyToUse = null;
-            let activeKeyObj = state.apiKeys.find(k => k.active === true || k.active === 'true');
-            if (activeKeyObj && activeKeyObj.key) apiKeyToUse = activeKeyObj.key;
-            else if (state.apiKeys.length > 0 && state.apiKeys[0].key) apiKeyToUse = state.apiKeys[0].key;
-            else apiKeyToUse = DEFAULT_API_KEY;
+            const apiKeyToUse = DEFAULT_API_KEY;
 
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> MENCARI...'; 
             btn.disabled = true;
@@ -1226,7 +1007,7 @@
         };
 
         window.exportData = function() {
-            const dataToExport = { channels: state.items, apiKeys: state.apiKeys, exportDate: new Date().toISOString() };
+            const dataToExport = { channels: state.items, exportDate: new Date().toISOString() };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
@@ -1246,13 +1027,8 @@
                 try {
                     const imported = JSON.parse(e.target.result);
                     if(imported.channels && Array.isArray(imported.channels)) state.items = imported.channels;
-                    if(imported.apiKeys && Array.isArray(imported.apiKeys)) {
-                        state.apiKeys = imported.apiKeys.map(k => ({...k, active: (k.active === true || k.active === "true")}));
-                        if(state.apiKeys.length > 0 && !state.apiKeys.some(k => k.active)) state.apiKeys[0].active = true;
-                    }
                     saveLocalData();
                     renderTable();
-                    renderApiKeys();
                     showToast('DATA BERHASIL DIIMPOR');
                     el('import-file').value = ''; 
                 } catch(err) { alert('GAGAL MEMBACA FILE JSON: ' + err.message); }
