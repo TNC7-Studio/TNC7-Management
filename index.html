@@ -735,6 +735,9 @@
                     catch (err) { console.warn("Firebase Offline persistence:", err.code); }
 
                     auth = getAuth(app);
+                    
+                    // PERBAIKAN: Tunggu sampai signInAnonymously BENAR-BENAR selesai
+                    // sebelum menjalankan setupRealtimeListeners dan syncLocalToCloud
                     await signInAnonymously(auth);
                     
                     state.isCloudConnected = true;
@@ -745,7 +748,10 @@
                 } catch (e) {
                     console.error("Firebase init error:", e);
                     if (e.code === 'auth/api-key-not-valid' || e.code === 'auth/operation-not-allowed') {
-                         showToast('Akses Ditolak: Periksa Pembatasan Kunci API di Google Cloud', true);
+                         showToast('Akses Ditolak: Periksa Kunci API di Google Cloud', true);
+                    } else if (e.code === 'permission-denied') {
+                         showToast('Akses Firestore Ditolak: Periksa Security Rules!', true);
+                         setCloudOffline();
                     } else {
                          setCloudOffline();
                     }
@@ -1056,9 +1062,22 @@
 
                 if(db && state.isCloudConnected) {
                     try { 
+                        // PERBAIKAN: Pengecekan auth.currentUser sebelum menghapus
+                        if (!auth.currentUser) {
+                            console.warn("User belum terotentikasi, tidak bisa menghapus di cloud.");
+                            showToast('Gagal: Sesi Cloud tidak valid', true);
+                            return;
+                        }
                         await deleteDoc(doc(db, 'artifacts', APP_ID, 'users', USER_ID, 'channels', id)); 
                         showToast('Dihapus dari Sistem'); 
-                    } catch(e) { console.error(e); }
+                    } catch(e) { 
+                        console.error("Error menghapus dari cloud:", e); 
+                        if(e.code === 'permission-denied') {
+                            showToast('Gagal Hapus: Ditolak oleh Aturan Firestore', true);
+                        } else {
+                            showToast('Gagal Hapus dari Cloud', true);
+                        }
+                    }
                 } else {
                     showToast('Dihapus dari Lokal');
                 }
