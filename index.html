@@ -81,8 +81,8 @@
         input, textarea, table, .allow-select { user-select: text; -webkit-user-select: text; }
 
         .container {
-            width: 100%; max-width: 1200px; margin: 0 auto; padding: 1.5rem;
-            flex-grow: 1; display: flex; flex-direction: column; gap: 1.5rem; z-index: 1;
+            width: 100%; max-width: 1200px; margin: 0 auto; padding: 0.5rem 1rem;
+            flex-grow: 1; display: flex; flex-direction: column; gap: 0.5rem; z-index: 1;
         }
 
         .hidden { display: none !important; }
@@ -115,27 +115,34 @@
 
         .form-input, .form-select {
             width: 100%; background-color: var(--input-bg); border: 1px solid var(--panel-border);
-            color: var(--text-main); border-radius: 0.75rem; padding: 0.7rem 1rem;
-            font-size: 0.9rem; font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+            color: var(--text-main); border-radius: 0.5rem; padding: 0.35rem 0.75rem;
+            font-size: 0.75rem; font-family: inherit; outline: none; transition: border-color 0.2s, box-shadow 0.2s;
         }
         
         .form-select { cursor: pointer; appearance: none; font-weight: 600; }
         .form-input:focus, .form-select:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2); }
 
         .table-container { overflow-x: auto; }
+        
         table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        
+        /* Make table header sticky */
         th {
-            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
-            color: #cbd5e1; font-weight: 800; padding: 1.25rem 1rem;
+            position: sticky;
+            top: 0;
+            background-color: var(--panel-bg);
+            z-index: 10; /* Ensure it stays above the scrolling content */
+            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;
+            color: #cbd5e1; font-weight: 800; padding: 0.35rem 0.5rem;
             border-bottom: 2px solid var(--panel-border); text-align: left; white-space: nowrap;
         }
         td {
-            padding: 1rem; font-size: 0.9rem; border-bottom: 1px solid var(--panel-border);
-            vertical-align: middle; font-weight: 500;
+            padding: 0.2rem 0.5rem; font-size: 0.75rem; border-bottom: 1px solid var(--panel-border);
+            vertical-align: middle; font-weight: 500; line-height: 1.1;
         }
         tr:hover td { background-color: var(--table-hover); cursor: default; }
 
-        .text-xs { font-size: 0.75rem; } .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.7rem; } .text-sm { font-size: 0.8rem; }
         .text-lg { font-size: 1.125rem; } .text-xl { font-size: 1.25rem; } .text-2xl { font-size: 1.5rem; }
         .font-bold { font-weight: 700; } .font-semibold { font-weight: 600; }
         .text-muted { color: var(--text-muted); } .text-accent { color: var(--primary-accent); }
@@ -228,6 +235,39 @@
         .chart-container { width: 100%; height: 300px; background: rgba(0,0,0,0.2); border-radius: 1rem; border: 1px solid var(--panel-border); padding: 1rem; margin-bottom: 1rem; display: none; position: relative; }
         .chart-container.show { display: block; }
 
+        /* Flex layout adjustments to keep header fixed and table scrollable */
+        #dashboard-view {
+            height: 100vh;
+            max-height: 100vh;
+            padding: 1rem;
+            gap: 1rem;
+        }
+        
+        .panel-glass.flex-col {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Prevent the entire panel from scrolling */
+        }
+        
+        .table-container { 
+            overflow-y: auto; /* Enable vertical scrolling */
+            flex-grow: 1;
+            height: 0; /* Important for flex-grow to work properly in a column flexbox */
+        }
+        
+        table { width: 100%; border-collapse: collapse; min-width: 900px; }
+        
+        /* Make table header sticky */
+        th {
+            position: sticky;
+            top: 0;
+            background-color: var(--panel-bg);
+            z-index: 10; /* Ensure it stays above the scrolling content */
+            font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em;
+            color: #cbd5e1; font-weight: 800; padding: 0.75rem 0.5rem;
+            border-bottom: 2px solid var(--panel-border); text-align: left; white-space: nowrap;
+        }
+
         @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .badge-live {
@@ -264,15 +304,15 @@
 <body>
 
     <div id="dashboard-view" class="container">
-        <header class="panel-glass" style="padding: 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
-            <div class="flex items-center gap-4">
-                <div class="icon-box" style="background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid rgba(255, 255, 255, 0.1); position: relative;">
+        <header class="panel-glass" style="padding: 0.5rem 1rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem;">
+            <div class="flex items-center gap-3">
+                <div class="icon-box" style="width: 32px; height: 32px; font-size: 1rem; background: rgba(250, 204, 21, 0.1); color: var(--primary-accent); border: 1px solid rgba(255, 255, 255, 0.1); position: relative;">
                     <i class="fab fa-youtube"></i>
-                    <div style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background: #10b981; border-radius: 50%; border: 2px solid var(--bg-color);"></div>
+                    <div style="position: absolute; bottom: -2px; right: -2px; width: 10px; height: 10px; background: #10b981; border-radius: 50%; border: 2px solid var(--bg-color);"></div>
                 </div>
                 <div>
-                    <h2 class="text-lg font-bold">TNC7 MANAGEMENT</h2>
-                    <p class="text-xs text-muted" style="font-size: 0.75rem; font-family: monospace; color: var(--primary-accent); font-weight: 700;"><span id="clock"></span></p>
+                    <h2 class="text-sm font-bold">TNC7 MANAGEMENT</h2>
+                    <p class="text-xs text-muted" style="font-size: 0.65rem; font-family: monospace; color: var(--primary-accent); font-weight: 700;"><span id="clock"></span></p>
                 </div>
             </div>
 
@@ -289,35 +329,35 @@
                 <div id="last-sync-time" class="text-xs text-muted font-bold hidden" style="margin-left: 0.5rem; background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; border: 1px solid var(--panel-border);"></div>
                 
                 <div class="flex items-center gap-2" style="background: var(--input-bg); padding: 4px; border-radius: 999px; border: 1px solid var(--panel-border); margin-left: 0.5rem; position: relative; z-index: 60;">
-                    <button class="btn" onclick="window.openModal('modal-settings')" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted);" title="PENGATURAN"><i class="fas fa-cog"></i></button>
-                    <button id="btn-theme-toggle" class="btn" onclick="window.cycleTheme()" style="width: 30px; height: 30px; border-radius: 50%; background: transparent; color: var(--text-muted); transition: all 0.3s;" title="GANTI TEMA"><i class="fas fa-moon"></i></button>
+                    <button class="btn" onclick="window.openModal('modal-settings')" style="width: 24px; height: 24px; font-size: 0.75rem; border-radius: 50%; background: transparent; color: var(--text-muted);" title="PENGATURAN"><i class="fas fa-cog"></i></button>
+                    <button id="btn-theme-toggle" class="btn" onclick="window.cycleTheme()" style="width: 24px; height: 24px; font-size: 0.75rem; border-radius: 50%; background: transparent; color: var(--text-muted); transition: all 0.3s;" title="GANTI TEMA"><i class="fas fa-moon"></i></button>
                 </div>
             </div>
         </header>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
-                <div class="icon-box" style="background: rgba(250,204,21,0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);"><i class="fas fa-tv"></i></div>
-                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">TOTAL CHANNEL</p><h3 class="text-2xl font-bold" id="stat-total">0</h3></div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem;">
+            <div class="panel-glass flex items-center gap-3" style="padding: 0.5rem 1rem;">
+                <div class="icon-box" style="width: 32px; height: 32px; font-size: 0.9rem; background: rgba(250,204,21,0.1); color: var(--primary-accent); border: 1px solid var(--panel-border);"><i class="fas fa-tv"></i></div>
+                <div><p class="text-[0.65rem] font-bold text-muted" style="text-transform: uppercase; font-size: 0.65rem;">TOTAL CHANNEL</p><h3 class="text-lg font-bold" id="stat-total">0</h3></div>
             </div>
-            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
-                <div class="icon-box" style="background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.3);"><i class="fas fa-dollar-sign"></i></div>
-                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">SUDAH MONETISASI</p><h3 class="text-2xl font-bold" id="stat-monet">0</h3></div>
+            <div class="panel-glass flex items-center gap-3" style="padding: 0.5rem 1rem;">
+                <div class="icon-box" style="width: 32px; height: 32px; font-size: 0.9rem; background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.3);"><i class="fas fa-dollar-sign"></i></div>
+                <div><p class="text-[0.65rem] font-bold text-muted" style="text-transform: uppercase; font-size: 0.65rem;">SUDAH MONETISASI</p><h3 class="text-lg font-bold" id="stat-monet">0</h3></div>
             </div>
-            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
-                <div class="icon-box" style="background: rgba(148,163,184,0.1); color: var(--text-muted); border: 1px solid rgba(148,163,184,0.3);"><i class="fas fa-dollar-sign"></i></div>
-                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">BELUM MONET</p><h3 class="text-2xl font-bold" id="stat-aktif">0</h3></div>
+            <div class="panel-glass flex items-center gap-3" style="padding: 0.5rem 1rem;">
+                <div class="icon-box" style="width: 32px; height: 32px; font-size: 0.9rem; background: rgba(148,163,184,0.1); color: var(--text-muted); border: 1px solid rgba(148,163,184,0.3);"><i class="fas fa-dollar-sign"></i></div>
+                <div><p class="text-[0.65rem] font-bold text-muted" style="text-transform: uppercase; font-size: 0.65rem;">BELUM MONET</p><h3 class="text-lg font-bold" id="stat-aktif">0</h3></div>
             </div>
-            <div class="panel-glass flex items-center gap-4" style="padding: 1.25rem;">
-                <div class="icon-box" style="background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);"><i class="fas fa-plus-circle"></i></div>
-                <div><p class="text-xs font-bold text-muted" style="text-transform: uppercase;">BARU (24 JAM)</p><h3 class="text-2xl font-bold" id="stat-new">0</h3></div>
+            <div class="panel-glass flex items-center gap-3" style="padding: 0.5rem 1rem;">
+                <div class="icon-box" style="width: 32px; height: 32px; font-size: 0.9rem; background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3);"><i class="fas fa-plus-circle"></i></div>
+                <div><p class="text-[0.65rem] font-bold text-muted" style="text-transform: uppercase; font-size: 0.65rem;">BARU (24 JAM)</p><h3 class="text-lg font-bold" id="stat-new">0</h3></div>
             </div>
         </div>
 
         <div class="panel-glass flex-col" style="flex-grow: 1; overflow: hidden; display: flex;">
-            <div style="padding: 1.25rem; border-bottom: 1px solid var(--panel-border);">
-                <div class="flex justify-between items-center" style="margin-bottom: 1rem;">
-                    <h2 class="text-lg font-bold">DAFTAR CHANNEL & AKUN</h2>
+            <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--panel-border);">
+                <div class="flex justify-between items-center" style="margin-bottom: 0.5rem;">
+                    <h2 class="text-sm font-bold">DAFTAR CHANNEL & AKUN</h2>
                     <div class="flex gap-2">
                         <button class="btn btn-pill" onclick="window.openModal('modal-search-yt')"><i class="fas fa-search"></i> CARI YT</button>
                     </div>
@@ -325,8 +365,8 @@
 
                 <div class="flex items-center gap-2 flex-wrap">
                     <div style="position: relative; flex-grow: 1; max-width: 300px;">
-                        <i class="fas fa-search text-muted" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 0.75rem;"></i>
-                        <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 2rem;" autocomplete="new-password" name="search_channel_input_x99" placeholder="CARI NAMA, ID, NICHE..." oninput="this.value = this.value.toUpperCase()">
+                        <i class="fas fa-search text-muted" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.7rem;"></i>
+                        <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 1.75rem;" autocomplete="new-password" name="search_channel_input_x99" placeholder="CARI NAMA, ID, NICHE..." oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <select id="filter-monet" class="form-select text-xs" style="width: auto;">
                         <option value="all">SEMUA MONETISASI</option>
@@ -337,9 +377,9 @@
                         <option value="all">SEMUA PENGELOLA</option>
                     </select>
                     <select id="sort-data" class="form-select text-xs" style="width: auto;">
+                        <option value="views_desc">KENAIKAN VIEWS ↑</option>
                         <option value="views_month_desc">TOTAL VIEWS TERTINGGI</option>
                         <option value="asli">URUTAN ASLI</option>
-                        <option value="views_desc">KENAIKAN VIEWS ↑</option>
                         <option value="subs_desc">KENAIKAN SUBS ↑</option>
                     </select>
                     <button id="btn-reset" class="btn btn-pill text-xs"><i class="fas fa-times"></i> RESET FILTER</button>
@@ -509,7 +549,7 @@
             console.warn("Firebase initialization failed, falling back to local only mode.", e);
         }
 
-        let state = { items: [], theme: 'kuning', isLoggedIn: true, isCloudConnected: false, viewMode: 'table', showChart: false };
+        let state = { items: [], theme: 'dark', isLoggedIn: true, isCloudConnected: false, viewMode: 'table', showChart: false };
         let dashboardChartInstance = null;
         const DEFAULT_API_KEY = "AIzaSyDJbN1UQy17B_hqVTQE4zNOpJJZFqh2eMc";
         const el = (id) => document.getElementById(id);
@@ -619,8 +659,8 @@
             
             const savedTheme = localStorage.getItem('TNC7_THEME');
             
-            // Menggunakan tema kuning sebagai default jika belum ada preferensi yang tersimpan
-            let initialTheme = savedTheme ? savedTheme : 'kuning';
+            // Menggunakan tema dark sebagai default jika belum ada preferensi yang tersimpan
+            let initialTheme = savedTheme ? savedTheme : 'dark';
             
             applyTheme(initialTheme);
 
@@ -779,13 +819,34 @@
                 el('search-input').value = ''; 
                 el('filter-monet').value = 'all'; 
                 el('filter-pengelola').value = 'all'; 
-                el('sort-data').value = 'views_month_desc';
+                el('sort-data').value = 'views_desc';
                 renderTable();
             });
 
             el('item-form').addEventListener('submit', (e) => {
                 e.preventDefault();
                 const id = el('item-id').value; 
+                
+                const inputChannelId = el('item-channelId').value.trim();
+                const inputLink = el('item-link').value.trim();
+                const inputTitle = el('item-title').value.trim().toUpperCase();
+
+                // Cek duplikasi data untuk mencegah input channel yang sama
+                const isDuplicate = state.items.some(item => {
+                    if (id && item.id === id) return false; // Lewati pengecekan jika sedang mode Edit pada item yang sama
+                    
+                    const isIdSame = inputChannelId !== '' && item.channelId === inputChannelId;
+                    const isLinkSame = inputLink !== '' && item.link === inputLink;
+                    const isTitleSame = inputTitle !== '' && item.title === inputTitle;
+                    
+                    return isIdSame || isLinkSame || isTitleSame;
+                });
+
+                if (isDuplicate) {
+                    showToast('GAGAL: CHANNEL SUDAH ADA DI DATABASE!', true);
+                    return; // Hentikan proses simpan agar tidak terjadi duplikat
+                }
+
                 const docId = id || Date.now().toString();
                 const newItem = {
                     id: docId, 
@@ -950,102 +1011,102 @@
             gridEl.innerHTML = '';
 
             if(filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="11" class="text-center text-muted" style="padding: 3rem;">BELUM ADA DATA...</td></tr>`;
-                gridEl.innerHTML = `<div class="text-center text-muted w-full" style="padding: 3rem; grid-column: 1 / -1;">BELUM ADA DATA...</div>`;
+                tbody.innerHTML = `<tr><td colspan="11" class="text-center text-muted" style="padding: 2rem;">BELUM ADA DATA...</td></tr>`;
+                gridEl.innerHTML = `<div class="text-center text-muted w-full" style="padding: 2rem; grid-column: 1 / -1;">BELUM ADA DATA...</div>`;
                 return;
             }
 
             let top3ViewsIds = [];
-            if (sort === 'views_month_desc' && filtered.length > 0) {
+            if ((sort === 'views_desc' || sort === 'views_month_desc') && filtered.length > 0) {
                 top3ViewsIds = filtered.slice(0, 3).map(item => item.id);
             }
 
             filtered.forEach((item, idx) => {
                 let badge = '';
                 
-                let isTopView = item.badges?.topViews || (sort === 'views_month_desc' && top3ViewsIds.includes(item.id));
+                let isTopView = item.badges?.topViews || ((sort === 'views_desc' || sort === 'views_month_desc') && top3ViewsIds.includes(item.id));
                 
                 if(isTopView) {
-                    badge += `<span class="badge-views">🔥 Top Views</span> `;
+                    badge += `<span class="badge-views" style="font-size: 0.55rem; padding: 2px 6px;">🔥 Top Views</span> `;
                 }
                 if(item.badges?.topSubs) {
-                    badge += `<span class="badge-subs"><i class="fas fa-chart-line"></i> Top Subs</span>`;
+                    badge += `<span class="badge-subs" style="font-size: 0.55rem; padding: 2px 6px;"><i class="fas fa-chart-line"></i> Top Subs</span>`;
                 }
 
-                let sG = item.subsGrowth > 0 ? `<div style="display: flex; flex-direction: column; line-height: 1.2;"><span class="text-emerald font-bold text-sm">▲ +${item.subsGrowth.toLocaleString('id-ID')}</span><span class="text-muted" style="font-size: 0.65rem; font-weight: 500; text-transform: lowercase;">1 hari</span></div>` : `<div style="display: flex; flex-direction: column; line-height: 1.2;"><span class="text-muted font-bold text-sm">0</span><span class="text-muted" style="font-size: 0.65rem; font-weight: 500; text-transform: lowercase;">1 hari</span></div>`;
+                let sG = item.subsGrowth > 0 ? `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-emerald font-bold" style="font-size: 0.7rem;">▲+${item.subsGrowth.toLocaleString('id-ID')}</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>` : `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-muted font-bold" style="font-size: 0.7rem;">0</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>`;
                 
                 let vG = '';
                 if (item.viewGrowth > 0) {
-                    vG = `<div style="display: flex; flex-direction: column; line-height: 1.2;">
-                            <span class="text-emerald font-bold text-sm">▲ +${item.viewGrowth.toLocaleString('id-ID')}</span>
-                            <span class="text-muted" style="font-size: 0.65rem; font-weight: 500; text-transform: lowercase;">1 hari</span>
+                    vG = `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;">
+                            <span class="text-emerald font-bold" style="font-size: 0.7rem;">▲+${item.viewGrowth.toLocaleString('id-ID')}</span>
+                            <span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span>
                           </div>`;
                 } else if (item.viewGrowth === 0 && item.views && item.views !== '0' && item.views !== '') {
-                     vG = `<div style="display: flex; flex-direction: column; line-height: 1.2;">
-                            <span class="text-muted font-bold text-sm">0</span>
-                            <span class="text-muted" style="font-size: 0.65rem; font-weight: 500; text-transform: lowercase;">1 hari</span>
+                     vG = `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;">
+                            <span class="text-muted font-bold" style="font-size: 0.7rem;">0</span>
+                            <span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span>
                           </div>`;
                 } else {
                     vG = `<span class="text-muted">—</span>`;
                 }
 
-                let monetHtml = item.monet === 'Sudah' ? `<div style="width:20px;height:20px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:10px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
+                let monetHtml = item.monet === 'Sudah' ? `<div style="width:16px;height:16px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:16px;height:16px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
                 let linkUrl = item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '#');
 
                 gridEl.innerHTML += `
                     <div class="card-item">
                         <div class="card-header">
                             <div>
-                                <div class="font-bold text-sm mb-1">${item.title}</div>
+                                <div class="font-bold text-sm mb-0.5">${item.title}</div>
                                 <div>${badge}</div>
                             </div>
-                            <div class="flex gap-2">
-                                <button onclick="window.editItem('${item.id}')" class="btn btn-pill" style="padding: 6px; border-radius: 8px;"><i class="fas fa-edit" style="font-size: 0.75rem;"></i></button>
-                                <button onclick="window.deleteItem('${item.id}')" class="btn btn-pill text-red" style="padding: 6px; border-radius: 8px;"><i class="fas fa-trash" style="font-size: 0.75rem;"></i></button>
+                            <div class="flex gap-1">
+                                <button onclick="window.editItem('${item.id}')" class="btn btn-pill" style="padding: 4px; border-radius: 6px;"><i class="fas fa-edit" style="font-size: 0.65rem;"></i></button>
+                                <button onclick="window.deleteItem('${item.id}')" class="btn btn-pill text-red" style="padding: 4px; border-radius: 6px;"><i class="fas fa-trash" style="font-size: 0.65rem;"></i></button>
                             </div>
                         </div>
-                        <div class="card-body mt-2">
-                            <div class="card-stat">
-                                <div class="text-xs text-muted mb-1 font-bold">SUBSCRIBERS</div>
-                                <div class="font-bold text-lg">${item.subs||'0'}</div>
-                                <div style="margin-top:4px;">${sG}</div>
+                        <div class="card-body mt-1">
+                            <div class="card-stat" style="padding: 0.5rem;">
+                                <div class="text-[0.6rem] text-muted mb-0.5 font-bold">SUBSCRIBERS</div>
+                                <div class="font-bold text-sm">${item.subs||'0'}</div>
+                                <div style="margin-top:2px;">${sG}</div>
                             </div>
-                            <div class="card-stat">
-                                <div class="text-xs text-muted mb-1 font-bold">TOTAL VIEWS</div>
-                                <div class="font-bold text-lg">${item.views||'0'}</div>
-                                <div style="margin-top:4px;">${vG}</div>
+                            <div class="card-stat" style="padding: 0.5rem;">
+                                <div class="text-[0.6rem] text-muted mb-0.5 font-bold">TOTAL VIEWS</div>
+                                <div class="font-bold text-sm">${item.views||'0'}</div>
+                                <div style="margin-top:2px;">${vG}</div>
                             </div>
-                            <div class="card-stat flex justify-between items-center" style="grid-column: span 2;">
+                            <div class="card-stat flex justify-between items-center" style="grid-column: span 2; padding: 0.5rem;">
                                 <div>
-                                    <div class="text-xs text-muted font-bold">NICHE</div>
-                                    <div class="font-bold text-sm mt-1">${item.niche||'-'}</div>
+                                    <div class="text-[0.6rem] text-muted font-bold">NICHE</div>
+                                    <div class="font-bold text-xs mt-0.5">${item.niche||'-'}</div>
                                 </div>
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="text-xs text-muted font-bold">MONET</span> 
+                                <div class="flex flex-col items-end gap-0.5">
+                                    <span class="text-[0.6rem] text-muted font-bold">MONET</span> 
                                     ${monetHtml}
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-2 flex gap-2">
-                            ${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="btn flex-1 text-xs" style="background:rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius:0.5rem; padding: 0.6rem;"><i class="fab fa-youtube text-red"></i> KUNJUNGI</a>` : ''}
+                        <div class="mt-1 flex gap-1">
+                            ${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="btn flex-1 text-[0.65rem]" style="background:rgba(255,255,255,0.05); border: 1px solid var(--panel-border); border-radius:0.4rem; padding: 0.4rem;"><i class="fab fa-youtube text-red"></i> KUNJUNGI</a>` : ''}
                         </div>
                     </div>
                 `;
 
                 tbody.innerHTML += `
                     <tr>
-                        <td class="text-center text-muted">${idx+1}</td>
-                        <td><div class="font-bold text-sm mb-1">${item.title}</div><div>${badge}</div></td>
-                        <td class="text-center">${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.65rem; font-weight: bold; text-decoration: none;">BUKA <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
-                        <td><div class="font-bold text-sm">${item.subs||'0'}</div>${sG}</td>
-                        <td class="font-bold text-sm">${item.views||'0'}</td><td>${vG}</td>
-                        <td class="text-center font-semibold text-sm">${item.videoCount}</td>
-                        <td class="text-xs text-muted font-semibold" style="text-transform: uppercase;">${item.pengelola||'-'}</td>
-                        <td class="text-xs text-muted">${item.niche||'-'}</td><td class="text-center">${monetHtml}</td>
-                        <td style="padding-right: 1.5rem;">
-                            <div class="flex gap-2 justify-end">
-                                <button onclick="window.editItem('${item.id}')" class="btn btn-pill" style="padding: 2px 8px; font-size: 0.65rem;">EDIT</button>
-                                <button onclick="window.deleteItem('${item.id}')" class="btn btn-pill text-red" style="padding: 2px 8px; font-size: 0.65rem;"><i class="fas fa-trash"></i></button>
+                        <td class="text-center text-muted text-xs">${idx+1}</td>
+                        <td><div class="font-bold text-xs" style="line-height: 1;">${item.title}</div><div style="margin-top: 2px;">${badge}</div></td>
+                        <td class="text-center">${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.6rem; font-weight: bold; text-decoration: none;">BUKA <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
+                        <td><div class="font-bold text-xs" style="line-height: 1;">${item.subs||'0'}</div>${sG}</td>
+                        <td><div class="font-bold text-xs" style="line-height: 1;">${item.views||'0'}</div>${vG}</td>
+                        <td class="text-center font-semibold text-xs">${item.videoCount}</td>
+                        <td class="text-[0.65rem] text-muted font-semibold" style="text-transform: uppercase;">${item.pengelola||'-'}</td>
+                        <td class="text-[0.65rem] text-muted">${item.niche||'-'}</td><td class="text-center">${monetHtml}</td>
+                        <td style="padding-right: 0.5rem;">
+                            <div class="flex gap-1 justify-end">
+                                <button onclick="window.editItem('${item.id}')" class="btn btn-pill" style="padding: 2px 6px; font-size: 0.6rem;">EDIT</button>
+                                <button onclick="window.deleteItem('${item.id}')" class="btn btn-pill text-red" style="padding: 2px 6px; font-size: 0.6rem;"><i class="fas fa-trash"></i></button>
                             </div>
                         </td>
                     </tr>
