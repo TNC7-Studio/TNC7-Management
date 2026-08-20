@@ -438,7 +438,6 @@
                             <th style="text-align: center;">LINK</th>
                             <th>SUBSCRIBERS</th>
                             <th>TOTAL VIEWS</th>
-                            <th>KENAIKAN VIEWS</th>
                             <th style="text-align: center;">VIDEO</th>
                             <th>PENGELOLA</th>
                             <th>NICHE</th>
@@ -1064,7 +1063,7 @@
             gridEl.innerHTML = '';
 
             if(filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="11" class="text-center text-muted" style="padding: 2rem;">BELUM ADA DATA...</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="10" class="text-center text-muted" style="padding: 2rem;">BELUM ADA DATA...</td></tr>`;
                 gridEl.innerHTML = `<div class="text-center text-muted w-full" style="padding: 2rem; grid-column: 1 / -1;">BELUM ADA DATA...</div>`;
                 return;
             }
