@@ -293,7 +293,10 @@
             header p#clock, header p.text-xs { font-size: 0.5rem !important; line-height: 1; }
             
             #notepad-container { max-width: 100% !important; margin-top: 0.25rem; width: 100%; }
-            #team-notepad { font-size: 0.65rem !important; padding: 0.4rem 1.75rem 0.4rem 0.5rem !important; color: #ffffff !important; }
+            /* Penyesuaian khusus notepad di HP: Tinggi lebih kecil, padding diatur ulang agar teks sejajar tengah vertikal */
+            #team-notepad { font-size: 0.65rem !important; padding: 0.2rem 2rem 0.2rem 0.5rem !important; height: 26px !important; min-height: 26px !important; color: #ffffff !important; line-height: 1.5 !important; }
+            .notepad-actions { right: 4px !important; gap: 2px !important; }
+            .notepad-actions .btn[title] { width: 20px !important; height: 20px !important; font-size: 0.6rem !important; }
 
             header .justify-end { width: 100%; justify-content: flex-start !important; margin-top: 0; gap: 0.3rem !important; flex-wrap: wrap; }
             .cloud-status, .badge-live { padding: 0.2rem 0.4rem !important; font-size: 0.5rem !important; }
@@ -360,8 +363,11 @@
                 <div style="position: absolute; top: -8px; left: 12px; display: flex; align-items: center; gap: 4px; z-index: 10;">
                     <span id="notepad-status" class="text-[0.5rem] font-bold text-muted bg-black/60 px-1.5 py-0.5 rounded-full" style="display: none; animation: pulse 2s infinite; border: 1px solid rgba(255,255,255,0.1);">MENYIMPAN...</span>
                 </div>
-                <textarea id="team-notepad" class="case-sensitive" placeholder="Ketik pengumuman atau catatan cepat tim di sini..." spellcheck="false" style="width: 100%; height: 38px; min-height: 38px; max-height: 120px; background: rgba(0,0,0,0.2); border: 1px solid var(--panel-border); border-radius: 0.75rem; color: #ffffff; padding: 0.5rem 2rem 0.5rem 0.75rem; font-size: 0.75rem; font-weight: 600; font-family: inherit; resize: vertical; outline: none; transition: all 0.3s; line-height: 1.4; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);"></textarea>
-                <button onclick="window.clearNotepad()" class="btn text-xs text-muted hover:text-red" title="Bersihkan Catatan" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); padding: 4px; background: transparent; border-radius: 50%; width: 24px; height: 24px;"><i class="fas fa-eraser"></i></button>
+                <!-- Mengubah height dan padding notepad agar lebih ramping. Mode default adalah readonly untuk keamanan. -->
+                <textarea id="team-notepad" readonly class="case-sensitive allow-select" placeholder="Ketik pengumuman atau catatan cepat tim di sini..." spellcheck="false" style="width: 100%; height: 30px; min-height: 30px; max-height: 120px; background: rgba(0,0,0,0.2); border: 1px solid var(--panel-border); border-radius: 0.75rem; color: #ffffff; padding: 0.35rem 2.5rem 0.35rem 0.75rem; font-size: 0.75rem; font-weight: 600; font-family: inherit; resize: vertical; outline: none; transition: all 0.3s; line-height: 1.2; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); cursor: default;"></textarea>
+                <div class="notepad-actions" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: flex; gap: 4px; z-index: 10;">
+                    <button onclick="window.enableNotepadEdit()" class="btn text-xs text-muted hover:text-accent" title="Mode Tulis" style="padding: 4px; background: transparent; border-radius: 50%; width: 24px; height: 24px;"><i class="fas fa-pencil-alt"></i></button>
+                </div>
             </div>
 
             <div class="flex items-center gap-2 flex-wrap justify-end">
@@ -858,13 +864,14 @@
             }
         };
 
-        window.clearNotepad = function() {
-            if(confirm('Bersihkan isi Notepad?')) {
-                const notepadEl = el('team-notepad');
-                if(notepadEl) {
-                    notepadEl.value = '';
-                    handleNotepadInput();
-                }
+        window.enableNotepadEdit = function() {
+            const notepadEl = el('team-notepad');
+            if(notepadEl) {
+                notepadEl.removeAttribute('readonly');
+                notepadEl.style.cursor = 'text';
+                notepadEl.focus();
+                notepadEl.style.background = 'var(--input-bg)';
+                notepadEl.style.borderColor = 'var(--primary-accent)';
             }
         };
 
@@ -982,6 +989,13 @@
             const notepadEl = el('team-notepad');
             if (notepadEl) {
                 notepadEl.addEventListener('input', handleNotepadInput);
+                notepadEl.addEventListener('blur', () => {
+                    // Kembalikan ke mode readonly saat kehilangan fokus (klik di luar kolom)
+                    notepadEl.setAttribute('readonly', 'true');
+                    notepadEl.style.cursor = 'default';
+                    notepadEl.style.background = 'rgba(0,0,0,0.2)';
+                    notepadEl.style.borderColor = 'var(--panel-border)';
+                });
             }
 
             ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { 
