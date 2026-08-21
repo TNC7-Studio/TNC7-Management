@@ -686,10 +686,13 @@
         let notepadTimeout = null;
         const DEFAULT_API_KEY = "AIzaSyDJbN1UQy17B_hqVTQE4zNOpJJZFqh2eMc";
         const el = (id) => document.getElementById(id);
-
+        
+        // VARIABEL UNTUK INFINITE SCROLL
+        let currentRenderLimit = 50; 
+        const RENDER_CHUNK = 50;
+        let currentFilteredData = [];
+        
         const formatNumberGlobal = (num) => {
-            if (typeof num === 'string') num = parseInt(num.replace(/,/g, ''));
-            if (isNaN(num)) return '0';
             if (num >= 1000000) return (num / 1000000).toFixed(1).replace('.0', '') + 'M';
             if (num >= 1000) return (num / 1000).toFixed(1).replace('.0', '') + 'K';
             return num.toString();
@@ -1045,8 +1048,43 @@
         window.openModal = function(id) { el(id).classList.remove('hidden'); };
         window.closeModal = function(id) { el(id).classList.add('hidden'); };
 
+        // --- OPTIMASI DEBOUNCE & HARDWARE ACCELERATION ---
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Render akan ditunda sedikit saat mengetik untuk menghemat CPU
+        const optimizedRender = debounce(() => {
+            currentRenderLimit = RENDER_CHUNK; // Reset limit tiap kali filter berubah
+            requestAnimationFrame(() => renderTable());
+        }, 150);
+        // ----------------------------------------------------
+
         function setupEventListeners() {
             document.addEventListener('contextmenu', event => event.preventDefault());
+
+            // --- SETUP INFINITE SCROLL PADA TABEL ---
+            const tableContainer = document.querySelector('.table-container');
+            if (tableContainer) {
+                tableContainer.addEventListener('scroll', () => {
+                    // Deteksi jika scroll sudah mendekati paling bawah (sisa 100px)
+                    if (tableContainer.scrollTop + tableContainer.clientHeight >= tableContainer.scrollHeight - 100) {
+                        // Jika masih ada data yang belum dirender
+                        if (currentRenderLimit < currentFilteredData.length) {
+                            currentRenderLimit += RENDER_CHUNK;
+                            requestAnimationFrame(() => renderTable(true)); // parameter true = hanya nambah baris (append)
+                        }
+                    }
+                });
+            }
 
             // Setup Notepad listener
             const notepadEl = el('team-notepad');
@@ -1062,7 +1100,7 @@
             }
 
             ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { 
-                el(id).addEventListener('input', renderTable); 
+                el(id).addEventListener('input', optimizedRender); 
             });
             
             el('btn-reset').addEventListener('click', () => {
@@ -1070,7 +1108,8 @@
                 el('filter-monet').value = 'all'; 
                 el('filter-pengelola').value = 'all'; 
                 el('sort-data').value = 'views_desc';
-                renderTable();
+                currentRenderLimit = RENDER_CHUNK; // Reset scroll limit
+                optimizedRender();
             });
 
             el('item-form').addEventListener('submit', (e) => {
@@ -1164,10 +1203,10 @@
             const btn = el('btn-chart-toggle');
             if(state.showChart) {
                 wrapper.classList.add('show');
-                btn.classList.add('active');
+                if (btn) btn.classList.add('active');
             } else {
                 wrapper.classList.remove('show');
-                btn.classList.remove('active');
+                if (btn) btn.classList.remove('active');
             }
             renderTable();
         };
@@ -1182,7 +1221,13 @@
             const labels = chartData.map(d => d.title.length > 12 ? d.title.substring(0,12)+'...' : d.title);
             const viewsData = chartData.map(d => parseViewsStr(d.views));
 
-            if (dashboardChartInstance) dashboardChartInstance.destroy();
+            // Optimasi: Daur ulang grafik alih-alih menghancurkannya
+            if (dashboardChartInstance) {
+                dashboardChartInstance.data.labels = labels;
+                dashboardChartInstance.data.datasets[0].data = viewsData;
+                dashboardChartInstance.update();
+                return;
+            }
 
             Chart.defaults.color = '#94a3b8';
             Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
@@ -1218,84 +1263,80 @@
             });
         }
 
-        function renderTable() {
+        function renderTable(isAppend = false) {
             if(!state.isLoggedIn) return;
             
             const tbody = el('table-body');
-            const tableEl = el('data-table');
             const gridEl = el('data-grid');
             
-            const sq = el('search-input').value.toLowerCase();
-            const fm = el('filter-monet').value;
-            const fp = el('filter-pengelola').value;
-            const sort = el('sort-data').value;
+            // JIKA BUKAN APPEND (Filter/Search berubah): Hitung ulang data
+            if (!isAppend) {
+                const sq = el('search-input').value.toLowerCase();
+                const fm = el('filter-monet').value;
+                const fp = el('filter-pengelola').value;
+                const sort = el('sort-data').value;
 
-            let filtered = state.items.filter(i => {
-                const ms = (i.title && i.title.toLowerCase().includes(sq)) || (i.niche && i.niche.toLowerCase().includes(sq)) || (i.channelId && i.channelId.toLowerCase().includes(sq));
-                const mm = fm === 'all' ? true : (fm === 'yes' ? i.monet === 'Sudah' : i.monet !== 'Sudah');
-                const mp = fp === 'all' ? true : i.pengelola === fp;
-                return ms && mm && mp;
-            });
-
-            const now = Date.now();
-
-            if(sort === 'views_desc') filtered.sort((a,b) => (b.viewGrowth||0) - (a.viewGrowth||0));
-            if(sort === 'subs_desc') filtered.sort((a,b) => (b.subsGrowth||0) - (a.subsGrowth||0));
-            if(sort === 'asli') filtered.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-            if(sort === 'views_month_desc') {
-                filtered.sort((a,b) => {
-                    const viewsA = parseViewsStr(a.views);
-                    const viewsB = parseViewsStr(b.views);
-                    return viewsB - viewsA;
+                currentFilteredData = state.items.filter(i => {
+                    const ms = (i.title && i.title.toLowerCase().includes(sq)) || (i.niche && i.niche.toLowerCase().includes(sq)) || (i.channelId && i.channelId.toLowerCase().includes(sq));
+                    const mm = fm === 'all' ? true : (fm === 'yes' ? i.monet === 'Sudah' : i.monet !== 'Sudah');
+                    const mp = fp === 'all' ? true : i.pengelola === fp;
+                    return ms && mm && mp;
                 });
+
+                if(sort === 'views_desc') currentFilteredData.sort((a,b) => (b.viewGrowth||0) - (a.viewGrowth||0));
+                if(sort === 'subs_desc') currentFilteredData.sort((a,b) => (b.subsGrowth||0) - (a.subsGrowth||0));
+                if(sort === 'asli') currentFilteredData.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+                if(sort === 'views_month_desc') {
+                    currentFilteredData.sort((a,b) => {
+                        const viewsA = parseViewsStr(a.views);
+                        const viewsB = parseViewsStr(b.views);
+                        return viewsB - viewsA;
+                    });
+                }
+                
+                // Update statistik hanya saat filter berubah (bukan saat scroll nambah)
+                const now = Date.now();
+                const newChannelsCount = state.items.filter(i => (now - (i.createdAt || 0)) <= 86400000).length;
+
+                el('stat-total').innerText = state.items.length;
+                el('stat-monet').innerText = state.items.filter(i => i.monet === 'Sudah').length;
+                if(el('stat-aktif')) el('stat-aktif').innerText = state.items.filter(i => i.monet !== 'Sudah').length; 
+                if(el('stat-new')) el('stat-new').innerText = newChannelsCount;
+                
+                // Memperbarui grafik secara responsif
+                updateChartData(currentFilteredData);
             }
 
-            const newChannelsCount = state.items.filter(i => (now - (i.createdAt || 0)) <= 86400000).length;
-
-            el('stat-total').innerText = state.items.length;
-            el('stat-monet').innerText = state.items.filter(i => i.monet === 'Sudah').length;
-            if(el('stat-aktif')) el('stat-aktif').innerText = state.items.filter(i => i.monet !== 'Sudah').length; 
-            if(el('stat-new')) el('stat-new').innerText = newChannelsCount;
-
-            tbody.innerHTML = '';
-            gridEl.innerHTML = '';
-
-            if(filtered.length === 0) {
+            if(currentFilteredData.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="10" class="text-center text-muted" style="padding: 2rem;">BELUM ADA DATA...</td></tr>`;
                 gridEl.innerHTML = `<div class="text-center text-muted w-full" style="padding: 2rem; grid-column: 1 / -1;">BELUM ADA DATA...</div>`;
                 return;
             }
 
+            const sortMode = el('sort-data').value;
             let top3ViewsIds = [];
-            if ((sort === 'views_desc' || sort === 'views_month_desc') && filtered.length > 0) {
-                top3ViewsIds = filtered.slice(0, 3).map(item => item.id);
+            if ((sortMode === 'views_desc' || sortMode === 'views_month_desc') && currentFilteredData.length > 0) {
+                top3ViewsIds = currentFilteredData.slice(0, 3).map(item => item.id);
             }
 
-            filtered.forEach((item, idx) => {
-                let badge = '';
-                
-                let isTopView = item.badges?.topViews || ((sort === 'views_desc' || sort === 'views_month_desc') && top3ViewsIds.includes(item.id));
-                
-                if(isTopView) {
-                    badge += `<span class="badge-views" style="font-size: 0.55rem; padding: 2px 6px;">🔥 Top Views</span> `;
-                }
-                if(item.badges?.topSubs) {
-                    badge += `<span class="badge-subs" style="font-size: 0.55rem; padding: 2px 6px;"><i class="fas fa-chart-line"></i> Top Subs</span>`;
-                }
+            // AMBIL DATA SESUAI LIMIT SCROLL
+            // Jika isAppend (sedang scroll), ambil chunk terbaru saja. Jika tidak, ambil dari index 0 sampai limit.
+            const startIndex = isAppend ? currentRenderLimit - RENDER_CHUNK : 0;
+            const dataToRender = currentFilteredData.slice(startIndex, currentRenderLimit);
 
+            // Perbaikan Performa: Menggunakan .map().join('') untuk merakit HTML secepat kilat
+            const gridHtml = dataToRender.map((item, idx) => {
+                const actualIndex = startIndex + idx; // Hitung nomor urut asli
+                let badge = '';
+                let isTopView = item.badges?.topViews || ((sortMode === 'views_desc' || sortMode === 'views_month_desc') && top3ViewsIds.includes(item.id));
+                
                 let sG = item.subsGrowth > 0 ? `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-emerald font-bold" style="font-size: 0.7rem;">▲+${item.subsGrowth.toLocaleString('id-ID')}</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>` : `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-muted font-bold" style="font-size: 0.7rem;">0</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>`;
                 
                 let vG = '';
                 if (item.viewGrowth > 0) {
-                    vG = `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;">
-                            <span class="text-emerald font-bold" style="font-size: 0.7rem;">▲+${item.viewGrowth.toLocaleString('id-ID')}</span>
-                            <span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span>
-                          </div>`;
+                    vG = `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-emerald font-bold" style="font-size: 0.7rem;">▲+${item.viewGrowth.toLocaleString('id-ID')}</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>`;
                 } else if (item.viewGrowth === 0 && item.views && item.views !== '0' && item.views !== '') {
-                     vG = `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;">
-                            <span class="text-muted font-bold" style="font-size: 0.7rem;">0</span>
-                            <span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span>
-                          </div>`;
+                     vG = `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-muted font-bold" style="font-size: 0.7rem;">0</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>`;
                 } else {
                     vG = `<span class="text-muted">—</span>`;
                 }
@@ -1303,11 +1344,11 @@
                 let monetHtml = item.monet === 'Sudah' ? `<div style="width:16px;height:16px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:16px;height:16px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
                 let linkUrl = item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '#');
 
-                gridEl.innerHTML += `
+                return `
                     <div class="card-item">
                         <div class="card-header">
                             <div>
-                                <div class="font-bold text-sm mb-0.5">${item.title}</div>
+                                <div class="font-bold text-sm mb-0.5"><span class="text-xs text-muted">#${actualIndex+1}</span> ${item.title}</div>
                                 <div>${badge}</div>
                             </div>
                             <div class="flex gap-1">
@@ -1342,10 +1383,26 @@
                         </div>
                     </div>
                 `;
+            }).join('');
 
-                tbody.innerHTML += `
+            const tableHtml = dataToRender.map((item, idx) => {
+                const actualIndex = startIndex + idx; // Hitung nomor urut asli
+                let badge = '';
+                let isTopView = item.badges?.topViews || ((sortMode === 'views_desc' || sortMode === 'views_month_desc') && top3ViewsIds.includes(item.id));
+                if(item.badges?.topSubs) badge += `<span class="badge-subs" style="font-size: 0.55rem; padding: 2px 6px;"><i class="fas fa-chart-line"></i> Top Subs</span>`;
+
+                let sG = item.subsGrowth > 0 ? `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-emerald font-bold" style="font-size: 0.7rem;">▲+${item.subsGrowth.toLocaleString('id-ID')}</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>` : `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-muted font-bold" style="font-size: 0.7rem;">0</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>`;
+                let vG = '';
+                if (item.viewGrowth > 0) vG = `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-emerald font-bold" style="font-size: 0.7rem;">▲+${item.viewGrowth.toLocaleString('id-ID')}</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>`;
+                else if (item.viewGrowth === 0 && item.views && item.views !== '0' && item.views !== '') vG = `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-muted font-bold" style="font-size: 0.7rem;">0</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>`;
+                else vG = `<span class="text-muted">—</span>`;
+
+                let monetHtml = item.monet === 'Sudah' ? `<div style="width:16px;height:16px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:16px;height:16px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
+                let linkUrl = item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '#');
+
+                return `
                     <tr>
-                        <td class="text-center text-muted text-xs">${idx+1}</td>
+                        <td class="text-center text-muted text-xs">${actualIndex+1}</td>
                         <td><div class="font-bold text-xs" style="line-height: 1;">${item.title}</div><div style="margin-top: 2px;">${badge}</div></td>
                         <td class="text-center">${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.6rem; font-weight: bold; text-decoration: none;">BUKA <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
                         <td><div class="font-bold text-xs" style="line-height: 1;">${item.subs||'0'}</div>${sG}</td>
@@ -1361,7 +1418,19 @@
                         </td>
                     </tr>
                 `;
-            });
+            }).join('');
+
+            // Terapkan hasil HTML
+            if (isAppend) {
+                // Jika sedang scroll, tambahkan elemen ke bawah tabel yang sudah ada (tidak menghapus yang atas)
+                // Menggunakan insertAdjacentHTML lebih ringan daripada += innerHTML
+                tbody.insertAdjacentHTML('beforeend', tableHtml);
+                gridEl.insertAdjacentHTML('beforeend', gridHtml);
+            } else {
+                // Jika mencari/filter ulang, timpa seluruh isi dari awal
+                tbody.innerHTML = tableHtml;
+                gridEl.innerHTML = gridHtml;
+            }
         }
 
         window.editItem = function(id) {
