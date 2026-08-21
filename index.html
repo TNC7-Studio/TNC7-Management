@@ -142,6 +142,13 @@
         }
         tr:hover td { background-color: var(--table-hover); cursor: default; }
 
+        /* KELAS WARNA UNTUK STATUS UPLOAD VIDEO (HANYA NOMOR) */
+        .num-warning { background-color: rgba(250, 204, 21, 0.2); color: #facc15 !important; font-weight: 900; padding: 2px 6px; border-radius: 6px; border: 1px solid rgba(250, 204, 21, 0.5); display: inline-block;}
+        .num-danger { background-color: rgba(239, 68, 68, 0.2); color: #ef4444 !important; font-weight: 900; padding: 2px 6px; border-radius: 6px; border: 1px solid rgba(239, 68, 68, 0.5); display: inline-block;}
+        
+        [data-theme="terang"] .num-warning { background-color: rgba(250, 204, 21, 0.3); color: #b45309 !important; border-color: #f59e0b; }
+        [data-theme="terang"] .num-danger { background-color: rgba(239, 68, 68, 0.2); color: #b91c1c !important; border-color: #ef4444; }
+
         .text-xs { font-size: 0.7rem; } .text-sm { font-size: 0.8rem; }
         .text-lg { font-size: 1.125rem; } .text-xl { font-size: 1.25rem; } .text-2xl { font-size: 1.5rem; }
         .font-bold { font-weight: 700; } .font-semibold { font-weight: 600; }
@@ -539,7 +546,15 @@
         <div class="panel-glass flex-col" style="flex-grow: 1; overflow: hidden; display: flex;">
             <div style="padding: 0.5rem 1rem; border-bottom: 1px solid var(--panel-border);">
                 <div class="flex justify-between items-center" style="margin-bottom: 0.5rem; gap: 0.5rem; flex-wrap: wrap;">
-                    <h2 class="text-sm font-bold">DAFTAR CHANNEL</h2>
+                    
+                    <div class="flex items-center gap-2">
+                        <h2 class="text-sm font-bold">DAFTAR CHANNEL</h2>
+                        <div class="flex items-center gap-1" style="font-size: 0.5rem; font-weight: 800; margin-left: 0.25rem;">
+                            <span class="num-warning" style="padding: 2px 5px; border-radius: 4px;" title="Kuning: 2 Hari Belum Upload">UP 2</span>
+                            <span class="num-danger" style="padding: 2px 5px; border-radius: 4px;" title="Merah: 4 Hari atau lebih Belum Upload">UP 4</span>
+                        </div>
+                    </div>
+
                     <div style="flex-grow: 1; max-width: 450px;" id="btn-tambah-channel-mobile">
                         <button class="btn btn-pill w-full" onclick="window.openModal('modal-search-yt')" style="background-color: var(--primary-accent); color: #000; font-weight: 800; padding: 0.5rem 1rem; border: none; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.25); white-space: normal; line-height: 1.2;">
                             <i class="fas fa-search"></i> PASTE LINK CHANNEL BARU DI SINI
@@ -813,12 +828,19 @@
                                 const subsGrowth = newSubs - (item.startOfDaySubs || 0);
                                 const currentViewsParsed = parseViewsStr(item.views);
                                 
-                                if (currentViewsParsed !== newViews || item.videoCount !== newVideos || item.viewGrowth !== viewGrowth) {
+                                // Deteksi penambahan video untuk update tanggal upload terakhir
+                                let updatedLastUpload = item.lastUploadDate;
+                                if (newVideos > (item.videoCount || 0)) {
+                                    updatedLastUpload = Date.now();
+                                }
+                                
+                                if (currentViewsParsed !== newViews || item.videoCount !== newVideos || item.viewGrowth !== viewGrowth || updatedLastUpload !== item.lastUploadDate) {
                                     item.views = formatNumberGlobal(newViews);
                                     item.subs = formatNumberGlobal(newSubs);
                                     item.videoCount = newVideos;
                                     item.viewGrowth = viewGrowth > 0 ? viewGrowth : 0; 
                                     item.subsGrowth = subsGrowth > 0 ? subsGrowth : 0;
+                                    item.lastUploadDate = updatedLastUpload; // Simpan waktu upload terakhir
                                     
                                     state.items[idx] = item;
                                     hasChanges = true;
@@ -1218,7 +1240,8 @@
                     createdAt: id ? (state.items.find(i => i.id === id)?.createdAt || Date.now()) : Date.now(),
                     startOfDayViews: id ? (state.items.find(i => i.id === id)?.startOfDayViews || null) : null,
                     startOfDaySubs: id ? (state.items.find(i => i.id === id)?.startOfDaySubs || null) : null,
-                    lastSyncDate: id ? (state.items.find(i => i.id === id)?.lastSyncDate || null) : null
+                    lastSyncDate: id ? (state.items.find(i => i.id === id)?.lastSyncDate || null) : null,
+                    lastUploadDate: id ? (state.items.find(i => i.id === id)?.lastUploadDate || Date.now()) : Date.now()
                 };
 
                 if(id) {
@@ -1390,6 +1413,14 @@
             // Perbaikan Performa: Menggunakan .map().join('') untuk merakit HTML secepat kilat
             const gridHtml = dataToRender.map((item, idx) => {
                 const actualIndex = startIndex + idx; // Hitung nomor urut asli
+                
+                // Hitung hari sejak upload terakhir untuk indikator warna di nomor
+                const lastUp = item.lastUploadDate || item.createdAt || Date.now();
+                const daysIdle = (Date.now() - lastUp) / (1000 * 60 * 60 * 24);
+                let numClass = 'text-muted';
+                if (daysIdle >= 4) numClass = 'num-danger';
+                else if (daysIdle >= 2) numClass = 'num-warning';
+
                 let badge = '';
                 let isTopView = item.badges?.topViews || ((sortMode === 'views_desc' || sortMode === 'views_month_desc') && top3ViewsIds.includes(item.id));
                 
@@ -1411,7 +1442,7 @@
                     <div class="card-item">
                         <div class="card-header">
                             <div>
-                                <div class="font-bold text-sm mb-0.5"><span class="text-xs text-muted">#${actualIndex+1}</span> ${item.title}</div>
+                                <div class="font-bold text-sm mb-0.5"><span class="text-xs ${numClass}">#${actualIndex+1}</span> ${item.title}</div>
                                 <div>${badge}</div>
                             </div>
                             <div class="flex gap-1">
@@ -1450,6 +1481,14 @@
 
             const tableHtml = dataToRender.map((item, idx) => {
                 const actualIndex = startIndex + idx; // Hitung nomor urut asli
+                
+                // Hitung hari sejak upload terakhir untuk indikator warna di nomor
+                const lastUp = item.lastUploadDate || item.createdAt || Date.now();
+                const daysIdle = (Date.now() - lastUp) / (1000 * 60 * 60 * 24);
+                let numClass = 'text-muted';
+                if (daysIdle >= 4) numClass = 'num-danger';
+                else if (daysIdle >= 2) numClass = 'num-warning';
+
                 let badge = '';
                 let isTopView = item.badges?.topViews || ((sortMode === 'views_desc' || sortMode === 'views_month_desc') && top3ViewsIds.includes(item.id));
                 if(item.badges?.topSubs) badge += `<span class="badge-subs" style="font-size: 0.55rem; padding: 2px 6px;"><i class="fas fa-chart-line"></i> Top Subs</span>`;
@@ -1465,7 +1504,7 @@
 
                 return `
                     <tr>
-                        <td class="text-center text-muted text-xs">${actualIndex+1}</td>
+                        <td class="text-center text-xs"><span class="${numClass}">${actualIndex+1}</span></td>
                         <td><div class="font-bold text-xs" style="line-height: 1;">${item.title}</div><div style="margin-top: 2px;">${badge}</div></td>
                         <td class="text-center">${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.6rem; font-weight: bold; text-decoration: none;">BUKA <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
                         <td><div class="font-bold text-xs" style="line-height: 1;">${item.subs||'0'}</div>${sG}</td>
