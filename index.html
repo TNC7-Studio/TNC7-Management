@@ -349,19 +349,19 @@
             .panel-glass { border-radius: 1rem; }
             
             /* -- MENGECILKAN HEADER (~50% di HP) -- */
-            header.panel-glass { flex-direction: column; align-items: stretch !important; padding: 0.6rem !important; gap: 0.75rem !important; }
-            header .flex.items-center.gap-3 { gap: 0.4rem !important; }
+            header.panel-glass { flex-direction: row !important; flex-wrap: wrap !important; align-items: center !important; padding: 0.6rem !important; gap: 0.5rem !important; }
+            header .flex.items-center.gap-3 { gap: 0.4rem !important; flex-shrink: 0; }
             header .icon-box { width: 24px !important; height: 24px !important; font-size: 0.75rem !important; }
             header h2 { font-size: 0.65rem !important; line-height: 1; margin-bottom: 2px; }
             header p#clock, header p.text-xs { font-size: 0.5rem !important; line-height: 1; }
             
-            #notepad-container { max-width: 100% !important; margin-top: 0.25rem; width: 100%; }
-            /* Penyesuaian khusus notepad di HP agar muat 2 baris tanpa terpotong */
-            #team-notepad { font-size: 0.65rem !important; padding: 0.3rem 2rem 0.3rem 0.5rem !important; height: 38px !important; min-height: 38px !important; color: #ffffff !important; line-height: 1.3 !important; }
+            #notepad-container { max-width: none !important; min-width: 100px !important; margin-top: 0 !important; width: auto !important; flex-grow: 1; }
+            /* Penyesuaian khusus notepad di HP sejajar dengan logo */
+            #team-notepad { font-size: 0.55rem !important; padding: 0.2rem 1.8rem 0.2rem 0.4rem !important; height: 34px !important; min-height: 34px !important; color: #ffffff !important; line-height: 1.2 !important; }
             .notepad-actions { right: 4px !important; gap: 2px !important; }
-            .notepad-actions .btn[title] { width: 20px !important; height: 20px !important; font-size: 0.6rem !important; }
+            .notepad-actions .btn[title] { width: 18px !important; height: 18px !important; font-size: 0.55rem !important; }
 
-            header .justify-end { width: 100%; justify-content: flex-start !important; margin-top: 0; gap: 0.3rem !important; flex-wrap: wrap; }
+            header .justify-end { width: 100%; justify-content: flex-start !important; margin-top: 0.2rem !important; gap: 0.3rem !important; flex-wrap: wrap; }
             .cloud-status, .badge-live { padding: 0.2rem 0.4rem !important; font-size: 0.5rem !important; }
             #last-sync-time { padding: 0.2rem 0.4rem !important; font-size: 0.5rem !important; margin-left: 0 !important; }
             header .flex.items-center.gap-2[style*="background"] { padding: 2px !important; margin-left: 0 !important; }
