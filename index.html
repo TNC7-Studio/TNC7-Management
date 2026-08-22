@@ -324,7 +324,7 @@
             #search-input {
                 font-size: 0.65rem !important;
             }
-            #filter-monet, #filter-pengelola, #sort-data {
+            #filter-monet, #filter-pengelola, #filter-label, #sort-data {
                 font-size: 0.65rem !important;
                 padding: 0.25rem 0.5rem !important;
             }
@@ -428,8 +428,8 @@
             }
             #search-input { width: 100%; font-size: 0.55rem !important; padding: 0.25rem 0.5rem 0.25rem 1.5rem !important; }
             #dashboard-view > .panel-glass.flex-col > div:first-child .flex.items-center.gap-2.flex-wrap > div > i { font-size: 0.55rem !important; }
-            #filter-monet, #filter-pengelola, #sort-data { width: 100% !important; flex: none; font-size: 0.45rem !important; padding: 0.25rem !important; border-radius: 0.4rem; }
-            #btn-reset { width: 100%; margin-top: 0; font-size: 0.45rem !important; padding: 0.25rem !important; border-radius: 0.4rem; }
+            #filter-monet, #filter-pengelola, #filter-label, #sort-data { width: 100% !important; flex: none; font-size: 0.45rem !important; padding: 0.25rem !important; border-radius: 0.4rem; }
+            #btn-reset { width: 100%; margin-top: 0; font-size: 0.45rem !important; padding: 0.25rem !important; border-radius: 0.4rem; grid-column: span 2; }
             
             .table-container { 
                 -webkit-overflow-scrolling: touch; 
@@ -549,7 +549,7 @@
                 <div class="flex items-center gap-2 flex-wrap">
                     <div style="position: relative; flex-grow: 1; max-width: 300px;">
                         <i class="fas fa-search text-muted" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.7rem;"></i>
-                        <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 1.75rem;" autocomplete="new-password" name="search_channel_input_x99" placeholder="CARI NAMA, ID, NICHE..." oninput="this.value = this.value.toUpperCase()">
+                        <input type="text" id="search-input" class="form-input text-xs" style="padding-left: 1.75rem;" autocomplete="new-password" name="search_channel_input_x99" placeholder="CARI NAMA, ID, LABEL..." oninput="this.value = this.value.toUpperCase()">
                     </div>
                     <select id="filter-monet" class="form-select text-xs" style="width: auto;">
                         <option value="all">SEMUA MONETISASI</option>
@@ -558,6 +558,9 @@
                     </select>
                     <select id="filter-pengelola" class="form-select text-xs" style="width: auto; text-transform: uppercase;">
                         <option value="all">SEMUA PENGELOLA</option>
+                    </select>
+                    <select id="filter-label" class="form-select text-xs" style="width: auto; text-transform: uppercase;">
+                        <option value="all">SEMUA LABEL</option>
                     </select>
                     <select id="sort-data" class="form-select text-xs" style="width: auto;">
                         <option value="views_desc">KENAIKAN VIEWS ↑</option>
@@ -584,9 +587,9 @@
                             <th>TOTAL VIEWS</th>
                             <th style="text-align: center;">VIDEO</th>
                             <th>PENGELOLA</th>
-                            <th>NICHE</th>
+                            <th>LABEL</th>
                             <th style="text-align: center;">MONET</th>
-                            <th style="text-align: center; padding-right: 1.5rem;">AKSI</th>
+                            <th style="text-align: center; padding-right: 1.5rem;">EDIT</th>
                         </tr>
                     </thead>
                     <tbody id="table-body"></tbody>
@@ -616,7 +619,7 @@
                         <div class="form-group full-width"><label>LINK CHANNEL / PROFIL</label><input type="text" id="item-link" class="case-sensitive" placeholder="HTTPS://YOUTUBE.COM/@HANDLE"></div>
                         <div class="form-group full-width"><label>ID CHANNEL</label><input type="text" id="item-channelId" class="case-sensitive" placeholder="UC..."></div>
                         <div class="form-group full-width"><label>NAMA PENGELOLA</label><input type="text" id="item-pengelola" placeholder="NAMA PENGELOLA" oninput="this.value = this.value.toUpperCase()"></div>
-                        <div class="form-group full-width"><label>NICHE / KATEGORI</label><input type="text" id="item-niche" placeholder="KETIK NICHE" oninput="this.value = this.value.toUpperCase()"></div>
+                        <div class="form-group full-width"><label>LABEL</label><input type="text" id="item-niche" placeholder="KETIK LABEL" oninput="this.value = this.value.toUpperCase()"></div>
                         <div class="form-group full-width"><label>MONETISASI</label>
                             <select id="item-monet">
                                 <option value="Belum">NO — BELUM MONETISASI</option>
@@ -1137,7 +1140,7 @@
                 });
             }
 
-            ['search-input', 'filter-monet', 'filter-pengelola', 'sort-data'].forEach(id => { 
+            ['search-input', 'filter-monet', 'filter-pengelola', 'filter-label', 'sort-data'].forEach(id => { 
                 el(id).addEventListener('input', optimizedRender); 
             });
             
@@ -1145,6 +1148,7 @@
                 el('search-input').value = ''; 
                 el('filter-monet').value = 'all'; 
                 el('filter-pengelola').value = 'all'; 
+                el('filter-label').value = 'all'; 
                 el('sort-data').value = 'views_desc';
                 currentRenderLimit = RENDER_CHUNK;
                 optimizedRender();
@@ -1215,9 +1219,13 @@
         }
 
         function updateFilters() {
-            const select = el('filter-pengelola');
-            const unique = [...new Set(state.items.map(i => i.pengelola).filter(Boolean))];
-            select.innerHTML = '<option value="all">SEMUA PENGELOLA</option>' + unique.map(p => `<option value="${p}">${p}</option>`).join('');
+            const selectP = el('filter-pengelola');
+            const uniqueP = [...new Set(state.items.map(i => i.pengelola).filter(Boolean))];
+            selectP.innerHTML = '<option value="all">SEMUA PENGELOLA</option>' + uniqueP.map(p => `<option value="${p}">${p}</option>`).join('');
+            
+            const selectL = el('filter-label');
+            const uniqueL = [...new Set(state.items.map(i => i.niche).filter(Boolean))];
+            selectL.innerHTML = '<option value="all">SEMUA LABEL</option>' + uniqueL.map(l => `<option value="${l}">${l}</option>`).join('');
         }
 
         window.toggleViewMode = function() {
@@ -1307,13 +1315,15 @@
                 const sq = el('search-input').value.toLowerCase();
                 const fm = el('filter-monet').value;
                 const fp = el('filter-pengelola').value;
+                const fl = el('filter-label').value;
                 const sort = el('sort-data').value;
 
                 currentFilteredData = state.items.filter(i => {
                     const ms = (i.title && i.title.toLowerCase().includes(sq)) || (i.niche && i.niche.toLowerCase().includes(sq)) || (i.channelId && i.channelId.toLowerCase().includes(sq));
                     const mm = fm === 'all' ? true : (fm === 'yes' ? i.monet === 'Sudah' : i.monet !== 'Sudah');
                     const mp = fp === 'all' ? true : i.pengelola === fp;
-                    return ms && mm && mp;
+                    const ml = fl === 'all' ? true : i.niche === fl;
+                    return ms && mm && mp && ml;
                 });
 
                 if(sort === 'views_desc') currentFilteredData.sort((a,b) => (b.viewGrowth||0) - (a.viewGrowth||0));
@@ -1402,7 +1412,7 @@
                             </div>
                             <div class="card-stat flex justify-between items-center" style="grid-column: span 2; padding: 0.5rem;">
                                 <div>
-                                    <div class="text-[0.6rem] text-muted font-bold">NICHE</div>
+                                    <div class="text-[0.6rem] text-muted font-bold">LABEL</div>
                                     <div class="font-bold text-xs mt-0.5">${item.niche||'-'}</div>
                                 </div>
                                 <div class="flex flex-col items-end gap-0.5">
