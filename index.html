@@ -671,7 +671,7 @@
                 </div>
                 <div class="settings-card">
                     <h4 class="font-bold text-sm mb-4"><i class="fas fa-file-excel text-xs"></i> EKSPOR KE EXCEL (XLSX)</h4>
-                    <p class="text-xs text-muted mb-4">DOWNLOAD NAMA, PENGELOLA, LINK, DAN ID CHANNEL KE FORMAT EXCEL.</p>
+                    <p class="text-xs text-muted mb-4">DOWNLOAD NAMA, PENGELOLA, LABEL, LINK, DAN ID CHANNEL KE FORMAT EXCEL.</p>
                     <div class="form-group mb-4">
                         <select id="export-excel-filter" class="form-select text-xs" style="background-color: rgba(0,0,0,0.3); border-color: var(--panel-border);">
                             <option value="filtered">EKSPOR HANYA DATA TERFILTER (YANG TAMPIL DI TABEL)</option>
@@ -1637,17 +1637,25 @@
                 'NO': index + 1,
                 'NAMA CHANNEL': item.title || '-',
                 'PENGELOLA': item.pengelola || '-',
+                'LABEL': item.niche || '-',
                 'LINK CHANNEL': item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '-'),
                 'ID CHANNEL': item.channelId || '-'
             }));
 
             const ws = XLSX.utils.json_to_sheet(excelData);
             
+            // Menambahkan auto-filter ke worksheet
+            if(!ws['!autofilter']) {
+                const range = XLSX.utils.decode_range(ws['!ref']);
+                ws['!autofilter'] = { ref: XLSX.utils.encode_range(range) };
+            }
+            
             // Mengatur lebar kolom agar rapi saat dibuka di Excel
             ws['!cols'] = [
                 {wch: 5},  // NO
                 {wch: 35}, // NAMA CHANNEL
                 {wch: 25}, // PENGELOLA
+                {wch: 25}, // LABEL
                 {wch: 50}, // LINK CHANNEL
                 {wch: 30}  // ID CHANNEL
             ];
