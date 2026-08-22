@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     
     <style>
         :root {
@@ -525,8 +526,8 @@
                     <div class="flex items-center gap-2 flex-wrap">
                         <h2 class="text-sm font-bold">DAFTAR CHANNEL</h2>
                         <div class="flex items-center gap-1" style="font-size: 0.5rem; font-weight: 800; margin-left: 0.25rem;">
-                            <span class="num-warning" style="padding: 2px 5px; border-radius: 4px;" title="Kuning: 2 Hari Belum Upload">UP 2</span>
-                            <span class="num-danger" style="padding: 2px 5px; border-radius: 4px;" title="Merah: 4 Hari atau lebih Belum Upload">UP 4</span>
+                            <span class="num-warning" style="padding: 2px 5px; border-radius: 4px;" title="Kuning: 1 Hari Belum Upload">UP 1</span>
+                            <span class="num-danger" style="padding: 2px 5px; border-radius: 4px;" title="Merah: 2 Hari atau lebih Belum Upload">UP 2</span>
                         </div>
                         
                         <!-- Elemen Desktop: Dipindahkan ke Sini (Disembunyikan di Mobile) -->
@@ -667,6 +668,17 @@
                     <p class="text-xs text-muted mb-4">KEMBALIKAN DATA (RESTORE) DARI FILE JSON.</p>
                     <input type="file" id="import-file" accept=".json" class="hidden" onchange="window.importData(event)">
                     <button onclick="document.getElementById('import-file').click()" class="btn w-full" style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-import"></i> PILIH FILE JSON</button>
+                </div>
+                <div class="settings-card">
+                    <h4 class="font-bold text-sm mb-4"><i class="fas fa-file-excel text-xs"></i> EKSPOR KE EXCEL (XLSX)</h4>
+                    <p class="text-xs text-muted mb-4">DOWNLOAD NAMA, PENGELOLA, LINK, DAN ID CHANNEL KE FORMAT EXCEL.</p>
+                    <div class="form-group mb-4">
+                        <select id="export-excel-filter" class="form-select text-xs" style="background-color: rgba(0,0,0,0.3); border-color: var(--panel-border);">
+                            <option value="filtered">EKSPOR HANYA DATA TERFILTER (YANG TAMPIL DI TABEL)</option>
+                            <option value="all">EKSPOR SEMUA DATA CHANNEL KESELURUHAN</option>
+                        </select>
+                    </div>
+                    <button onclick="window.exportExcel()" class="btn w-full" style="background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid #22c55e; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-excel"></i> DOWNLOAD EXCEL (XLSX)</button>
                 </div>
             </div>
             <div class="modal-footer"><button type="button" class="btn btn-pill" style="padding: 0.5rem 1.5rem; background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--panel-border);" onclick="window.closeModal('modal-settings')">TUTUP</button></div>
@@ -1368,8 +1380,8 @@
                 const lastUp = item.lastUploadDate || item.createdAt || Date.now();
                 const daysIdle = (Date.now() - lastUp) / (1000 * 60 * 60 * 24);
                 let numClass = 'text-muted';
-                if (daysIdle >= 4) numClass = 'num-danger';
-                else if (daysIdle >= 2) numClass = 'num-warning';
+                if (daysIdle >= 2) numClass = 'num-danger';
+                else if (daysIdle >= 1) numClass = 'num-warning';
 
                 let badge = '';
                 
@@ -1433,8 +1445,8 @@
                 const lastUp = item.lastUploadDate || item.createdAt || Date.now();
                 const daysIdle = (Date.now() - lastUp) / (1000 * 60 * 60 * 24);
                 let numClass = 'text-muted';
-                if (daysIdle >= 4) numClass = 'num-danger';
-                else if (daysIdle >= 2) numClass = 'num-warning';
+                if (daysIdle >= 2) numClass = 'num-danger';
+                else if (daysIdle >= 1) numClass = 'num-warning';
 
                 let badge = '';
                 if(item.badges?.topSubs) badge += `<span class="badge-subs" style="font-size: 0.55rem; padding: 2px 6px;"><i class="fas fa-chart-line"></i> Top Subs</span>`;
@@ -1605,6 +1617,48 @@
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
             showToast('DATA BERHASIL DIEKSPOR');
+        };
+
+        window.exportExcel = function() {
+            if (typeof XLSX === 'undefined') {
+                showToast('GAGAL: LIBRARY EXCEL BELUM TERLOAD', true);
+                return;
+            }
+
+            const filterType = el('export-excel-filter').value;
+            const dataToExport = filterType === 'filtered' ? currentFilteredData : state.items;
+
+            if (!dataToExport || dataToExport.length === 0) {
+                showToast('TIDAK ADA DATA UNTUK DIEKSPOR', true);
+                return;
+            }
+
+            const excelData = dataToExport.map((item, index) => ({
+                'NO': index + 1,
+                'NAMA CHANNEL': item.title || '-',
+                'PENGELOLA': item.pengelola || '-',
+                'LINK CHANNEL': item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '-'),
+                'ID CHANNEL': item.channelId || '-'
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(excelData);
+            
+            // Mengatur lebar kolom agar rapi saat dibuka di Excel
+            ws['!cols'] = [
+                {wch: 5},  // NO
+                {wch: 35}, // NAMA CHANNEL
+                {wch: 25}, // PENGELOLA
+                {wch: 50}, // LINK CHANNEL
+                {wch: 30}  // ID CHANNEL
+            ];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Data_Channel");
+
+            const fileName = `TNC7_CHANNEL_${filterType === 'all' ? 'SEMUA' : 'TERFILTER'}_${new Date().getTime()}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            showToast('FILE EXCEL BERHASIL DIDOWNLOAD');
         };
 
         window.importData = function(event) {
