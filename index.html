@@ -219,12 +219,18 @@
         .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.2); }
         
         .cloud-status {
-            display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem;
-            background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
-            white-space: nowrap; /* Mencegah teks turun baris */
-            font-weight: 800; /* Menyamakan ketebalan font dengan badge-live */
-            letter-spacing: 0.05em; /* Menyamakan letter-spacing dengan badge-live */
-            height: 28px; /* Menetapkan tinggi yang konsisten */
+            display: flex; align-items: center; justify-content: center; gap: 0; font-size: 0.75rem;
+            background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);
+            white-space: nowrap; 
+            font-weight: 800; 
+            letter-spacing: 0.05em; 
+            width: 28px; 
+            height: 28px; 
+            padding: 0;
+            cursor: help;
+        }
+        .cloud-status span.status-text {
+            display: none !important;
         }
         .cloud-status.offline { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
 
@@ -271,10 +277,16 @@
         @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0.7); } 70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(250, 204, 21, 0); } 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(250, 204, 21, 0); } }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .badge-live {
-            display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em;
-            background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.25rem 0.75rem; border-radius: 999px; border: 1px solid rgba(16, 185, 129, 0.3);
-            white-space: nowrap; /* Mencegah teks turun baris */
-            height: 28px; /* Menetapkan tinggi yang konsisten */
+            display: flex; align-items: center; justify-content: center; gap: 0; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.05em;
+            background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 6px; border: 1px solid rgba(16, 185, 129, 0.3);
+            white-space: nowrap; 
+            width: 28px;
+            height: 28px; 
+            padding: 0;
+            cursor: help;
+        }
+        .badge-live span.status-text {
+            display: none !important;
         }
         .badge-live i { animation: blink 1.5s infinite; font-size: 0.5rem; }
 
@@ -350,15 +362,17 @@
                 height: 100dvh;
             }
             
+            /* MENGUBAH LAYOUT HEADER MOBILE AGAR SEJAJAR */
             header.panel-glass { 
                 flex-direction: row !important; 
-                flex-wrap: wrap !important; 
+                flex-wrap: nowrap !important; /* Jangan wrap ke baris baru */
                 justify-content: space-between !important;
                 align-items: center !important; 
                 padding: 0.4rem 0.5rem !important; 
                 gap: 0.25rem !important; 
                 border-radius: 0.75rem; 
                 flex-shrink: 0; 
+                overflow: hidden; /* Cegah meluber */
             }
             
             header .flex.items-center.gap-3 { gap: 0.25rem !important; flex-shrink: 1; min-width: 0; }
@@ -375,11 +389,31 @@
                 justify-content: flex-end !important; 
                 margin-top: 0 !important; 
                 gap: 0.2rem !important; 
-                flex-wrap: wrap !important; 
+                flex-wrap: nowrap !important; /* Jangan wrap indikator ke baris bawah */
                 flex-shrink: 0; 
             }
-            .cloud-status, .badge-live { padding: 0.15rem 0.25rem !important; font-size: 0.4rem !important; border-radius: 4px; height: 18px; white-space: nowrap; } 
-            #last-sync-time { padding: 0.15rem 0.25rem !important; font-size: 0.4rem !important; margin-left: 0 !important; border-radius: 4px; height: 18px; display: flex; align-items: center; white-space: nowrap; }
+
+            /* MENGUBAH INDIKATOR MENJADI HANYA IKON DI MOBILE */
+            .cloud-status {
+                width: 22px !important; 
+                height: 22px !important; 
+            }
+
+            .badge-live {
+                width: 22px !important; 
+                height: 22px !important; 
+            }
+            
+            #last-sync-time { 
+                padding: 0.15rem 0.25rem !important; 
+                font-size: 0.45rem !important; /* Sedikit perbesar agar terbaca */
+                margin-left: 0 !important; 
+                border-radius: 6px !important; 
+                height: 22px !important; 
+                display: flex; 
+                align-items: center; 
+                white-space: nowrap; 
+            }
 
             #dashboard-view > div[style*="display: grid"] { 
                 grid-template-columns: 1fr 1fr !important; 
@@ -481,13 +515,13 @@
 
             <div class="flex items-center gap-2 flex-wrap justify-end">
                 <button id="btn-install" class="btn btn-pill hidden" style="background: var(--primary-accent); color: #1a1814; border: none; font-weight: bold; height: 28px;"><i class="fas fa-download"></i> INSTALL APP</button>
-                <div id="cloud-status-indicator" class="cloud-status">
-                    <i class="fas fa-spinner fa-spin"></i> MENGHUBUNGKAN...
+                <div id="cloud-status-indicator" class="cloud-status" title="Status Cloud">
+                    <i class="fas fa-spinner fa-spin"></i> <span class="status-text">MENGHUBUNGKAN...</span>
                 </div>
 
                 <div id="toast"><i class="fas fa-info-circle"></i> <span id="toast-msg">SUCCESS</span></div>
 
-                <div id="auto-sync-badge" class="badge-live hidden"><i class="fas fa-circle"></i> AUTO-SYNC</div>
+                <div id="auto-sync-badge" class="badge-live hidden" title="Auto Sync Aktif"><i class="fas fa-circle"></i> <span class="status-text">AUTO-SYNC</span></div>
                 
                 <div id="last-sync-time" class="text-xs text-muted font-bold hidden" style="background: rgba(255,255,255,0.05); padding: 0 8px; border-radius: 6px; border: 1px solid var(--panel-border); height: 28px; display: flex; align-items: center; white-space: nowrap;"></div>
             </div>
@@ -800,7 +834,7 @@
             const autoSyncBadge = el('auto-sync-badge');
             const originalHtml = autoSyncBadge ? autoSyncBadge.innerHTML : '';
             if(autoSyncBadge && !autoSyncBadge.classList.contains('hidden')) {
-                autoSyncBadge.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SYNCING...';
+                autoSyncBadge.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span class="status-text">SYNCING...</span>';
             }
 
             const API_KEY = DEFAULT_API_KEY; 
@@ -1001,7 +1035,7 @@
             const ind = el('cloud-status-indicator');
             if(ind) {
                 ind.className = 'cloud-status';
-                ind.innerHTML = '<i class="fas fa-cloud"></i> CLOUD SYNC AKTIF';
+                ind.innerHTML = '<i class="fas fa-cloud"></i> <span class="status-text">CLOUD SYNC AKTIF</span>';
             }
             const badge = el('auto-sync-badge');
             if(badge) badge.classList.remove('hidden');
@@ -1011,7 +1045,7 @@
             const ind = el('cloud-status-indicator');
             if(ind) {
                 ind.className = 'cloud-status offline';
-                ind.innerHTML = '<i class="fas fa-cloud-slash"></i> LOKAL MODE';
+                ind.innerHTML = '<i class="fas fa-cloud-slash"></i> <span class="status-text">LOKAL MODE</span>';
             }
             const badge = el('auto-sync-badge');
             if(badge) badge.classList.add('hidden');
