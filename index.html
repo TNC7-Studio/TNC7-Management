@@ -1406,6 +1406,9 @@
                 if (daysIdle >= 2) numClass = 'num-danger';
                 else if (daysIdle >= 1) numClass = 'num-warning';
 
+                const isNew = item.createdAt && (Date.now() - item.createdAt) <= (7 * 24 * 60 * 60 * 1000);
+                const newBadge = isNew ? `<span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 1px 4px; border-radius: 4px; font-size: 0.5rem; font-weight: 900; margin-left: 4px; vertical-align: middle; display: inline-block; line-height: 1.2;">NEW</span>` : '';
+
                 let badge = '';
                 
                 let sG = item.subsGrowth > 0 ? `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-emerald font-bold" style="font-size: 0.7rem;">▲+${item.subsGrowth.toLocaleString('id-ID')}</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>` : `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-muted font-bold" style="font-size: 0.7rem;">0</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>`;
@@ -1426,7 +1429,7 @@
                     <div class="card-item">
                         <div class="card-header">
                             <div>
-                                <div class="font-bold text-sm mb-0.5"><span class="text-xs ${numClass}">#${actualIndex+1}</span> ${item.title}</div>
+                                <div class="font-bold text-sm mb-0.5"><span class="text-xs ${numClass}">#${actualIndex+1}</span> ${item.title}${newBadge}</div>
                                 <div>${badge}</div>
                             </div>
                             <div class="flex gap-1">
@@ -1471,6 +1474,9 @@
                 if (daysIdle >= 2) numClass = 'num-danger';
                 else if (daysIdle >= 1) numClass = 'num-warning';
 
+                const isNew = item.createdAt && (Date.now() - item.createdAt) <= (7 * 24 * 60 * 60 * 1000);
+                const newBadge = isNew ? `<span style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4); padding: 1px 4px; border-radius: 4px; font-size: 0.45rem; font-weight: 900; margin-left: 4px; vertical-align: middle; display: inline-block; line-height: 1.2;">NEW</span>` : '';
+
                 let badge = '';
                 if(item.badges?.topSubs) badge += `<span class="badge-subs" style="font-size: 0.55rem; padding: 2px 6px;"><i class="fas fa-chart-line"></i> Top Subs</span>`;
 
@@ -1486,7 +1492,7 @@
                 return `
                     <tr>
                         <td class="text-center text-xs"><span class="${numClass}">${actualIndex+1}</span></td>
-                        <td><div class="font-bold text-xs" style="line-height: 1;">${item.title}</div><div style="margin-top: 2px;">${badge}</div></td>
+                        <td><div class="font-bold text-xs" style="line-height: 1; display: flex; align-items: center; flex-wrap: wrap; gap: 2px;"><span>${item.title}</span>${newBadge}</div><div style="margin-top: 2px;">${badge}</div></td>
                         <td class="text-center">${linkUrl !== '#' ? `<a href="${linkUrl}" target="_blank" class="text-accent" style="font-size: 0.6rem; font-weight: bold; text-decoration: none;">BUKA <i class="fas fa-external-link-alt"></i></a>` : '-'}</td>
                         <td><div class="font-bold text-xs" style="line-height: 1;">${item.subs||'0'}</div>${sG}</td>
                         <td><div class="font-bold text-xs" style="line-height: 1;">${item.views||'0'}</div>${vG}</td>
