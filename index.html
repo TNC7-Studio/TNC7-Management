@@ -709,6 +709,12 @@
                  <div class="settings-card">
                     <h4 class="font-bold text-sm mb-4"><i class="fas fa-download text-xs"></i> EKSPOR DATA LOKAL</h4>
                     <p class="text-xs text-muted mb-4">SIMPAN DATA ANDA SEBAGAI FILE JSON UNTUK BACKUP.</p>
+                    <div class="form-group mb-4">
+                        <select id="export-json-filter" class="form-select text-xs" style="background-color: rgba(0,0,0,0.3); border-color: var(--panel-border);">
+                            <option value="filtered">EKSPOR HANYA DATA TERFILTER (YANG TAMPIL DI TABEL)</option>
+                            <option value="all">EKSPOR SEMUA DATA CHANNEL KESELURUHAN</option>
+                        </select>
+                    </div>
                     <button onclick="window.exportData()" class="btn w-full" style="background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid #38bdf8; padding: 0.75rem; border-radius: 0.5rem;"><i class="fas fa-file-export"></i> DOWNLOAD DATA (JSON)</button>
                 </div>
                  <div class="settings-card">
@@ -763,6 +769,21 @@
                 <button id="btn-yt-search" onclick="window.searchYouTubeChannel()" class="btn" style="background: var(--primary-accent); color: #1a160c; font-weight: bold; font-size: 1rem; padding: 0.75rem 2rem; border-radius: 999px; box-shadow: 0 4px 15px rgba(250, 204, 21, 0.2);">
                     <i class="fas fa-search text-sm"></i> CARI
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus -->
+    <div id="modal-confirm-delete" class="modal-overlay hidden" style="align-items: center; justify-content: center; z-index: 100000;">
+        <div class="modal-content" style="max-width: 320px; background: #1a1a1a; border: 1px solid #333; border-radius: 1.5rem; padding: 2rem 1.5rem; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="margin-bottom: 1.5rem;">
+                <i class="fas fa-trash-alt" style="font-size: 3.5rem; color: #ff4757; text-shadow: 0 0 20px rgba(255, 71, 87, 0.4);"></i>
+            </div>
+            <h3 class="font-bold text-lg mb-2" style="color: white; letter-spacing: -0.5px;">HAPUS CHANNEL?</h3>
+            <p class="text-xs text-muted mb-6" style="color: #999; line-height: 1.4;">TINDAKAN INI TIDAK DAPAT DIBATALKAN.<br>APAKAH ANDA YAKIN INGIN MENGHAPUSNYA?</p>
+            <div class="flex gap-3 justify-center">
+                <button class="btn" onclick="window.closeModal('modal-confirm-delete')" style="flex: 1; padding: 0.6rem; background: #2a2a2a; color: #ccc; border: 1px solid #444; border-radius: 0.5rem; font-weight: 600; font-size: 0.8rem;">BATAL</button>
+                <button id="btn-confirm-delete-action" class="btn" style="flex: 1; padding: 0.6rem; background: #ff4757; color: white; border: none; border-radius: 0.5rem; font-weight: 600; font-size: 0.8rem; box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);">HAPUS</button>
             </div>
         </div>
     </div>
@@ -1520,19 +1541,34 @@
             window.openModal('modal-form');
         };
 
+        let deleteTargetId = null;
+
         window.deleteItem = function(id) {
-            if(confirm('HAPUS CHANNEL INI?')) {
-                state.items = state.items.filter(i => i.id !== id);
-                saveLocalData();
+            deleteTargetId = id;
+            window.openModal('modal-confirm-delete');
+            
+            const confirmBtn = el('btn-confirm-delete-action');
+            
+            // Remove previous event listeners to avoid multiple triggers
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            newConfirmBtn.addEventListener('click', () => {
+                if(deleteTargetId) {
+                    state.items = state.items.filter(i => i.id !== deleteTargetId);
+                    saveLocalData();
 
-                if (state.isCloudConnected && db && userId) {
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', id);
-                    deleteDoc(docRef).catch(err => console.error("Gagal hapus dari cloud", err));
+                    if (state.isCloudConnected && db && userId) {
+                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', deleteTargetId);
+                        deleteDoc(docRef).catch(err => console.error("Gagal hapus dari cloud", err));
+                    }
+
+                    renderTable();
+                    window.closeModal('modal-confirm-delete');
+                    showToast('DATA BERHASIL DIHAPUS');
+                    deleteTargetId = null;
                 }
-
-                renderTable();
-                showToast('DATA BERHASIL DIHAPUS');
-            }
+            });
         };
 
         window.searchYouTubeChannel = async function() {
@@ -1610,11 +1646,19 @@
         };
 
         window.exportData = function() {
-            const dataToExport = { channels: state.items, exportDate: new Date().toISOString() };
+            const filterType = el('export-json-filter') ? el('export-json-filter').value : 'all';
+            const dataToExportArray = filterType === 'filtered' ? currentFilteredData : state.items;
+            
+            if (!dataToExportArray || dataToExportArray.length === 0) {
+                showToast('TIDAK ADA DATA UNTUK DIEKSPOR', true);
+                return;
+            }
+
+            const dataToExport = { channels: dataToExportArray, exportDate: new Date().toISOString() };
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
             const downloadAnchorNode = document.createElement('a');
             downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "TNC7_BACKUP_" + new Date().getTime() + ".json");
+            downloadAnchorNode.setAttribute("download", `TNC7_BACKUP_${filterType === 'all' ? 'SEMUA' : 'TERFILTER'}_${new Date().getTime()}.json`);
             document.body.appendChild(downloadAnchorNode);
             downloadAnchorNode.click();
             downloadAnchorNode.remove();
