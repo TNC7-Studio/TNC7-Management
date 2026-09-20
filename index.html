@@ -849,6 +849,16 @@
             return isNaN(num) ? 0 : num * multiplier;
         };
 
+        const checkMonetStatus = (monetValue) => {
+            if (!monetValue) return false;
+            const val = String(monetValue).trim().toLowerCase();
+            // Jika ada kata 'belum', 'tidak', 'no', langsung nyatakan TIDAK MONET (Dolar Abu-abu)
+            if (val.includes('belum') || val.includes('tidak') || val === 'no' || val === 'false' || val === '0') return false;
+            
+            // Jika lolos pengecekan di atas, baru cek apakah ada kata penanda SUDAH MONET (Dolar Hijau)
+            return val.includes('sudah') || val.includes('yes') || val === 'true' || val === '1' || val === 'y' || val.includes('monet');
+        };
+
         async function silentAutoSync() {
             if (!state.items || state.items.length === 0) return;
             
@@ -1176,7 +1186,11 @@
             // if (notepadEl) { ... }
 
             ['search-input', 'filter-monet', 'filter-pengelola', 'filter-label', 'sort-data'].forEach(id => { 
-                el(id).addEventListener('input', optimizedRender); 
+                const filterElement = el(id);
+                if (filterElement) {
+                    filterElement.addEventListener('input', optimizedRender); 
+                    filterElement.addEventListener('change', optimizedRender); // Memastikan berjalan realtime di semua browser/HP
+                }
             });
             
             el('btn-reset').addEventListener('click', () => {
@@ -1355,7 +1369,8 @@
 
                 currentFilteredData = state.items.filter(i => {
                     const ms = (i.title && i.title.toLowerCase().includes(sq)) || (i.niche && i.niche.toLowerCase().includes(sq)) || (i.channelId && i.channelId.toLowerCase().includes(sq));
-                    const mm = fm === 'all' ? true : (fm === 'yes' ? i.monet === 'Sudah' : i.monet !== 'Sudah');
+                    const isMonet = checkMonetStatus(i.monet);
+                    const mm = fm === 'all' ? true : (fm === 'yes' ? isMonet : !isMonet);
                     const mp = fp === 'all' ? true : i.pengelola === fp;
                     const ml = fl === 'all' ? true : i.niche === fl;
                     return ms && mm && mp && ml;
@@ -1373,11 +1388,11 @@
                 }
                 
                 const now = Date.now();
-                const newChannelsCount = state.items.filter(i => (now - (i.createdAt || 0)) <= 86400000).length;
+                const newChannelsCount = currentFilteredData.filter(i => (now - (i.createdAt || 0)) <= 86400000).length;
 
-                el('stat-total').innerText = state.items.length;
-                el('stat-monet').innerText = state.items.filter(i => i.monet === 'Sudah').length;
-                if(el('stat-aktif')) el('stat-aktif').innerText = state.items.filter(i => i.monet !== 'Sudah').length; 
+                el('stat-total').innerText = currentFilteredData.length;
+                el('stat-monet').innerText = currentFilteredData.filter(i => checkMonetStatus(i.monet)).length;
+                if(el('stat-aktif')) el('stat-aktif').innerText = currentFilteredData.filter(i => !checkMonetStatus(i.monet)).length; 
                 if(el('stat-new')) el('stat-new').innerText = newChannelsCount;
                 
                 updateChartData(currentFilteredData);
@@ -1422,7 +1437,7 @@
                     vG = `<span class="text-muted">—</span>`;
                 }
 
-                let monetHtml = item.monet === 'Sudah' ? `<div style="width:16px;height:16px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:16px;height:16px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
+                let monetHtml = checkMonetStatus(item.monet) ? `<div style="width:16px;height:16px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:16px;height:16px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
                 let linkUrl = item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '#');
 
                 return `
@@ -1486,7 +1501,7 @@
                 else if (item.viewGrowth === 0 && item.views && item.views !== '0' && item.views !== '') vG = `<div style="display: flex; align-items: baseline; gap: 4px; margin-top: 1px;"><span class="text-muted font-bold" style="font-size: 0.7rem;">0</span><span class="text-muted" style="font-size: 0.55rem; font-weight: 500; text-transform: lowercase;">(1hr)</span></div>`;
                 else vG = `<span class="text-muted">—</span>`;
 
-                let monetHtml = item.monet === 'Sudah' ? `<div style="width:16px;height:16px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:16px;height:16px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
+                let monetHtml = checkMonetStatus(item.monet) ? `<div style="width:16px;height:16px;border-radius:50%;background:#10b981;color:white;display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;"><i class="fas fa-dollar-sign"></i></div>` : `<div style="width:16px;height:16px;border-radius:50%;border:1px solid var(--panel-border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;margin:auto;font-size:9px;opacity:0.5;"><i class="fas fa-dollar-sign"></i></div>`;
                 let linkUrl = item.link && item.link.trim() !== '' ? item.link : (item.channelId ? `https://youtube.com/channel/${item.channelId}` : '#');
 
                 return `
@@ -1536,7 +1551,7 @@
                     el('item-viewGrowth').value = item.viewGrowth || 0;
                     el('item-video').value = item.videoCount || 0; 
                     el('item-niche').value = item.niche || '';
-                    el('item-monet').value = item.monet || 'Belum'; 
+                    el('item-monet').value = checkMonetStatus(item.monet) ? 'Sudah' : 'Belum'; 
                     el('item-notes').value = item.notes || '';
                     el('item-topViews').checked = !!item.badges?.topViews; 
                     el('item-topSubs').checked = !!item.badges?.topSubs;
