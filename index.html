@@ -859,8 +859,10 @@
             return val.includes('sudah') || val.includes('yes') || val === 'true' || val === '1' || val === 'y' || val.includes('monet');
         };
 
+        let firstSyncDone = false; // sinkronisasi pertama dijalankan begitu daftar channel dari cloud termuat
         async function silentAutoSync() {
             if (!state.items || state.items.length === 0) return;
+            firstSyncDone = true;
             
             const autoSyncBadge = el('auto-sync-badge');
             const originalHtml = autoSyncBadge ? autoSyncBadge.innerHTML : '';
@@ -870,6 +872,10 @@
 
             const API_KEY = DEFAULT_API_KEY; 
             const todayStr = new Date().toLocaleDateString('en-CA'); 
+            const yesterdayStr = new Date(Date.now() - 86400000).toLocaleDateString('en-CA');
+            // Versi hitungan kenaikan harian. Versi 2: patokan awal hari dari angka persis (viewCountRaw/subCountRaw),
+            // bukan dari teks ringkas ("1.6M"); data lebih lama dari kemarin -> kenaikan hari itu mulai dari 0.
+            const SYNC_VER = 2; 
             
             const validItems = state.items.filter(i => i.channelId && i.channelId.startsWith('UC'));
             
@@ -891,22 +897,33 @@
                                 const newSubs = parseInt(yt.statistics.subscriberCount) || 0;
                                 const newVideos = parseInt(yt.statistics.videoCount) || 0;
                                 
-                                if (item.lastSyncDate !== todayStr) {
-                                    item.startOfDayViews = parseViewsStr(item.views) || newViews;
-                                    item.startOfDaySubs = parseViewsStr(item.subs) || newSubs;
+                                let baselineChanged = false;
+                                if (item.lastSyncDate !== todayStr || item.syncVer !== SYNC_VER) {
+                                    // Hari baru. Patokan = angka persis terakhir kemarin; kalau tidak ada (data lama /
+                                    // aplikasi lama tidak dibuka / versi lama), kenaikan hari ini dihitung mulai dari 0 supaya
+                                    // views yang terkumpul berhari-hari tidak dianggap kenaikan satu hari.
+                                    const exactYesterday = item.syncVer === SYNC_VER && item.lastSyncDate === yesterdayStr && typeof item.viewCountRaw === 'number';
+                                    item.startOfDayViews = exactYesterday ? item.viewCountRaw : newViews;
+                                    item.startOfDaySubs = exactYesterday && typeof item.subCountRaw === 'number' ? item.subCountRaw : newSubs;
                                     item.lastSyncDate = todayStr;
+                                    item.syncVer = SYNC_VER;
+                                    baselineChanged = true;
                                 }
                                 
                                 const viewGrowth = newViews - (item.startOfDayViews || 0);
                                 const subsGrowth = newSubs - (item.startOfDaySubs || 0);
-                                const currentViewsParsed = parseViewsStr(item.views);
                                 
                                 let updatedLastUpload = item.lastUploadDate;
                                 if (newVideos > (item.videoCount || 0)) {
                                     updatedLastUpload = Date.now();
                                 }
                                 
-                                if (currentViewsParsed !== newViews || item.videoCount !== newVideos || item.viewGrowth !== viewGrowth || updatedLastUpload !== item.lastUploadDate) {
+                                // Disimpan hanya bila ada yang berubah (dibandingkan dengan angka persis, bukan teks ringkas
+                                // "1.6M" yang selalu berbeda dari angka YouTube dan membuat semua channel ditulis ulang tiap 5 menit)
+                                const growthNow = viewGrowth > 0 ? viewGrowth : 0, subsGrowthNow = subsGrowth > 0 ? subsGrowth : 0;
+                                if (baselineChanged || item.viewCountRaw !== newViews || item.subCountRaw !== newSubs || item.videoCount !== newVideos || item.viewGrowth !== growthNow || item.subsGrowth !== subsGrowthNow || updatedLastUpload !== item.lastUploadDate) {
+                                    item.viewCountRaw = newViews;
+                                    item.subCountRaw = newSubs;
                                     item.views = formatNumberGlobal(newViews);
                                     item.subs = formatNumberGlobal(newSubs);
                                     item.videoCount = newVideos;
@@ -1018,6 +1035,7 @@
                     saveLocalData();
                     renderTable();
                     updateFilters();
+                    if (!firstSyncDone && state.items.length > 0 && !snapshot.metadata.fromCache) { firstSyncDone = true; setTimeout(silentAutoSync, 500); }
                 }
             }, (error) => console.error("Error syncing channels: ", error));
         }
