@@ -936,7 +936,10 @@
                                     
                                     if (state.isCloudConnected && db && userId) {
                                         const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'channels', item.id);
-                                        setDoc(docRef, item, {merge: true}).catch(e=>{});
+                                        // Firestore menolak kolom bernilai undefined (mis. lastUploadDate pada channel lama) dengan error
+                                        // yang menghentikan sinkronisasi sisa channel; kolom kosong dibuang dulu
+                                        const clean = Object.fromEntries(Object.entries(item).filter(([, v]) => v !== undefined));
+                                        try { setDoc(docRef, clean, {merge: true}).catch(e=>{}); } catch (e) { console.warn('Simpan channel gagal:', item.title, e); }
                                     }
                                 }
                             }
