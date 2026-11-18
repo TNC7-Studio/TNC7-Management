@@ -492,6 +492,107 @@
             .form-group.full-width { grid-column: auto; }
             .form-group input, .form-group textarea, .form-group select { padding: 0.5rem 0.75rem; font-size: 0.75rem; }
         }
+
+        /* ===== TAMPILAN MODERN (lapisan atas; tidak mengubah struktur/ID) ===== */
+        :root {
+            --radius: 1.1rem;
+            --ring: rgba(250, 204, 21, 0.35);
+            --glow: rgba(250, 204, 21, 0.10);
+            --surface: rgba(255, 255, 255, 0.035);
+            --line: rgba(255, 255, 255, 0.08);
+            --shadow: 0 1px 0 rgba(255,255,255,0.05) inset, 0 12px 32px -12px rgba(0,0,0,0.55);
+            --panel-bg: rgba(24, 28, 38, 0.72); --panel-border: rgba(255, 255, 255, 0.09); --table-hover: rgba(250, 204, 21, 0.06);
+        }
+        [data-theme="kuning"] { --panel-bg: rgba(36, 33, 28, 0.72); --panel-border: rgba(255, 255, 255, 0.09); --table-hover: rgba(245, 158, 11, 0.07); --ring: rgba(245, 158, 11, 0.4); --glow: rgba(245, 158, 11, 0.12); }
+        [data-theme="terang"] {
+            --panel-bg: rgba(255, 255, 255, 0.82); --panel-border: rgba(15, 23, 42, 0.08); --table-hover: rgba(37, 99, 235, 0.05);
+            --ring: rgba(37, 99, 235, 0.3); --glow: rgba(37, 99, 235, 0.10); --surface: rgba(15, 23, 42, 0.03); --line: rgba(15, 23, 42, 0.08);
+            --shadow: 0 1px 0 rgba(255,255,255,0.9) inset, 0 12px 28px -14px rgba(15,23,42,0.25);
+        }
+
+        body {
+            background-image:
+                radial-gradient(900px 480px at 12% -8%, var(--glow), transparent 60%),
+                radial-gradient(760px 420px at 100% 0%, rgba(56, 189, 248, 0.08), transparent 60%),
+                radial-gradient(700px 500px at 50% 110%, rgba(168, 85, 247, 0.07), transparent 60%);
+            background-attachment: fixed;
+            letter-spacing: -0.005em;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .panel-glass {
+            border-radius: var(--radius);
+            border: 1px solid var(--panel-border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%);
+        }
+
+        header.panel-glass { border-radius: 1.25rem; }
+        header.panel-glass h2 {
+            background: linear-gradient(90deg, var(--text-main) 30%, var(--primary-accent));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        header .icon-box { border-radius: 12px; box-shadow: 0 0 0 4px var(--glow); }
+
+        /* Kartu statistik */
+        #dashboard-view > div[style*="display: grid"] .panel-glass {
+            position: relative; overflow: hidden; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+        }
+        #dashboard-view > div[style*="display: grid"] .panel-glass::after {
+            content: ""; position: absolute; inset: 0 0 auto 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary-accent), transparent); opacity: .55;
+        }
+        #dashboard-view > div[style*="display: grid"] .panel-glass:hover { transform: translateY(-2px); border-color: var(--ring); }
+        #dashboard-view > div[style*="display: grid"] h3 { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; font-weight: 800; }
+        .icon-box { border-radius: 12px; flex-shrink: 0; }
+        .gap-3 { gap: .75rem; } .gap-1 { gap: .25rem; }
+
+        /* Tombol & input */
+        .btn { transition: transform .15s ease, background-color .2s, border-color .2s, color .2s, box-shadow .2s; }
+        .btn:active { transform: scale(.96); }
+        .btn-pill { background: var(--surface); border-color: var(--line); }
+        .btn-pill:hover { box-shadow: 0 0 0 3px var(--glow); }
+        .btn-pill.active { background: linear-gradient(135deg, var(--primary-accent), var(--primary-hover)); box-shadow: 0 6px 18px -6px var(--ring); }
+        .form-input, .form-select, .form-group input, .form-group textarea, .form-group select {
+            background-color: var(--surface); border-color: var(--line); border-radius: .7rem;
+        }
+        .form-input:focus, .form-select:focus, .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--primary-accent); box-shadow: 0 0 0 3px var(--ring);
+        }
+        #top-toggles { background: var(--surface) !important; border-color: var(--line) !important; backdrop-filter: blur(8px); }
+        #top-toggles .btn:hover { background: var(--glow) !important; color: var(--primary-accent) !important; }
+        .cloud-status, .badge-live, #last-sync-time { border-radius: 10px; }
+
+        /* Tabel */
+        .table-container { scrollbar-gutter: stable; }
+        table { border-collapse: separate; border-spacing: 0; }
+        th {
+            background: var(--panel-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            color: var(--text-muted); border-bottom: 1px solid var(--line);
+        }
+        td { border-bottom: 1px solid var(--line); transition: background-color .15s; }
+        tr:hover td { background-color: var(--table-hover); }
+        tr:hover td:first-child { box-shadow: inset 3px 0 0 var(--primary-accent); }
+        .badge-views, .badge-subs { border-radius: 9999px; }
+        .num-warning, .num-danger { border-radius: 8px; letter-spacing: .02em; }
+
+        /* Modal & kartu */
+        .modal-overlay { background: rgba(5, 8, 15, 0.62); backdrop-filter: blur(10px) saturate(140%); -webkit-backdrop-filter: blur(10px) saturate(140%); animation: tampil .2s ease-out; }
+        .modal-content {
+            background: var(--bg-color); border-color: var(--line); border-radius: 1.4rem;
+            box-shadow: 0 30px 80px -20px rgba(0,0,0,.7), 0 1px 0 rgba(255,255,255,.06) inset; animation: naik .28s cubic-bezier(.2,.9,.3,1.1);
+        }
+        .modal-header, .modal-footer { border-color: var(--line); }
+        .settings-card, .card-item, .card-stat, .chart-container { background: var(--surface); border-color: var(--line); border-radius: 1rem; }
+        .card-item:hover { border-color: var(--ring); box-shadow: 0 14px 30px -14px rgba(0,0,0,.6), 0 0 0 3px var(--glow); }
+        #toast { backdrop-filter: blur(14px); box-shadow: 0 12px 30px -10px rgba(0,0,0,.6); padding: .45rem 1rem; }
+
+        ::-webkit-scrollbar-thumb { background: rgba(148,163,184,.28); border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(148,163,184,.5); background-clip: padding-box; }
+
+        @keyframes tampil { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes naik { from { opacity: 0; transform: translateY(14px) scale(.98); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
     </style>
 </head>
 <body>
