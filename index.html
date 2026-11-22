@@ -119,6 +119,8 @@
         }
         
         .form-select { cursor: pointer; appearance: none; font-weight: 600; }
+        /* daftar pilihan (dropdown) mengikuti tema: tanpa ini latarnya putih bawaan peramban sementara tulisannya terang sehingga tidak terbaca */
+        .form-select option, .form-group select option { background-color: var(--bg-color); color: var(--text-main); }
         .form-input:focus, .form-select:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.2); }
 
         .table-container { overflow-x: auto; }
