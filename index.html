@@ -20,6 +20,9 @@
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
     
     <style>
+  /* Teks halaman tidak bisa diblok; hanya teks yang bisa diedit (kolom isian, area teks, contenteditable) yang bisa diblok & disalin */
+  body { -webkit-user-select: none; user-select: none; }
+  input, textarea, select, [contenteditable]:not([contenteditable="false"]), [contenteditable]:not([contenteditable="false"]) * { -webkit-user-select: text; user-select: text; }
         :root {
             --bg-color: #161921;
             --panel-bg: rgba(26, 31, 41, 0.95);
@@ -77,7 +80,7 @@
             text-transform: none !important;
         }
 
-        input, textarea, table, .allow-select { user-select: text; -webkit-user-select: text; }
+        input, textarea, select, [contenteditable]:not([contenteditable="false"]) { user-select: text; -webkit-user-select: text; }
 
         .container {
             width: 100%; max-width: 1200px; margin: 0 auto; padding: 0.5rem 1rem;
